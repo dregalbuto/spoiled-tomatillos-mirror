@@ -9,4 +9,10 @@ public class HelloController {
 	public String hello() {
 		return "Hello World!";
 	}
+	
+	@RequestMapping("/api/hello/object") 
+	public HelloObject helloObject() {
+		HelloObject obj = new HelloObject("Hello World!");
+		return obj;
+	}
 }
