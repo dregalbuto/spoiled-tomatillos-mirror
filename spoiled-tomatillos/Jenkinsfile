@@ -16,7 +16,7 @@ pipeline {
 		stage('Test'){
 			steps {
 				echo "Testing"
-				sh 'mvn -f spoiled.tomatillos/pom.xml test'
+				sh 'mvn -f spoiled-tomatillos/pom.xml test'
 			}
 		}
 	}
