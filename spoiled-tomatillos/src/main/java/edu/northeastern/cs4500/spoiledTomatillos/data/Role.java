@@ -10,9 +10,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+import lombok.Data;
+
 /**
  * Class for a user role
  */
+@Data
 @Entity(name="roles")
 public class Role {
 	/**
@@ -54,11 +57,8 @@ public class Role {
 		this.setName(new String());
 	}
 	
-	/**
-	 * @param name Name of this role
-	 */
 	public Role(String name) {
-		this.setName(name);
+		this.name = name;
 	}
 	
 	/**

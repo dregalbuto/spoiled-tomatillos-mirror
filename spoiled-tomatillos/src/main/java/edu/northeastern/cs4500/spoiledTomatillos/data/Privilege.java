@@ -8,10 +8,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import lombok.Data;
+
 /**
  * Class for a privilege within Spoiled Tomatillos
  * Might get rid of this and just implement it within the Role class
  */
+@Data
 @Entity(name="privileges")
 public class Privilege {
 	@Id
@@ -31,7 +34,7 @@ public class Privilege {
     }
     
     public Privilege(String name) {
-    		this.setName(name);
+    		this.name = name;
     }
 
 	public String getName() {

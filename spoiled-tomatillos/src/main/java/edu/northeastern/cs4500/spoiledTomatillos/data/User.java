@@ -10,9 +10,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+import lombok.Data;
+
 /**
  * Class for a user of Spoiled Tomatillos
  */
+@Data
 @Entity(name="users")
 public class User {
 
@@ -40,73 +43,18 @@ public class User {
     private Collection<Role> roles;
 	
 	public User() {
-		this.setFirstName(new String());
-		this.setLastName(new String());
-		this.setEmail(new String());
-		this.setUsername(new String());
-		this.setPassword(new String());
-		this.setEnabled(false);
-		this.setTokenExpired(true);
-	}
+		
+	}	
 	
-	public void setRoles(Collection<Role> roles) {
-		this.roles = roles;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
+	public User(String firstName, String lastName, String email, 
+			String username, String password, boolean enabled, 
+			boolean tokenExpired) {
 		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	public boolean isTokenExpired() {
-		return tokenExpired;
-	}
-
-	public void setTokenExpired(boolean tokenExpired) {
 		this.tokenExpired = tokenExpired;
 	}
-	
 }
