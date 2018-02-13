@@ -32,8 +32,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Autowired
     private PrivilegeRepository privilegeRepository;
   
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    //@Autowired
+    //private PasswordEncoder passwordEncoder;
   
     @Override
     @Transactional
@@ -55,10 +55,13 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         User user = new User();
         user.setFirstName("Test");
         user.setLastName("Test");
-        user.setPassword(passwordEncoder.encode("test"));
+        //user.setPassword(passwordEncoder.encode("test"));
+        user.setPassword("test");
         user.setEmail("test@test.com");
         user.setRoles(Arrays.asList(adminRole));
         user.setEnabled(true);
+        System.out.println("Saving user");
+        System.out.println(user.toString());
         userRepository.save(user);
  
         alreadySetup = true;
@@ -70,6 +73,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         Privilege privilege = privilegeRepository.findByName(name);
         if (privilege == null) {
             privilege = new Privilege(name);
+            System.out.println("Saving privilege");
+            System.out.println(privilege.toString());
             privilegeRepository.save(privilege);
         }
         return privilege;
@@ -83,6 +88,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         if (role == null) {
             role = new Role(name);
             role.setPrivileges(privileges);
+            System.out.println("Saving role");
+            System.out.println(role.toString());
             roleRepository.save(role);
         }
         return role;
