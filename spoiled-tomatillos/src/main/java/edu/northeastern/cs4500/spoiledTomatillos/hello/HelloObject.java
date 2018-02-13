@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500;
+package edu.northeastern.cs4500.spoiledTomatillos.hello;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

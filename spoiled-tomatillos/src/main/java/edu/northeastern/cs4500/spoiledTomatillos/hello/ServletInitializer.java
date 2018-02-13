@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500;
+package edu.northeastern.cs4500.spoiledTomatillos.hello;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
