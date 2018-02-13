@@ -9,14 +9,14 @@ pipeline {
 		stage('Build') {
 			steps {
 				echo "Building"
-				sh 'mvn -f spoiled-tomatillos/pom.xml compile'
-				sh 'mvn -f spoiled-tomatillos/pom.xml package'
+				sh 'mvn compile'
+				sh 'mvn package'
 			}
 		}
 		stage('Test'){
 			steps {
 				echo "Testing"
-				sh 'mvn -f spoiled-tomatillos/pom.xml test'
+				sh 'mvn -f test'
 			}
 		}
 	}
