@@ -46,22 +46,15 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         Privilege writePrivilege
           = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
   
-        List<Privilege> adminPrivileges = Arrays.asList(
-          readPrivilege, writePrivilege);        
+        List<Privilege> adminPrivileges 
+        		= Arrays.asList(readPrivilege, writePrivilege);        
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
  
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-        User user = new User();
-        user.setFirstName("Test");
-        user.setLastName("Test");
-        //user.setPassword(passwordEncoder.encode("test"));
-        user.setPassword("test");
-        user.setEmail("test@test.com");
-        user.setRoles(Arrays.asList(adminRole));
-        user.setEnabled(true);
-        userRepository.save(user);
- 
+        
+        createUserIfNotFound("Admin", adminRole);
+        
         alreadySetup = true;
     }
  
@@ -87,5 +80,24 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             roleRepository.save(role);
         }
         return role;
+    }
+    
+    @Transactional
+    private User createUserIfNotFound(String username, Role adminRole) {
+    	
+    		User admin = userRepository.findByUsername(username);
+    		if(admin == null) {
+	    		admin = new User();
+	    		admin.setFirstName("Test");
+	    		admin.setLastName("Test");
+	    		admin.setEmail("test@test.com");
+	    		admin.setUsername(username);
+		     //user.setPassword(passwordEncoder.encode("test"));
+	    		admin.setPassword("test");
+	    		admin.setRoles(Arrays.asList(adminRole));
+	    		admin.setEnabled(true);
+	        userRepository.save(admin);
+	    		}
+    		return admin;
     }
 }
