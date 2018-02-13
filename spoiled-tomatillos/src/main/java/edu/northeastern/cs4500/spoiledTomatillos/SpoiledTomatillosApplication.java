@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.hello;
+package edu.northeastern.cs4500.spoiledTomatillos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
