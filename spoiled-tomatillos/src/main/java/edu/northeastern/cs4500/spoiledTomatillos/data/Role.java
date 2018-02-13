@@ -10,7 +10,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
-@Entity
+@Entity(name="roles")
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
