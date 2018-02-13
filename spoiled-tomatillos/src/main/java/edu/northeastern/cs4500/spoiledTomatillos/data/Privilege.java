@@ -8,6 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+/**
+ * Class for a privilege within Spoiled Tomatillos
+ * Might get rid of this and just implement it within the Role class
+ */
 @Entity(name="privileges")
 public class Privilege {
 	@Id
@@ -16,6 +20,9 @@ public class Privilege {
  
     private String name;
  
+    /**
+     * All of the roles that have this privilege
+     */
     @ManyToMany(mappedBy = "privileges")
     private Collection<Role> roles;
     

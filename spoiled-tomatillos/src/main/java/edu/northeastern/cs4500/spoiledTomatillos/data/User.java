@@ -10,6 +10,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+/**
+ * Class for a user of Spoiled Tomatillos
+ */
 @Entity(name="users")
 public class User {
 
@@ -24,6 +27,9 @@ public class User {
 	private boolean enabled;
 	private boolean tokenExpired;
 	
+	/**
+	 * All of the roles this user has
+	 */
 	@ManyToMany
     @JoinTable( 
         name = "users_roles", 
