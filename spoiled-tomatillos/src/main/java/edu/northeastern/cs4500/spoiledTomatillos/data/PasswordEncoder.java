@@ -1,8 +1,11 @@
 package edu.northeastern.cs4500.spoiledTomatillos.data;
 
-public class PasswordEncoder {
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+public class PasswordEncoder {
+	
 	public String encode(String password) {
-		return password;
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder.encode(password);
 	}
 }

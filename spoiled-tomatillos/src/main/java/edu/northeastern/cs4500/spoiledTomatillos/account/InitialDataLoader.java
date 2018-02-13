@@ -32,8 +32,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Autowired
     private PrivilegeRepository privilegeRepository;
   
-    //@Autowired
-    //private PasswordEncoder passwordEncoder;
+   // @Autowired
+    private PasswordEncoder passwordEncoder;
   
     @Override
     @Transactional
@@ -92,7 +92,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 	    		admin.setLastName("Test");
 	    		admin.setEmail("test@test.com");
 	    		admin.setUsername(username);
-		     //user.setPassword(passwordEncoder.encode("test"));
+		    admin.setPassword(passwordEncoder.encode("test"));
 	    		admin.setPassword("test");
 	    		admin.setRoles(Arrays.asList(adminRole));
 	    		admin.setEnabled(true);
