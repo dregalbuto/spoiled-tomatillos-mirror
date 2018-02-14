@@ -3,7 +3,6 @@ import Login from './Login';
 import Signup from './Signup';
 import { Route } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.css";
 import { Navbar, NavItem, Nav, Grid, Row, Col, Image } from "react-bootstrap";
 import './Home.css';
 import Logo from './../images/logo.svg'

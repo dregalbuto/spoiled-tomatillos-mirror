@@ -16,8 +16,11 @@ $ npm install --save react
 Install ReactDOM
 $ npm install --save react-dom
 
+Dependencies required:
+$ npm install --save react-bootstrap
+
 ## Running the program
 
-git clone the repository
+git clone the repository and cd to spoiled-tomatillos/src/main/webapp/script
 
 run 'npm start' to open up the website on localhost:3000
