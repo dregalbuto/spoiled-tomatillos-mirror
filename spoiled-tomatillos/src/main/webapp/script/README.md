@@ -4,7 +4,7 @@ We use React.js for front-end development.
 
 ## Getting Started
 
-Make sure you have [npm] (https://docs.npmjs.com/cli/install) and [node](https://nodejs.org/en/) installed.
+Make sure you have [npm](https://docs.npmjs.com/cli/install) and [node](https://nodejs.org/en/) installed.
 
 
 You'll also need to install react using npm
