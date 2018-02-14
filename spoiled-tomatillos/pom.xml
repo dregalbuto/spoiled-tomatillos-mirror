@@ -25,6 +25,7 @@
 		<spring-cloud.version>Edgware.SR1</spring-cloud.version>
 	</properties>
 
+
 	<dependencies>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -43,8 +44,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
+	        <groupId>org.springframework.security</groupId>
+	        <artifactId>spring-security-web</artifactId>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-crypto</artifactId>
+		</dependency>
+	    <dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 			<scope>runtime</scope>
@@ -64,7 +72,23 @@
 	        <artifactId>lombok</artifactId>
 	        <scope>provided</scope>
 	    </dependency>
+	    <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-devtools</artifactId>
+		    <optional>true</optional>
+		</dependency>
 	</dependencies>
+	
+	<repositories>
+    <repository>
+        <id>spring-snapshots</id>
+        <name>Spring Snapshots</name>
+        <url>https://repo.spring.io/libs-snapshot</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+    </repositories>
 
 	<dependencyManagement>
 		<dependencies>
@@ -83,9 +107,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+			        <addResources>true</addResources>
+			    </configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>
