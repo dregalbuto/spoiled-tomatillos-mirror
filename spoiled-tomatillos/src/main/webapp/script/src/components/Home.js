@@ -3,15 +3,98 @@ import Login from './Login';
 import Signup from './Signup';
 import { Route } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import './../App.css';
+import "bootstrap/dist/css/bootstrap.css";
+import { Navbar, NavItem, Nav, Grid, Row, Col, Image } from "react-bootstrap";
+import './Home.css';
 
-class Home extends Component {
+
+///////////////// Navigation /////////////////////
+class Navigation extends Component {
   render() {
     return (
-      <div className="Home">
+      <div id="navigation" className="Navigation">
+      <nav>
+      <ul>
+      <li>Saved Movies</li>
+      <li>Reviews</li>
+      <li>Groups</li>
+      <li>Help</li>
+      <li>Profile</li>
+      </ul>
+      </nav>
+      </div>
+    );
+  }
+}
 
-      {/* Route Configuration */}
-      <Route path = "/Login" exact component = {Login}/>
+///////////////// User Profle /////////////////////
+class UserProfile extends Component {
+  render() {
+    return (
+      <div className="UserProfile">
+      <div className="User">
+      <div className="name">John Doe</div>
+      <div className="image"><img src="http://freapp.com/apps/android/com.profile.visitors/" alt="profile" /></div>
+      </div>
+      </div>
+    );
+  }
+}
+
+///////////////// Features /////////////////////
+class Features extends Component {
+  render() {
+    return (
+      <div id="features" className="Features" style={{backgroundImage: 'url(https://therealsasha.wordpress.com/2015/03/01/interstellar-review/)'}}>
+      <div className="content">
+      <img className="logo" src="http://entjunkie.blogspot.com/2014/11/interstellar-2014-film-review.html" alt="movie-bg" />
+      <h2>Watch interstellar now</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque id quam sapiente unde voluptatum alias vero debitis, magnam quis quod.</p>
+      <div className="button-wrapper">
+      <FeaturesButton primary={true} text="Watch now" />
+      <FeaturesButton primary={false} text="+ My list" />
+      </div>
+      </div>
+      <div className="overlay"></div>
+      </div>
+    );
+  }
+}
+
+// FeaturesButton
+class FeaturesButton extends Component {
+  render() {
+    return (
+      <a href="#" className="Button" data-primary={this.props.primary}>{this.props.text}</a>
+    );
+  }
+}
+
+class TitleList extends Component {
+  constructor(props) {
+    super(props);
+}
+  render() {
+    return(
+        <div className="Title">
+          <h2>{this.props.title}</h2>
+        </div>
+    );
+  }
+}
+
+///////////////// Home /////////////////////
+class Home extends Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+
+      //      <div className="Home">
+
+      //        {/* Route Configuration */}
+      /*      <Route path = "/Login" exact component = {Login}/>
       <Route path = "/Signup" exact component = {Signup}/>
 
       <nav id="topNav" class="navbar navbar-fixed-top">
@@ -38,6 +121,31 @@ class Home extends Component {
       </form>
       </div>
 
+      </div>
+      */
+      <div>
+      <header className="Header">
+      <Navigation />
+      <div id="search" className="Search">
+        <form action='/search' id='search-form' method='get' target='_top'>
+        <input id='search-text' name='q' placeholder='Search' type='text'/>
+        <button id='search-button' type='submit'>
+        <span>Search</span>
+        </button>
+        </form>
+      </div>
+      <UserProfile />
+      </header>
+      <Features />
+
+      <div className="TitleList">
+        <div className="Title">
+          <h1>Top Picks </h1>
+        </div>
+        <div className="Title">
+          <h1>Recommended For Me</h1>
+        </div>
+       </div>
       </div>
     );
   }
