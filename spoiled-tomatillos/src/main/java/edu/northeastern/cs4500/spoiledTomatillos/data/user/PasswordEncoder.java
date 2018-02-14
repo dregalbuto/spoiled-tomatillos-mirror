@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data;
+package edu.northeastern.cs4500.spoiledTomatillos.data.user;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

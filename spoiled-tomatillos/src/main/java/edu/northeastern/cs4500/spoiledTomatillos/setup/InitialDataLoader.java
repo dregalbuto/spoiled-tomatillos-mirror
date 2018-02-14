@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.account;
+package edu.northeastern.cs4500.spoiledTomatillos.setup;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,13 +11,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import edu.northeastern.cs4500.spoiledTomatillos.data.PasswordEncoder;
-import edu.northeastern.cs4500.spoiledTomatillos.data.Privilege;
-import edu.northeastern.cs4500.spoiledTomatillos.data.PrivilegeRepository;
-import edu.northeastern.cs4500.spoiledTomatillos.data.Role;
-import edu.northeastern.cs4500.spoiledTomatillos.data.RoleRepository;
-import edu.northeastern.cs4500.spoiledTomatillos.data.User;
-import edu.northeastern.cs4500.spoiledTomatillos.data.UserRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.PasswordEncoder;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.Privilege;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.PrivilegeRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.Role;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.RoleRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.User;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.UserRepository;
 
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent>{
