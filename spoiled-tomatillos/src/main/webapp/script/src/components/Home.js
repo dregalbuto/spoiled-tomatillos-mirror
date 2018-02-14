@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.css";
 import { Navbar, NavItem, Nav, Grid, Row, Col, Image } from "react-bootstrap";
 import './Home.css';
-
+import Logo from './../images/logo.svg'
 
 ///////////////// Navigation /////////////////////
 class Navigation extends Component {
@@ -125,6 +125,7 @@ class Home extends Component {
       */
       <div>
       <header className="Header">
+      <img src={Logo} />
       <Navigation />
       <div id="search" className="Search">
         <form action='/search' id='search-form' method='get' target='_top'>
