@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.spoiledTomatillos.data.movies.omdb;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -12,22 +13,38 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OMDBMovie {
     private String imdbID;
-    private String Title;
-    private String Year;
-    private String Released;
-    private String Runtime;
-    private String Genre;
-    private String Director;
-    private String Writer;
-    private String Actors;
-    private String Plot;
-    private String Language;
-    private String Country;
-    private String Awards;
-    private String Poster;
-    private String Type;
-    private String Metascore;
+    @JsonProperty("Title")
+    private String title;
+    @JsonProperty("Year")
+    private String year;
+    @JsonProperty("Released")
+    private String released;
+    @JsonProperty("Runtime")
+    private String runtime;
+    @JsonProperty("Genre")
+    private String genre;
+    @JsonProperty("Director")
+    private String director;
+    @JsonProperty("Writer")
+    private String writer;
+    @JsonProperty("Actors")
+    private String actors;
+    @JsonProperty("Plot")
+    private String plot;
+    @JsonProperty("Language")
+    private String language;
+    @JsonProperty("Country")
+    private String country;
+    @JsonProperty("Awards")
+    private String awards;
+    @JsonProperty("Poster")
+    private String poster;
+    @JsonProperty("Type")
+    private String type;
+    @JsonProperty("Metascore")
+    private String metascore;
     private String imdbRating;
     private String imdbVotes;
-    private List<OMDBMovieRatings> Ratings;
+    @JsonProperty("Ratings")
+    private List<OMDBMovieRatings> ratings;
 }

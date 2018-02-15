@@ -3,6 +3,7 @@ package edu.northeastern.cs4500.spoiledTomatillos.data.movies.omdb;
 import edu.northeastern.cs4500.spoiledTomatillos.data.movies.ExternalMovieSource;
 import edu.northeastern.cs4500.spoiledTomatillos.data.movies.Movie;
 import edu.northeastern.cs4500.spoiledTomatillos.data.movies.MovieSearchQuery;
+import lombok.NonNull;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -18,7 +19,8 @@ public class OMDBMovieSource implements ExternalMovieSource<OMDBMovie> {
      */
     @Override
     public OMDBMovie getMovie(String id) {
-        return new RestTemplate().getForObject("https://www.omdbapi.com/?apikey=" + APIKEY + "&i=" + id, OMDBMovie.class);
+        return new RestTemplate().getForObject(
+                "http://www.omdbapi.com/?apikey={apikey}&i={id}", OMDBMovie.class, APIKEY, id);
     }
 
     /**
@@ -40,7 +42,7 @@ public class OMDBMovieSource implements ExternalMovieSource<OMDBMovie> {
      * @return T movie as represented as T.
      */
     @Override
-    public OMDBMovie movieToExternalSource(Movie mov) {
+    public OMDBMovie movieToExternalSource(@NonNull Movie mov) {
         return null;
     }
 
