@@ -1,6 +1,5 @@
 package edu.northeastern.cs4500.spoiledTomatillos.data.movies;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +29,8 @@ public class MovieRepositoryTest {
         entityManager.persist(mov);
         assertEquals(movieRepository.findOne(movID), mov);
         assertEquals(movieRepository.findOne(movID).getTitle(), movT);
+        assertEquals(movieRepository.exists(movID), true);
+        movieRepository.delete(movID);
+        assertEquals(movieRepository.count(), 0);
     }
 }
