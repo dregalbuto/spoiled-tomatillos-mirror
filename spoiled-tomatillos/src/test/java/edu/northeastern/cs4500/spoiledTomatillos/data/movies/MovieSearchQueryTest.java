@@ -1,6 +1,5 @@
 package edu.northeastern.cs4500.spoiledTomatillos.data.movies;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,15 +8,17 @@ import static org.junit.Assert.*;
 public class MovieSearchQueryTest {
 
     MovieSearchQuery sq;
+    String movieTitle = "Title";
 
     @Before
-    public void setUp() throws Exception {
-        sq = new MovieSearchQuery("Title");
+    public void setUp() {
+        movieTitle = "Title";
+        sq = new MovieSearchQuery(movieTitle);
     }
 
     @Test
     public void getTitle() {
-        assertEquals(sq.getTitle(), "Title");
+        assertEquals(sq.getTitle(), movieTitle);
     }
 
     @Test
@@ -34,7 +35,7 @@ public class MovieSearchQueryTest {
 
     @Test
     public void setTitle() {
-        assertEquals(sq.getTitle(), "Title");
+        assertEquals(sq.getTitle(), movieTitle);
         sq.setTitle("Alt");
         assertEquals(sq.getTitle(), "Alt");
 

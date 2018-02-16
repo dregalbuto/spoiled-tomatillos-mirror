@@ -1,19 +1,21 @@
 package edu.northeastern.cs4500.spoiledTomatillos.data.movies;
 
+import edu.northeastern.cs4500.spoiledTomatillos.data.movies.omdb.OMDBMovieSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Cached Repository that uses movie repository as a cache. Use cache first
- * before loop up.
+ * before look up.
  */
 @Service
 public class MovieCachedRepository {
     private MovieRepository movieRepository;
-
+    private List<ExternalMovieSource> sources;
     /**
      * Constructor to create a MovieCachedRepository with needed repo.
      * @param movieRepository Cache to use for Movie.
@@ -21,6 +23,8 @@ public class MovieCachedRepository {
     @Autowired
     public MovieCachedRepository(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
+        this.sources = new ArrayList<>();
+        this.sources.add(new OMDBMovieSource());
     }
 
     /**
@@ -30,7 +34,20 @@ public class MovieCachedRepository {
      */
     @Transactional
     public Movie getMovie(String id) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (id == null) {
+            return null;
+        }
+        if (this.movieRepository.exists(id)) {
+            return this.movieRepository.findOne(id);
+        }
+        for (ExternalMovieSource ems : this.sources) {
+            Movie movie = ems.getMovie(id);
+            if (movie != null) {
+                this.movieRepository.saveAndFlush(movie);
+                return movie;
+            }
+        }
+        return null;
     }
 
     /**
@@ -40,7 +57,19 @@ public class MovieCachedRepository {
      * @return List of best matched movie.
      */
     @Transactional
-    public List<Movie> searchMovie(MovieSearchQuery q) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public List<String> searchMovie(MovieSearchQuery q) {
+        List<String> result = new ArrayList<>();
+        if (q == null) {
+            return result;
+        }
+        for (Movie movie : this.movieRepository.findAll()) {
+            if (movie.getTitle().contains(q.getTitle())) {
+                result.add(movie.getId());
+            }
+        }
+        for (ExternalMovieSource ems : this.sources) {
+            result.addAll(ems.searchMovie(q));
+        }
+        return result;
     }
 }
