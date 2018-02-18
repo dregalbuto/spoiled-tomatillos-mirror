@@ -23,4 +23,4 @@ $ npm install --save react-bootstrap
 
 git clone the repository and cd to spoiled-tomatillos/src/main/webapp/script
 
-run 'npm start' to open up the website on localhost:3000
+run 'npm start' and open up the website on localhost:3000/Home
