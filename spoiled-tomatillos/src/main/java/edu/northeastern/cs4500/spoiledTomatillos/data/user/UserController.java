@@ -18,7 +18,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@RequestMapping(value = "/foo", method = RequestMethod.GET)
+	@RequestMapping(value = "/foo")
 	String getFoo() {
 		return "Foo";
 	}
