@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.user;
+package edu.northeastern.cs4500.spoiledTomatillos.user.model;
 
 import java.util.Collection;
 
@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -29,7 +31,14 @@ public class Privilege {
     /**
      * All of the roles that have this privilege
      */
-    @ManyToMany(mappedBy = "privileges")
+    @ManyToMany
+    @JoinTable(
+	        name = "roles_privileges", 
+	        joinColumns = @JoinColumn(
+	          name = "privilege_id", referencedColumnName = "id"), 
+	        inverseJoinColumns = @JoinColumn(
+	          name = "role_id", referencedColumnName = "id"))
+	private Collection<Privilege> privileges;
     @JsonBackReference
     private Collection<Role> roles;
     

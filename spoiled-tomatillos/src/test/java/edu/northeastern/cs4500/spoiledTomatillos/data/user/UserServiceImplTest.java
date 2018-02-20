@@ -11,6 +11,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
+import edu.northeastern.cs4500.spoiledTomatillos.user.repository.UserRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
+import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserServiceImpl;
+
 @RunWith(SpringRunner.class)
 public class UserServiceImplTest {
 	@TestConfiguration
@@ -40,7 +45,7 @@ public class UserServiceImplTest {
     @Test
     public void whenValidUsername_thenUserShouldBeFound() {
         String username = "diana";
-        User found = userService.getUserByUsername("diana");
+        User found = userService.loadUserByUsername("diana");
       
          assertEquals(found.getUsername(), username);
      }

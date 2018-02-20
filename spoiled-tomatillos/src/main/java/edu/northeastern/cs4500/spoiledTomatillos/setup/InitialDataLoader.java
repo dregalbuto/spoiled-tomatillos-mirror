@@ -11,7 +11,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.*;
+import edu.northeastern.cs4500.spoiledTomatillos.user.model.*;
+import edu.northeastern.cs4500.spoiledTomatillos.user.repository.PrivilegeRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.user.repository.RoleRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.user.repository.UserRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
 
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent>{
@@ -81,7 +85,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Transactional
     private User createUserIfNotFound(String username, Role adminRole) {
     	
-    		User admin = userService.getUserByUsername(username);
+    		User admin = userService.loadUserByUsername(username);
     		if(admin == null) {
 	    		admin = new User();
 	    		admin.setFirstName("Test");

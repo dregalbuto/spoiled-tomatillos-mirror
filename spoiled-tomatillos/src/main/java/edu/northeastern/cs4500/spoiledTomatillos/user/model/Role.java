@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.user;
+package edu.northeastern.cs4500.spoiledTomatillos.user.model;
 
 import java.util.Collection;
 
