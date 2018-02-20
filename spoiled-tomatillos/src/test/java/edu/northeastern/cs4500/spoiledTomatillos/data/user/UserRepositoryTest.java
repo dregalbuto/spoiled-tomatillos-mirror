@@ -25,7 +25,7 @@ public class UserRepositoryTest {
 		entityManager.persist(diana);
 		entityManager.flush();
 		
-		User found = userRepository.findByUsername(diana.getUsername());
+		User found = (userRepository.findByUsername(diana.getUsername())).get(0);
 		
 		assertEquals(found.getUsername(), diana.getUsername());
 	}
