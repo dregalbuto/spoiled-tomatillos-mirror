@@ -11,13 +11,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.PasswordEncoder;
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.Privilege;
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.PrivilegeRepository;
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.Role;
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.RoleRepository;
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.User;
-import edu.northeastern.cs4500.spoiledTomatillos.data.user.UserRepository;
+import edu.northeastern.cs4500.spoiledTomatillos.data.user.*;
 
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent>{
@@ -25,6 +19,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 	 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
   
     @Autowired
     private RoleRepository roleRepository;
@@ -85,7 +81,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Transactional
     private User createUserIfNotFound(String username, Role adminRole) {
     	
-    		User admin = userRepository.findByUsername(username);
+    		User admin = userService.getUserByUsername(username);
     		if(admin == null) {
 	    		admin = new User();
 	    		admin.setFirstName("Test");
