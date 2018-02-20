@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
 
 /**
@@ -27,6 +30,7 @@ public class Privilege {
      * All of the roles that have this privilege
      */
     @ManyToMany(mappedBy = "privileges")
+    @JsonBackReference
     private Collection<Role> roles;
     
     public Privilege() {

@@ -10,6 +10,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
 
 /**
@@ -40,6 +42,7 @@ public class User {
           name = "user_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
+	@JsonManagedReference
     private Collection<Role> roles;
 	
 	public User() {
