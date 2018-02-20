@@ -85,7 +85,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Transactional
     private User createUserIfNotFound(String username, Role adminRole) {
     	
-    		User admin = userRepository.findByUsername(username);
+    		User admin = userRepository.findFirstOrderByUsername(username);
     		if(admin == null) {
 	    		admin = new User();
 	    		admin.setFirstName("Test");

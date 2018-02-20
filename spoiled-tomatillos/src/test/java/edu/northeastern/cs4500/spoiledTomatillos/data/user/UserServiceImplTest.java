@@ -33,7 +33,7 @@ public class UserServiceImplTest {
         User diana = new User();
         diana.setUsername("diana");
      
-        Mockito.when(userRepository.findByUsername(diana.getUsername()))
+        Mockito.when(userRepository.findFirstOrderByUsername(diana.getUsername()))
           .thenReturn(diana);
     }
     

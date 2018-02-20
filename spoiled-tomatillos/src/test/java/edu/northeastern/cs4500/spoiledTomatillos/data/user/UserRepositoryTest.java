@@ -19,13 +19,13 @@ public class UserRepositoryTest {
 	private UserRepository userRepository;
 	
 	@Test
-	public void whenFindByUsername_thenReturnUser() {
+	public void whenFindFirstOrderByUsername_thenReturnUser() {
 		User diana = new User();
 		diana.setUsername("diana");
 		entityManager.persist(diana);
 		entityManager.flush();
 		
-		User found = userRepository.findByUsername(diana.getUsername());
+		User found = userRepository.findFirstOrderByUsername(diana.getUsername());
 		
 		assertEquals(found.getUsername(), diana.getUsername());
 	}
