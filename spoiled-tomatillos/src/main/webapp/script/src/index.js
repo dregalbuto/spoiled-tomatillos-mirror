@@ -23,17 +23,5 @@ ReactDOM.render(
     </BrowserRouter>
     , document.getElementById('root'));
 
-//       render(
-//     <Router history={browserHistory}>
-//         <Route component={App}>
-//             <Route path="/" component={Homepage}/>
-//             <Route path="/Login" component={Login}/>
-//             {/* Parameter route*/}
-//             <Route path="/Signup" component={Signup}/>
-//         </Route>
-//     </Router>,
-//     document.getElementById('root')
-// );
-
 
     registerServiceWorker();
