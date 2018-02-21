@@ -1,7 +1,15 @@
+/**
+ * Implements SearchBar component with text box and search functionality to
+ * backend.
+ */
 import Search from 'react-search';
 import ReactDOM from 'react-dom';
 import React, {Component, PropTypes} from 'react';
 
+/**
+ * Represents one result in list of results in SearchList.
+ * Uses props.id with id of movie to display.
+ */
 class SearchElement extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +20,10 @@ class SearchElement extends Component {
         .then(json=>this.setState({data:json}));
   }
 
+  /**
+   * Render this with nothing if this.state.data.title is not set. <li>
+   * otherwise.
+   */
   render() {
     if (this.state.data.title == {}) {
       return null;
@@ -20,6 +32,10 @@ class SearchElement extends Component {
   }
 }
 
+/**
+ * Represent a list of search results from search query.
+ * Uses props.result which should be a list of id for movies.
+ */
 class SearchList extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +43,9 @@ class SearchList extends Component {
     this.state = {titles:{}};
   }
 
+  /**
+   * Render a list of search results with SearchElements.
+   */
   render() {
     const listItem = this.props.result.map((id) =>
       <SearchElement key={"keyofelementwithidof" + id} id={id} />
@@ -35,6 +54,9 @@ class SearchList extends Component {
   }
 }
 
+/**
+ * Represent a functional search bar that renders a list of results underneath.
+ */
 class SearchBar extends Component {
   constructor(props) {
     super(props);
@@ -45,6 +67,10 @@ class SearchBar extends Component {
     this.state = {results:[]};
   }
 
+  /**
+   * Takes in a list of ids for movies and a time. Will render if time is the
+   * latest time received by this function.
+   */
   renderAnswer(lop, d) {
     if(d > this.date) {
       this.date = d;
@@ -52,6 +78,9 @@ class SearchBar extends Component {
     }
   }
 
+  /**
+   * Search the backend with values of this SearchBar and render the results.
+   */
   searchBackend() {
     var s = this.searchBox.value;
     if (s != "") {
@@ -64,10 +93,16 @@ class SearchBar extends Component {
     }
   }
 
+  /**
+   * Handing typing event on the SearchBar.
+   */
   handleType(e) {
     this.searchBackend();
   }
 
+  /**
+   * Handling keyboard event on SearchBar.
+   */
   handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.searchBackend();
@@ -75,6 +110,9 @@ class SearchBar extends Component {
     }
   }
 
+  /**
+   * Render the SearchBar with callbacks to events.
+   */
   render() {
     return (
       <div>
