@@ -40,8 +40,10 @@ class UserProfile extends Component {
   }
 }
 
+
 ///////////////// Features /////////////////////
 class Features extends Component {
+
   render() {
     return (
       <div id="features" className="Features" style={{backgroundImage: 'url(https://therealsasha.wordpress.com/2015/03/01/interstellar-review/)'}}>
@@ -50,7 +52,8 @@ class Features extends Component {
       <h2>Watch interstellar now</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque id quam sapiente unde voluptatum alias vero debitis, magnam quis quod.</p>
       <div className="button-wrapper">
-      <FeaturesButton primary={true} text="Watch now" />
+      <Link to="/Movie"><FeaturesButton primary={true} text="Watch now">
+      </FeaturesButton></Link>
       <FeaturesButton primary={false} text="+ My list" />
       </div>
       </div>
@@ -72,12 +75,12 @@ class FeaturesButton extends Component {
 class TitleList extends Component {
   constructor(props) {
     super(props);
-}
+  }
   render() {
     return(
-        <div className="Title">
-          <h2>{this.props.title}</h2>
-        </div>
+      <div className="Title">
+      <h2>{this.props.title}</h2>
+      </div>
     );
   }
 }
@@ -127,25 +130,25 @@ class Home extends Component {
       <img src={Logo} />
       <Navigation />
       <div id="search" className="Search">
-        <form action='/search' id='search-form' method='get' target='_top'>
-        <input id='search-text' name='q' placeholder='Search' type='text'/>
-        <button id='search-button' type='submit'>
-        <span>Search</span>
-        </button>
-        </form>
+      <form action='/search' id='search-form' method='get' target='_top'>
+      <input id='search-text' name='q' placeholder='Search' type='text'/>
+      <button id='search-button' type='submit'>
+      <span>Search</span>
+      </button>
+      </form>
       </div>
       <UserProfile />
       </header>
       <Features />
 
       <div className="TitleList">
-        <div className="Title">
-          <h1>Top Picks </h1>
-        </div>
-        <div className="Title">
-          <h1>Recommended For Me</h1>
-        </div>
-       </div>
+      <div className="Title">
+      <h1>Top Picks </h1>
+      </div>
+      <div className="Title">
+      <h1>Recommended For Me</h1>
+      </div>
+      </div>
       </div>
     );
   }

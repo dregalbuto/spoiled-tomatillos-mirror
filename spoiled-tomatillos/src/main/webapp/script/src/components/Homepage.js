@@ -1,8 +1,46 @@
 import React, { Component } from 'react';
-import '../App.css'
+import './Home.css'
 import { Link } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
+import Logo from './../images/logo.svg'
+
+class Movies extends Component {
+  constructor(props) {
+    super(props);
+}
+  render() {
+    return(
+        <div className="Title">
+          <h2>Explore Movies</h2>
+        </div>
+    );
+  }
+}
+class Celebs extends Component {
+  constructor(props) {
+    super(props);
+}
+  render() {
+    return(
+        <div className="Title">
+          <h2>Explore Celebrities</h2>
+        </div>
+    );
+  }
+}
+class Reviews extends Component {
+  constructor(props) {
+    super(props);
+}
+  render() {
+    return(
+        <div className="Title">
+          <h2>Explore Reviews</h2>
+        </div>
+    );
+  }
+}
 
 const helloAPI = 'http://www.omdbapi.com/?i=tt3896198&apikey=1c821225' ;
 console.log("Hello from omdb");
@@ -30,6 +68,8 @@ class Homepage extends Component {
   render() {
     return (
       <div className="Homepage">
+      <header className="header">
+
       <nav id="topNav" class="navbar navbar-fixed-top">
       <div className="container-fluid">
       <ul class="nav navbar-nav navbar-right">
@@ -39,7 +79,6 @@ class Homepage extends Component {
       </div>
       </nav>
 
-      <header className="App-header">
       <h1 className="App-title">Welcome to {this.name}</h1>
       <p className="App-intro">
       Find Movies, TV shows, Celebrities and more ...
@@ -60,6 +99,9 @@ class Homepage extends Component {
 
       }
       </div>
+      <Movies />
+      <Celebs />
+      <Reviews/>
 
       </div>
     );
