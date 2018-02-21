@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import Login from './Login';
-import Signup from './Signup';
-import { Route } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { Navbar, NavItem, Nav, Grid, Row, Col, Image } from "react-bootstrap";
 import './Home.css';
 import Logo from './../images/logo.svg'
+import { Link } from 'react-router-dom';
 
 ///////////////// Navigation /////////////////////
 class Navigation extends Component {
@@ -40,9 +36,22 @@ class UserProfile extends Component {
   }
 }
 
-
+class FeaturesButton extends Component {
+  render() {
+    return (
+      <button className="Button" data-primary={this.props.primary}>{this.props.text}</button>
+    );
+  }
+}
 ///////////////// Features /////////////////////
 class Features extends Component {
+
+  _handleClick() {
+    return (
+      console.log("CLICKED!!!!!!!"),
+      <Link to="/Movie">TESTING</Link>
+    );
+  }
 
   render() {
     return (
@@ -52,8 +61,10 @@ class Features extends Component {
       <h2>Watch interstellar now</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque id quam sapiente unde voluptatum alias vero debitis, magnam quis quod.</p>
       <div className="button-wrapper">
-      <Link to="/Movie"><FeaturesButton primary={true} text="Watch now">
-      </FeaturesButton></Link>
+
+      <FeaturesButton onClick={this._handleClick} primary={true} text="Watch now">
+      </FeaturesButton>
+
       <FeaturesButton primary={false} text="+ My list" />
       </div>
       </div>
@@ -63,19 +74,8 @@ class Features extends Component {
   }
 }
 
-// FeaturesButton
-class FeaturesButton extends Component {
-  render() {
-    return (
-      <a href="#" className="Button" data-primary={this.props.primary}>{this.props.text}</a>
-    );
-  }
-}
 
 class TitleList extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return(
       <div className="Title">
@@ -87,9 +87,6 @@ class TitleList extends Component {
 
 ///////////////// Home /////////////////////
 class Home extends Component {
-  constructor(props) {
-    super(props)
-  }
   render() {
     return (
 
@@ -127,7 +124,7 @@ class Home extends Component {
       */
       <div>
       <header className="Header">
-      <img src={Logo} />
+      <img src={Logo} alt="logo"/>
       <Navigation />
       <div id="search" className="Search">
       <form action='/search' id='search-form' method='get' target='_top'>

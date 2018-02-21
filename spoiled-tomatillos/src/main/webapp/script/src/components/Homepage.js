@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import './Home.css'
 import { Link } from 'react-router-dom';
-import Login from './Login';
-import Signup from './Signup';
-import Logo from './../images/logo.svg'
 
 class Movies extends Component {
-  constructor(props) {
-    super(props);
-}
+
   render() {
     return(
         <div className="Title">
@@ -18,9 +13,6 @@ class Movies extends Component {
   }
 }
 class Celebs extends Component {
-  constructor(props) {
-    super(props);
-}
   render() {
     return(
         <div className="Title">
@@ -30,9 +22,6 @@ class Celebs extends Component {
   }
 }
 class Reviews extends Component {
-  constructor(props) {
-    super(props);
-}
   render() {
     return(
         <div className="Title">
@@ -54,9 +43,9 @@ class Homepage extends Component {
     }}
 
     componentDidMount() {
-      fetch('http://www.omdbapi.com/?i=tt3896198&apikey=1c821225').
-      then((response) => response.json()).
-      then((findresponse) => {
+      fetch('http://www.omdbapi.com/?i=tt3896198&apikey=1c821225')
+      .then((response) => response.json())
+      .then((findresponse) => {
         console.log(findresponse.Poster)
         this.setState({
           data:findresponse.Poster,
@@ -70,11 +59,11 @@ class Homepage extends Component {
       <div className="Homepage">
       <header className="header">
 
-      <nav id="topNav" class="navbar navbar-fixed-top">
+      <nav id="topNav" className="navbar navbar-fixed-top">
       <div className="container-fluid">
-      <ul class="nav navbar-nav navbar-right">
-      <li><Link to="/Signup"><a><span class="glyphicon glyphicon-user"></span> Sign Up</a></Link></li>
-      <li>  <Link to="/Login"><a><span class="glyphicon glyphicon-log-in"></span> Login</a></Link></li>
+      <ul className="nav navbar-nav navbar-right">
+      <li><Link to="/Signup"><a><span className="glyphicon glyphicon-user"></span> Sign Up</a></Link></li>
+      <li> <Link to="/Login"><a><span className="glyphicon glyphicon-log-in"></span> Login</a></Link></li>
       </ul>
       </div>
       </nav>
@@ -95,7 +84,7 @@ class Homepage extends Component {
 
       <div className = "movie-items">
       {
-        <img src = {this.state.data}></img>
+        <img src = {this.state.data} alt="movie-item"></img>
       }
       </div>
       <Movies />
