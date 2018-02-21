@@ -14,13 +14,9 @@ class App extends Component {
   }
   render() {
     return (
-
       <title>
       Spoiled Tomatillos
       </title>
-
-
-
     );
   }
 }
