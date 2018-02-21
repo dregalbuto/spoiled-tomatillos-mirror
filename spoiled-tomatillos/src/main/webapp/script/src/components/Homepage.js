@@ -57,6 +57,7 @@ class Homepage extends Component {
       <div className = "movie-items">
       {
         <img src = {this.state.data}></img>
+
       }
       </div>
 
