@@ -41,13 +41,6 @@ class UserProfile extends Component {
 }
 
 
-class MovieInfo extends Component {
-  render () {
-    return (
-      this.props.history.push('/Movie')
-    );
-  }
-}
 ///////////////// Features /////////////////////
 class Features extends Component {
 
@@ -59,7 +52,8 @@ class Features extends Component {
       <h2>Watch interstellar now</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque id quam sapiente unde voluptatum alias vero debitis, magnam quis quod.</p>
       <div className="button-wrapper">
-      <FeaturesButton primary={true} text="Watch now" onClick='MovieInfo()'/>
+      <Link to="/Movie"><FeaturesButton primary={true} text="Watch now">
+      </FeaturesButton></Link>
       <FeaturesButton primary={false} text="+ My list" />
       </div>
       </div>
@@ -73,7 +67,7 @@ class Features extends Component {
 class FeaturesButton extends Component {
   render() {
     return (
-      <a href={this.props.onClick} className="Button" data-primary={this.props.primary}>{this.props.text}</a>
+      <a href="#" className="Button" data-primary={this.props.primary}>{this.props.text}</a>
     );
   }
 }

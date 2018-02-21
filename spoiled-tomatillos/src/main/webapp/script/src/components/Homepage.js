@@ -68,10 +68,8 @@ class Homepage extends Component {
   render() {
     return (
       <div className="Homepage">
-
-
       <header className="header">
-      
+
       <nav id="topNav" class="navbar navbar-fixed-top">
       <div className="container-fluid">
       <ul class="nav navbar-nav navbar-right">
