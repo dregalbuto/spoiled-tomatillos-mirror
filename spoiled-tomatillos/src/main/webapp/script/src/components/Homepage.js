@@ -18,10 +18,15 @@ class Homepage extends Component {
     componentDidMount() {
       fetch('http://www.omdbapi.com/?i=tt3896198&apikey=1c821225').
       then((response) => response.json()).
-      then((findresponse) => {console.log(findresponse)})
+      then((findresponse) => {
+        console.log(findresponse.Poster)
+        this.setState({
+          data:findresponse.Poster,
+        })
+      })
     }
 
-  
+
   render() {
     return (
       <div className="Homepage">
@@ -51,8 +56,7 @@ class Homepage extends Component {
 
       <div className = "movie-items">
       {
-        this.state.data.map((dynamicData,i) =>  <div>
-        </div>)
+        <img src = {this.state.data}></img>
       }
       </div>
 
