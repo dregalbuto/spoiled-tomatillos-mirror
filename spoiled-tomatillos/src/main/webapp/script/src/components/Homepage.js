@@ -3,6 +3,7 @@ import '../App.css'
 import { Link } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
+import SearchBar from './SearchBar';
 
 
 class Homepage extends Component {
@@ -28,14 +29,7 @@ class Homepage extends Component {
             Find Movies, TV shows, Celebrities and more ...
           </p>
         </header>
-        <div id='search-box'>
-          <form action='/search' id='search-form' method='get' target='_top'>
-            <input id='search-text' name='q' placeholder='Search' type='text'/>
-            <button id='search-button' type='submit'>
-              <span>Search</span>
-            </button>
-          </form>
-        </div>
+        <SearchBar />
 
       </div>
     );
