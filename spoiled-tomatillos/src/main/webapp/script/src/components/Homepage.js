@@ -42,21 +42,53 @@ class Reviews extends Component {
   }
 }
 
+const helloAPI = 'http://www.omdbapi.com/?i=tt3896198&apikey=1c821225' ;
+console.log("Hello from omdb");
 
 class Homepage extends Component {
   constructor() {
     super();
     this.name = "Spoiled Tomatillos";
-  }
+    this.state = {
+      data:[],
+    }}
+
+    componentDidMount() {
+      fetch('http://www.omdbapi.com/?i=tt3896198&apikey=1c821225').
+      then((response) => response.json()).
+      then((findresponse) => {
+        console.log(findresponse.Poster)
+        this.setState({
+          data:findresponse.Poster,
+        })
+      })
+    }
+
+
   render() {
     return (
+<<<<<<< HEAD
       <div>
       <header className="Header">
       <img src={Logo} />
+=======
+      <div className="Homepage">
+      <nav id="topNav" class="navbar navbar-fixed-top">
+      <div className="container-fluid">
+      <ul class="nav navbar-nav navbar-right">
+      <li><Link to="/Signup"><a><span class="glyphicon glyphicon-user"></span> Sign Up</a></Link></li>
+      <li>  <Link to="/Login"><a><span class="glyphicon glyphicon-log-in"></span> Login</a></Link></li>
+      </ul>
+      </div>
+      </nav>
+
+      <header className="App-header">
+>>>>>>> afdae790b8d65878f783994c0f3fbaf4272ae7de
       <h1 className="App-title">Welcome to {this.name}</h1>
       <p className="App-intro">
       Find Movies, TV shows, Celebrities and more ...
       </p>
+<<<<<<< HEAD
       <div id='Search'>
           <form action='/search' id='search-form' method='get'>
             <input id='search-text' name='q' placeholder='Search' type='text'/>
@@ -84,6 +116,23 @@ class Homepage extends Component {
       <Movies/>
       <Celebs/>
       <Reviews/>
+=======
+      </header>
+      <div id='search-box'>
+      <form action='/search' id='search-form' method='get' target='_top'>
+      <input id='search-text' name='q' placeholder='Search' type='text'/>
+      <button id='search-button' type='submit'>
+      <span>Search</span>
+      </button>
+      </form>
+      </div>
+
+      <div className = "movie-items">
+      {
+        <img src = {this.state.data}></img>
+      }
+      </div>
+>>>>>>> afdae790b8d65878f783994c0f3fbaf4272ae7de
 
       </div>
     );
