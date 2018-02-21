@@ -84,7 +84,12 @@ class Homepage extends Component {
 
       <div className = "movie-items">
       {
+<<<<<<< HEAD
         <img src = {this.state.data} alt="movie-item"></img>
+=======
+        <img src = {this.state.data}></img>
+
+>>>>>>> 06455dd1157c66891f106945501dbe6b96625d53
       }
       </div>
       <Movies />
