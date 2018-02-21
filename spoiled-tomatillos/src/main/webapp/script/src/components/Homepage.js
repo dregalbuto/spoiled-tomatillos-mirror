@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './Home.css'
 import { Link } from 'react-router-dom';
+import Login from './Login';
+import Signup from './Signup';
+import SearchBar from './SearchBar';
 
 class Movies extends Component {
 
@@ -57,6 +60,7 @@ class Homepage extends Component {
   render() {
     return (
       <div className="Homepage">
+
       <header className="header">
 
       <nav id="topNav" className="navbar navbar-fixed-top">
@@ -84,12 +88,7 @@ class Homepage extends Component {
 
       <div className = "movie-items">
       {
-<<<<<<< HEAD
         <img src = {this.state.data} alt="movie-item"></img>
-=======
-        <img src = {this.state.data}></img>
-
->>>>>>> 06455dd1157c66891f106945501dbe6b96625d53
       }
       </div>
       <Movies />

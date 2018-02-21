@@ -1,7 +1,9 @@
-package edu.northeastern.cs4500;
+package edu.northeastern.cs4500.spoiledTomatillos.setup;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+
+import edu.northeastern.cs4500.spoiledTomatillos.SpoiledTomatillosApplication;
 
 public class ServletInitializer extends SpringBootServletInitializer {
 

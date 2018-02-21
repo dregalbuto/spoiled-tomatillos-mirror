@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500;
+package edu.northeastern.cs4500.spoiledTomatillos.hello;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,21 +13,21 @@ public class HelloController {
 	@Autowired
 	HelloRepository helloRepository;
 	
-	@RequestMapping("/api/hello/insert")
+	@RequestMapping("/hello/insert")
 	public HelloObject insertHelloObject() {
 		HelloObject obj = new HelloObject("Hello!");
 		helloRepository.save(obj);
 		return obj;
 	}
 	
-	@RequestMapping("/api/hello/select/all")
+	@RequestMapping("/hello/select/all")
 	public List<HelloObject> selectAllHelloObjects() {
 		List<HelloObject> hellos =
 		(List<HelloObject>)helloRepository.findAll();
 		return hellos;
 	}
 	
-	@RequestMapping("/api/hello/insert/{msg}")
+	@RequestMapping("/hello/insert/{msg}")
 	public HelloObject insertMessage(@PathVariable("msg") String message)
 	{
 		HelloObject obj = new HelloObject(message);
@@ -35,12 +35,12 @@ public class HelloController {
 		return obj;
 	}
 	
-	@RequestMapping("/api/hello/string") 
+	@RequestMapping("/hello/string") 
 	public String hello() {
 		return "Hello World!";
 	}
 	
-	@RequestMapping("/api/hello/object") 
+	@RequestMapping("/hello/object") 
 	public HelloObject helloObject() {
 		HelloObject obj = new HelloObject("Hello World!");
 		return obj;
