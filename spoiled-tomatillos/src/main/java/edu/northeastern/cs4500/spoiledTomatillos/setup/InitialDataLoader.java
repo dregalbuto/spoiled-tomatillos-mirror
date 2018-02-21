@@ -32,9 +32,6 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Autowired
     private PrivilegeRepository privilegeRepository;
   
-   // @Autowired
-    private PasswordEncoder passwordEncoder;
-  
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -85,14 +82,14 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     @Transactional
     private User createUserIfNotFound(String username, Role adminRole) {
     	
-    		User admin = userService.loadUserByUsername(username);
+    		User admin = userService.findByUsername(username);
     		if(admin == null) {
 	    		admin = new User();
 	    		admin.setFirstName("Test");
 	    		admin.setLastName("Test");
 	    		admin.setEmail("test@test.com");
 	    		admin.setUsername(username);
-		    admin.setPassword(passwordEncoder.encode("test"));
+		    admin.setPassword("test");
 	    		admin.setPassword("test");
 	    		admin.setRoles(Arrays.asList(adminRole));
 	    		admin.setEnabled(true);

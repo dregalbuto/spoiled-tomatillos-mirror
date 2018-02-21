@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.user;
+package edu.northeastern.cs4500.spoiledTomatillos.web;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
+import edu.northeastern.cs4500.spoiledTomatillos.web.UserController;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

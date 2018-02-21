@@ -38,7 +38,6 @@ public class Privilege {
 	          name = "privilege_id", referencedColumnName = "id"), 
 	        inverseJoinColumns = @JoinColumn(
 	          name = "role_id", referencedColumnName = "id"))
-	private Collection<Privilege> privileges;
     @JsonBackReference
     private Collection<Role> roles;
     

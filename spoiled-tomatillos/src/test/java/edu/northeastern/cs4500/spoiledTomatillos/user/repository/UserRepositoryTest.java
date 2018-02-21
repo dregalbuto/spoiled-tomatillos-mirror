@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.user;
+package edu.northeastern.cs4500.spoiledTomatillos.user.repository;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class UserRepositoryTest {
 		entityManager.persist(diana);
 		entityManager.flush();
 		
-		User found = (userRepository.findByUsername(diana.getUsername())).get(0);
+		User found = userRepository.findByUsername(diana.getUsername());
 		
 		assertEquals(found.getUsername(), diana.getUsername());
 	}
