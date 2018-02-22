@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
-import edu.northeastern.cs4500.spoiledTomatillos.user.repository.UserRepository;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -29,6 +28,16 @@ public class UserRepositoryTest {
 		User found = userRepository.findByUsername(diana.getUsername());
 		
 		assertEquals(found.getUsername(), diana.getUsername());
+	}
+	
+	@Test
+	public void whenFindByEmail_thenReturnUser() {
+		User diana = new User();
+		diana.setEmail("regalbuto.d@husky.neu.edu");
+		entityManager.persist(diana);
+		entityManager.flush();
+		User found = userRepository.findByEmail(diana.getEmail());
+		assertEquals(found.getEmail(), diana.getEmail());
 	}
 	
 }
