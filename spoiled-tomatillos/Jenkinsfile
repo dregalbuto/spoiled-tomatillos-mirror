@@ -22,8 +22,8 @@ pipeline {
     stage('SonarQube') {
       steps {
         withSonarQubeEnv('SonarQube') {
-          sh -f spoiled-tomatillos/pom.xml 'mvn clean install'
-          sh -f spoiled-tomatillos/pom.xml 'mvn sonar:sonar'
+          sh 'mvn -f spoiled-tomatillos/pom.xml clean install'
+          sh 'mvn -f spoiled-tomatillos/pom.xml sonar:sonar'
         }
       }
     }
