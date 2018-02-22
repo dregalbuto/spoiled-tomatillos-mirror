@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500;
+package edu.northeastern.cs4500.spoiledTomatillos.hello;
 
 import static org.junit.Assert.assertEquals;
 
