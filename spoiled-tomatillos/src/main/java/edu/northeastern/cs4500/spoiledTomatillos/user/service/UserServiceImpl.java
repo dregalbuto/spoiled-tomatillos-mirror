@@ -18,6 +18,10 @@ import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledTomatillos.user.repository.UserRepository;
 import edu.northeastern.cs4500.spoiledTomatillos.web.dto.UserRegistrationDto;
 
+/**
+ * Implementation of UserService with methods to work with Spring Security
+ * 
+ */
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired

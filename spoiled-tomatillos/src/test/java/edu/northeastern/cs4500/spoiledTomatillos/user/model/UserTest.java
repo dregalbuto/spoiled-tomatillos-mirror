@@ -8,6 +8,10 @@ import java.util.Collection;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Tests for the User class
+ *
+ */
 public class UserTest {
 	@Autowired
 	User u;

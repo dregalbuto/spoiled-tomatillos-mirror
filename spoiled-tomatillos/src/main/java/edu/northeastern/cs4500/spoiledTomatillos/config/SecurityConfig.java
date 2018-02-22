@@ -12,6 +12,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
 
+/**
+ * This class is for Spring Security configuration
+ * It also gives us a /login endpoint
+ *
+ */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired

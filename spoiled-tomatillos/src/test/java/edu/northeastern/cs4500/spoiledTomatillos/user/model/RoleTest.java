@@ -9,6 +9,10 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Tests for the Role class
+ *
+ */
 public class RoleTest {
 	@Autowired
 	private Role r;

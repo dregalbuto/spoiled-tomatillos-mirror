@@ -5,6 +5,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Tests for the Privilege class
+ *
+ */
 public class PrivilegeTest {
 	@Autowired
 	private Privilege p;
