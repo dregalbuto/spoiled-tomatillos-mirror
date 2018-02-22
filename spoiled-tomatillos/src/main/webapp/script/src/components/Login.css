@@ -1,0 +1,63 @@
+@charset "utf-8";
+/*------------------------------------*\
+    $MAIN
+\*------------------------------------*/
+ /*html {*/
+    /*background-color: #f6f9f9;*/
+    /*color: #95a4a9;
+    font: 12px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+/*}*/
+body {
+    margin: 10%;
+}
+
+.avatar {
+    float: left;
+    margin: 0 40px 20px 0;
+}
+.avatar img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 125px;
+}
+
+.content {
+    float: left;
+    width: 300px;
+}
+.title {
+    font-size: 48px;
+    font-weight: normal;
+    line-height: 1;
+}
+
+/*.twitter {*/
+    /*background-image: url(../img/twitter.png);*/
+    /*width: 20px;*/
+    /*height: 17px;*/
+/*}*/
+/*.facebook {*/
+    /*background-image: url(../img/facebook.png);*/
+    /*width: 10px;*/
+    /*height: 19px;*/
+/*}*/
+/*.googleplus {*/
+    /*background-image: url(../img/googleplus.png);*/
+    /*width: 21px;*/
+    /*height: 19px;*/
+/*}*/
+/*.dribbble {*/
+    /*background-image: url(../img/dribbble.png);*/
+    /*width: 21px;*/
+    /*height: 19px;*/
+/*}*/
+/*.instagram {*/
+    /*background-image: url(../img/instagram.png);*/
+    /*width: 20px;*/
+    /*height: 19px;*/
+/*}*/
+/*.flickr {*/
+    /*background-image: url(../img/flickr.png);*/
+    /*width: 20px;*/
+    /*height: 9px;*/
+/*}*/
