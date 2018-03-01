@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './Home.css'
 import { Link } from 'react-router-dom';
-import Login from './Login';
-import Signup from './Signup';
-import SearchBar from './SearchBar';
+import Login from './Login.js';
+import Signup from './Signup.js';
+import SearchBar from './SearchBar.js';
 
 class Movies extends Component {
 

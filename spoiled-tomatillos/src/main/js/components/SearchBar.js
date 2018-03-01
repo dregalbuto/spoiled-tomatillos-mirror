@@ -15,7 +15,7 @@ class SearchElement extends Component {
     super(props);
 
     this.state = {data:{}};
-    fetch("http://localhost:8080/api/movies/info?id=" + this.props.id)
+    fetch("/api/movies/info?id=" + this.props.id)
         .then(res=>res.json())
         .then(json=>this.setState({data:json}));
   }
@@ -85,7 +85,7 @@ class SearchBar extends Component {
     var s = this.searchBox.value;
     if (s != "") {
       var d = new Date();
-      fetch("http://localhost:8080/api/movies/search?s=" + s)
+      fetch("/api/movies/search?s=" + s)
           .then(res=>res.json())
           .then(json=>this.renderAnswer(json, d));
     } else {
@@ -103,7 +103,7 @@ class SearchBar extends Component {
   /**
    * Handling keyboard event on SearchBar.
    */
-  handleKeyPress = (e) => {
+  handleKeyPress(e) {
     if (e.key === 'Enter') {
       this.searchBackend();
       e.preventDefault();

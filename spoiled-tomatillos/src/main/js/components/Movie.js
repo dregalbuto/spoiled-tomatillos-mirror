@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Movie.css';
-import MovieCard from './MovieCard';
+import MovieCard from './MovieCard.js';
 
 
 class Movie extends Component {
