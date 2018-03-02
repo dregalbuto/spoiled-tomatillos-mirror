@@ -9,8 +9,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				echo "Building"
-				sh 'cd spoiled-tomatillos & mvn compile'
-				sh 'cd spoiled-tomatillos & mvn package'
+				sh 'mvn -f spoiled-tomatillos/pom.xml install'
 			}
 		}
 		stage('Test'){
@@ -19,14 +18,14 @@ pipeline {
 				sh 'mvn -f spoiled-tomatillos/pom.xml test'
 			}
 		}
-    stage('SonarQube') {
-      steps {
-        withSonarQubeEnv('SonarQube') {
-          sh 'mvn -f spoiled-tomatillos/pom.xml clean install'
-          sh 'mvn -f spoiled-tomatillos/pom.xml sonar:sonar'
-        }
-      }
-    }
+    	stage('SonarQube') {
+      		steps {
+        		withSonarQubeEnv('SonarQube') {
+          			sh 'mvn -f spoiled-tomatillos/pom.xml clean install'
+          			sh 'mvn -f spoiled-tomatillos/pom.xml sonar:sonar'
+        		}
+      		}
+    	}
     /* Problems with configuration where it is failing but is linked to someone
          else's project on sonarqube.
     stage('Quality') {
