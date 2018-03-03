@@ -9,8 +9,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				echo "Building"
-				sh 'cd spoiled-tomatillos && mvn compile'
-				sh 'cd spoiled-tomatillos && mvn package'
+				sh 'cd spoiled-tomatillos && mvn clean install'
 			}
 		}
 		stage('Test'){
