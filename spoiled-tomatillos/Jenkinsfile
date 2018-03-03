@@ -9,7 +9,10 @@ pipeline {
 		stage('Build') {
 			steps {
 				echo "Building"
-				sh 'mvn -f spoiled-tomatillos/pom.xml install'
+				dir("spoiled-tomatillos") {
+					sh 'mvn compile'
+					sh 'mvn package'
+				}
 			}
 		}
 		stage('Test'){
