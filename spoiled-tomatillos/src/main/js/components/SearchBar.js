@@ -5,6 +5,7 @@
 import Search from 'react-search';
 import ReactDOM from 'react-dom';
 import React, {Component, PropTypes} from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * Represents one result in list of results in SearchList.
@@ -28,7 +29,8 @@ class SearchElement extends Component {
     if (this.state.data.title == {}) {
       return null;
     }
-    return <li>{this.state.data.title}</li>
+    return <li><Link style={{"color":"inherit","text-decoration":"inherit",}}
+                     to={"/Movie/" + this.state.data.id}>{this.state.data.title}</Link></li>
   }
 }
 
@@ -50,7 +52,7 @@ class SearchList extends Component {
     const listItem = this.props.result.map((id) =>
       <SearchElement key={"keyofelementwithidof" + id} id={id} />
     );
-    return <ul>{listItem}</ul>;
+    return <ul>{listItem.slice(0, Math.min(10, listItem.length))}</ul>;
   }
 }
 
@@ -90,6 +92,7 @@ class SearchBar extends Component {
           .then(json=>this.renderAnswer(json, d));
     } else {
       this.setState({results: []});
+      this.date = new Date();
     }
   }
 
