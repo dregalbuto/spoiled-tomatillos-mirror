@@ -16,11 +16,6 @@ import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
 import edu.northeastern.cs4500.spoiledTomatillos.web.dto.UserRegistrationDto;
 
-/**
- * This controller is used on the registration page 
- * to create a new account from a registration form.
- *
- */
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
 @RequestMapping("/registration")

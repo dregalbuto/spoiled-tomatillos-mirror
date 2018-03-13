@@ -25,9 +25,6 @@ public class Privilege {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
  
-	/**
-	 * Name of this privilege
-	 */
     private String name;
  
     /**
