@@ -9,9 +9,13 @@ class Signup extends Component {
 	    this.state = { 
 	    		/* initial state */
 	    		email: '',
+	    		confirmemail:'',
+	    		first_name:'',
+	    		last_name: '',
 			username: '',
 			password: '',
-			passwordconfirm: ''};
+			passwordconfirm: ''
+			};
 	    this.onChange = this.onChange.bind(this);
 	    this.onSubmit = this.onSubmit.bind(this);
 	  }
@@ -57,7 +61,14 @@ class Signup extends Component {
 	onSubmit(e) {
 		e.preventDefault();
 		console.log(this.state);
-		var newUser = {email: this.state.email, username: this.state.username, password: this.state.password};
+		
+		var newUser = {
+				first_name: this.state.first_name, 
+				last_name: this.state.last_name,
+				email: this.state.email,
+				username: this.state.username, 
+				password: this.state.password
+				};
 	    this.onCreate(newUser);  
 	}
 
@@ -73,7 +84,22 @@ class Signup extends Component {
 					value={this.state.email} 
 					onChange={this.onChange} 
 				/>
+				
+				<input name = "confirmemail" placeholder = "Confirm Email" ref="confirmemail" type="text"
+					value={this.state.confirmemail} 
+					onChange={this.onChange} 
+				/>
 
+				<input name = "first_name" placeholder = "First Name" ref="first_name" type="text"
+					value={this.state.first_name}
+					onChange={this.onChange} 
+				/> 
+				
+				<input name = "last_name" placeholder = "Last Name" ref="last_name" type="text"
+					value={this.state.last_name}
+					onChange={this.onChange} 
+				/> 
+				
 				<input name = "username" placeholder = "Username" ref="username"
 					value={this.state.username}
 					onChange={this.onChange} 

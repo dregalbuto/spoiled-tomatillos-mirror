@@ -49,14 +49,14 @@ public class Role {
      *  (might get rid of privileges)
      */
 	
-	@ManyToMany
-	@JoinTable(
-	        name = "roles_privileges", 
-	        joinColumns = @JoinColumn(
-	          name = "role_id", referencedColumnName = "id"), 
-	        inverseJoinColumns = @JoinColumn(
-	          name = "privilege_id", referencedColumnName = "id"))
-	private Collection<Privilege> privileges;
+//	@ManyToMany
+//	@JoinTable(
+//	        name = "roles_privileges", 
+//	        joinColumns = @JoinColumn(
+//	          name = "role_id", referencedColumnName = "id"), 
+//	        inverseJoinColumns = @JoinColumn(
+//	          name = "privilege_id", referencedColumnName = "id"))
+//	private Collection<Privilege> privileges;
 	
 	/**
 	 * Default constructor
@@ -72,9 +72,9 @@ public class Role {
 	/**
 	 * @param privileges List of privileges for this role
 	 */
-	public void setPrivileges(Collection<Privilege> privileges) {
-		this.privileges = privileges;
-	}
+//	public void setPrivileges(Collection<Privilege> privileges) {
+//		this.privileges = privileges;
+//	}
 
 	/**
 	 * @return Name of this role
