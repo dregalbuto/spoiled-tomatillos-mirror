@@ -10,6 +10,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -20,6 +22,7 @@ import lombok.Data;
  */
 @Data
 @Entity(name="roles")
+@CrossOrigin(origins = "http://localhost:3000")
 public class Role {
 	/**
 	 * unique ID number for this role (used in database)

@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
@@ -20,6 +22,7 @@ import lombok.Data;
  */
 @Data
 @Entity(name="privileges")
+@CrossOrigin(origins = "http://localhost:3000")
 public class Privilege {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
