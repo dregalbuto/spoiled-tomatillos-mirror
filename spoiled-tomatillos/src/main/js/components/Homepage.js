@@ -15,6 +15,7 @@ class Movies extends Component {
     );
   }
 }
+
 class Celebs extends Component {
   render() {
     return(
@@ -55,8 +56,6 @@ class Homepage extends Component {
         })
       })
     }
-
-
   render() {
     return (
       <div className="Homepage">
@@ -66,8 +65,8 @@ class Homepage extends Component {
       <nav id="topNav" className="navbar navbar-fixed-top">
       <div className="container-fluid">
       <ul className="nav navbar-nav navbar-right">
-      <li><Link to="/Signup"><a><span className="glyphicon glyphicon-user"></span> Sign Up</a></Link></li>
-      <li> <Link to="/Login"><a><span className="glyphicon glyphicon-log-in"></span> Login</a></Link></li>
+      <li><Link to="/Signup"><span className="glyphicon glyphicon-user"></span> Sign Up</Link></li>
+      <li><Link to="/Login"><span className="glyphicon glyphicon-log-in"></span> Login</Link></li>
       </ul>
       </div>
       </nav>

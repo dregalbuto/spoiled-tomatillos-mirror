@@ -5,7 +5,7 @@ class Login extends Component{
   render() {
     return(
       <div className="Login">
-      <div class="container-fluid">
+      <div className="container-fluid">
       <h1>Login</h1>
       {/*
         <div class="alert alert-info">
@@ -23,14 +23,14 @@ class Login extends Component{
         invalid password
         </div> */}
         <a href= "/User"
-        class="btn btn-block btn-primary">Login</a>
+        className="btn btn-block btn-primary">Login</a>
 
-        <a href="/auth/google" class="btn btn-danger btn-block">
-        <span class="fa fa-google-plus"></span>
+        <a href="/auth/google" className="btn btn-danger btn-block">
+        <span className="fa fa-google-plus"></span>
         Google
         </a>
 
-        <a class="btn btn-success btn-block"
+        <a className="btn btn-success btn-block"
         href="/Signup">Register</a>
         </div>
         </div>
