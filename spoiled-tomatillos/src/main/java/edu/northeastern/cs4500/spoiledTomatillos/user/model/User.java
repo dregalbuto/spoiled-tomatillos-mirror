@@ -10,6 +10,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
@@ -19,6 +21,7 @@ import lombok.Data;
  */
 @Data
 @Entity(name="users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class User {
 
     @Id
