@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import './Login.css'
+import './Login.css';
+import FacebookLogin from 'react-facebook-login';
+
+const responseFacebook = (response) => {
+  console.log(response);
+}
 
 class Login extends Component{
   constructor(props) {
@@ -13,15 +18,12 @@ class Login extends Component{
   validateForm() {
     return this.state.username.length > 0 && this.state.password.length > 0;
   }
-  
+
   render() {
     return(
       <div className="Login">
       <div className="container-fluid">
       <h1>Login</h1>
-      {/*
-        <div class="alert alert-info">
-        </div>*/}
         <input
         type="text"
         floatingLabelText="username"
@@ -33,16 +35,17 @@ class Login extends Component{
         floatingLabelText="password"
         onChange = {(event, newValue) => this.setState({password:newValue})}
         placeholder="password"/>
-        {/*    <div class="alert alert-danger">
-        invalid password
-        </div> */}
         <a href= "/User"
         className="btn btn-block btn-primary">Login</a>
 
-        <a href="/auth/google" className="btn btn-danger btn-block">
-        <span className="fa fa-google-plus"></span>
-        Google
-        </a>
+        <FacebookLogin
+          appId="1229282497194175"
+          autoLoad
+          callback={responseFacebook}
+          render={renderProps => (
+            <button onClick={renderProps.onClick}>This is my custom FB button</button>
+          )}
+        />
 
         <a className="btn btn-success btn-block"
         href="/Signup">Register</a>
