@@ -2,6 +2,18 @@ import React, { Component } from 'react';
 import './Login.css'
 
 class Login extends Component{
+  constructor(props) {
+    super(props);
+    this.state={
+      username:"",
+      password:""
+    };
+  }
+
+  validateForm() {
+    return this.state.username.length > 0 && this.state.password.length > 0;
+  }
+  
   render() {
     return(
       <div className="Login">
@@ -12,12 +24,14 @@ class Login extends Component{
         </div>*/}
         <input
         type="text"
-        className="form-control"
+        floatingLabelText="username"
+        onChange = {(event, newValue) => this.setState({username:newValue})}
         placeholder="username"/>
 
         <input
         type="password"
-        className="form-control"
+        floatingLabelText="password"
+        onChange = {(event, newValue) => this.setState({password:newValue})}
         placeholder="password"/>
         {/*    <div class="alert alert-danger">
         invalid password
