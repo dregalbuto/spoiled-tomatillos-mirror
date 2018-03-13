@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import './Login.css';
 var _ = require('underscore');
 
@@ -15,6 +16,34 @@ class Signup extends Component {
 	    this.onSubmit = this.onSubmit.bind(this);
 	  }
 	
+	loadFromServer() {
+		fetch('http://localhost:8080/api/users') 
+	      .then((response) => response.json()) 
+	      .then((responseData) => { 
+	          this.setState({ 
+	              users: responseData._embedded.users, 
+	          }); 
+	      });     
+	}
+	
+	onCreate(newUser) {
+		fetch('http://localhost:8080/api/users', 
+			      {   method: 'POST',
+			          headers: {
+			            'Content-Type': 'application/json',
+			          },
+			          body: JSON.stringify(newUser)
+			      })
+			      .then( 
+			          res => this.loadFromServer()
+			      )
+			      .catch( err => console.error(err))
+	}
+	
+	componentDidMount() {
+		this.loadFromServer();
+	}
+	
 	onChange(e) {
 		this.setState({[e.target.name]: e.target.value });
 	}
@@ -28,6 +57,8 @@ class Signup extends Component {
 	onSubmit(e) {
 		e.preventDefault();
 		console.log(this.state);
+		var newUser = {email: this.state.email, username: this.state.username, password: this.state.password};
+	    this.onCreate(newUser);  
 	}
 
 	render() {
@@ -36,7 +67,7 @@ class Signup extends Component {
 				<div className="create_account_form">
 				<h1>Create account</h1>
 				<p>Create a user account in Spoiled Tomatillos</p>
-				<form onSubmit={this.onSubmit}>
+				<form onSubmit={this.onSubmit} >
 				
 				<input name = "email" placeholder = "Email" ref="email" type="text"
 					value={this.state.email} 
