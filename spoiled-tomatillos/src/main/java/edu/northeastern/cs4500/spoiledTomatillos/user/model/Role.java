@@ -40,7 +40,7 @@ public class Role {
 	/**
 	 *  collection of all users who have this role
 	 */
-	@JsonBackReference
+	
     @ManyToMany(mappedBy = "roles")
 	private Collection<User> users;
     
@@ -48,7 +48,7 @@ public class Role {
      *  collection of all privileges tied to this role
      *  (might get rid of privileges)
      */
-	@JsonManagedReference
+	
 	@ManyToMany
 	@JoinTable(
 	        name = "roles_privileges", 
