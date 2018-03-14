@@ -70,7 +70,8 @@ class Signup extends Component {
 				username: this.state.username, 
 				password: this.state.password
 				};
-	    this.onCreate(newUser);  
+	    this.onCreate(newUser); 
+	    
 	}
 
 	render() {
