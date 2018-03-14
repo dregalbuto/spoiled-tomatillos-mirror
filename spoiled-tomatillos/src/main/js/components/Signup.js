@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 var _ = require('underscore');
 import "./Signup.css";
 import {Form, Button, FormGroup, ControlLabel, FormControl, Col} from 'react-bootstrap'
+import { Redirect } from 'react-router'
 
 class Signup extends Component {
 	constructor(props) {
@@ -15,7 +16,8 @@ class Signup extends Component {
 	    		last_name: '',
 			username: '',
 			password: '',
-			passwordconfirm: ''
+			passwordconfirm: '',
+			fireRedirect: false
 			};
 	    this.onChange = this.onChange.bind(this);
 	    this.onSubmit = this.onSubmit.bind(this);
@@ -71,6 +73,7 @@ class Signup extends Component {
 				password: this.state.password
 				};
 	    this.onCreate(newUser); 
+	    this.setState({ fireRedirect: true })
 	    
 	}
 
@@ -180,6 +183,10 @@ class Signup extends Component {
 				
 			
 				</Form>
+				{this.state.fireRedirect && (
+				          <Redirect to="/Login"/>
+				        )}
+				
 				</div>
 				</div>
 		)
