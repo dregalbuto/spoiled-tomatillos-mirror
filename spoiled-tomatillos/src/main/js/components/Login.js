@@ -13,10 +13,27 @@ class Login extends Component{
       username:"",
       password:""
     };
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
-  validateForm() {
-    return this.state.username.length > 0 && this.state.password.length > 0;
+  handleClick(event){
+    event.preventDefault;
+
+    var apiBaseUrl = "http://localhost:8080/api/";
+    var self = this;
+
+    if(this.state.username.length <= 0 || this.state.password.length <= 0) {
+      alert("empty fields");
+      return;
+    }
+
+    post('http://localhost:8080/api/users',{
+      username:this.state.username,
+      password:this.state.password
+    })
+
+
   }
 
   render() {
@@ -35,8 +52,9 @@ class Login extends Component{
         floatingLabelText="password"
         onChange = {(event, newValue) => this.setState({password:newValue})}
         placeholder="password"/>
-        <a href= "/User"
-        className="btn btn-block btn-primary">Login</a>
+
+        <a className="btn btn-success btn-block" onClick={(event)=>this.handleClick(event)}
+        >Login</a>
 
         <FacebookLogin
           appId="1229282497194175"
