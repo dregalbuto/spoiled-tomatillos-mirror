@@ -26,13 +26,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/css/**",
                         "/img/**",
                         "/webjars/**",
-						"/api/movies/**").permitAll()
+						"/api/movies/**",
+						"/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
                     .loginPage("/login")
                         .permitAll()
             .and()
+            		.csrf().disable()
                 .logout()
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)

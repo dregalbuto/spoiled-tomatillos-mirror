@@ -1,16 +1,16 @@
 pipeline {
 	agent {
 		docker {
-			image 'maven:3-alpine'
+			image 'kdvolder/mvn-plus-npm'
 			args '-v /root/.m2:/root/.m2'
 		}
 	}
+	tools {nodejs "node"}
 	stages {
 		stage('Build') {
 			steps {
 				echo "Building"
-				sh 'mvn -f spoiled-tomatillos/pom.xml compile'
-				sh 'mvn -f spoiled-tomatillos/pom.xml package'
+				sh 'cd spoiled-tomatillos && mvn clean install'
 			}
 		}
 		stage('Test'){
@@ -19,14 +19,14 @@ pipeline {
 				sh 'mvn -f spoiled-tomatillos/pom.xml test'
 			}
 		}
-    stage('SonarQube') {
-      steps {
-        withSonarQubeEnv('SonarQube') {
-          sh 'mvn -f spoiled-tomatillos/pom.xml clean install'
-          sh 'mvn -f spoiled-tomatillos/pom.xml sonar:sonar'
-        }
-      }
-    }
+    	stage('SonarQube') {
+      		steps {
+        		withSonarQubeEnv('SonarQube') {
+          			sh 'mvn -f spoiled-tomatillos/pom.xml clean install'
+          			sh 'mvn -f spoiled-tomatillos/pom.xml sonar:sonar'
+        		}
+      		}
+    	}
     /* Problems with configuration where it is failing but is linked to someone
          else's project on sonarqube.
     stage('Quality') {

@@ -46,8 +46,8 @@ public class UserServiceImpl implements UserService {
 	
 	public User save(UserRegistrationDto registration){
         User user = new User();
-        user.setFirstName(registration.getFirstName());
-        user.setLastName(registration.getLastName());
+        user.setFirst_name(registration.getFirstName());
+        user.setLast_name(registration.getLastName());
         user.setEmail(registration.getEmail());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Arrays.asList(new Role("ROLE_USER")));
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public List<User> getAllUsers() {
-		return userRepository.findAll();
+		return (List<User>) userRepository.findAll();
 	}
 
 }
