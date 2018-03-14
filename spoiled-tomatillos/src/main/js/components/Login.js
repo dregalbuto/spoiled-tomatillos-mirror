@@ -31,6 +31,8 @@ class Login extends Component{
     post('http://localhost:8080/api/users',{
       username:this.state.username,
       password:this.state.password
+    }).then((res)=>{
+      
     })
 
 
