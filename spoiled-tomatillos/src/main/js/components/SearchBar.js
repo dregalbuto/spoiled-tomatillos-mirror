@@ -26,11 +26,11 @@ class SearchElement extends Component {
    * otherwise.
    */
   render() {
-    if (this.state.data.title == {}) {
+    if (this.state.data.title == {} || this.state.data.releaseDate == undefined) {
       return null;
     }
     return <li><Link style={{"color":"inherit","text-decoration":"inherit",}}
-                     to={"/Movie/" + this.state.data.id}>{this.state.data.title}</Link></li>
+                     to={"/Movie/" + this.state.data.id}>{this.state.data.title} {"(" + this.state.data.releaseDate + ")"}</Link></li>
   }
 }
 
