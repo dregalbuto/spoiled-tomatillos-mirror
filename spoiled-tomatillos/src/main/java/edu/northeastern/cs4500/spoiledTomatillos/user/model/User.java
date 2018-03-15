@@ -55,7 +55,7 @@ public class User {
 	}
 	
 	public void setToken_expired(boolean tokenExpired) {
-		this.token_xpired = tokenExpired;
+		this.token_expired = tokenExpired;
 	}
 	
 	public void setFirstName(String firstName) {
