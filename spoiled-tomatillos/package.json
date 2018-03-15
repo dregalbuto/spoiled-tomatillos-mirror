@@ -22,9 +22,9 @@
   "dependencies": {
     "atom": "^1.1.0",
     "react": "^15.6.2",
-    "react-bootstrap-form": "^0.1.4-beta6",
     "react-bootstrap": "^0.32.1",
-    "react-dom": "^15.3.2",
+    "react-bootstrap-form": "^0.1.4-beta6",
+    "react-dom": "^15.6.2",
     "react-facebook-login": "^4.0.1",
     "react-router-dom": "^4.2.2",
     "react-search": "^2.0.5",

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-
 import { Link } from 'react-router-dom';
 import Login from './Login.js';
 import Signup from './Signup.js';
 import SearchBar from './SearchBar.js';
-import {Navbar, NavItem, NavDropdown, MenuItem, Nav} from 'react-bootstrap'
+import {Navbar, NavItem, NavDropdown, MenuItem, Nav} from 'react-bootstrap';
 
 class Movies extends Component {
 
@@ -59,14 +58,11 @@ class Homepage extends Component {
     }
   render() {
     return (
-      <div className="Homepage">
-
-      <header className="header">
-
+    		<div className="Homepage">
       <Navbar>
   <Navbar.Header>
     <Navbar.Brand>
-      <a href="#home">YYYYESSSSSSSSSSSSSSSSSSSSSSSSs</a>
+      <a href="#home">NONONONO</a>
     </Navbar.Brand>
   </Navbar.Header>
   <Nav>
@@ -85,6 +81,10 @@ class Homepage extends Component {
     </NavDropdown>
   </Nav>
 </Navbar>
+
+
+
+<header className="header">
 
       <nav id="topNav" className="navbar navbar-fixed-top">
       <div className="container-fluid">

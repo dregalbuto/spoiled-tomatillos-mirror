@@ -8,6 +8,8 @@ import Signup from './components/Signup.js';
 import Homepage from './components/Homepage.js';
 import UserHome from './components/Home.js';
 import Movie from './components/Movie.js';
+import 'bootstrap/dist/css/bootstrap.css';
+
 
 ReactDOM.render(
   <BrowserRouter>
