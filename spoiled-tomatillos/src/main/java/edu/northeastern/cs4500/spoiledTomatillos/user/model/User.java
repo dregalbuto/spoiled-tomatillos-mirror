@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.spoiledTomatillos.user.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +25,7 @@ import lombok.ToString;
 /**
  * Class for a user of Spoiled Tomatillos
  */
+
 @Data
 @Entity(name="users")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -37,6 +39,8 @@ public class User {
 	private String email;
 	private String username;
 	private String password;
+	private boolean enabled;
+	private boolean token_expired;
 
 	public void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -67,7 +71,7 @@ public class User {
           name = "role_id", referencedColumnName = "id")) 
 	
     private Collection<Role> roles;
-	
+
 	public User() {
 		
 	}	
