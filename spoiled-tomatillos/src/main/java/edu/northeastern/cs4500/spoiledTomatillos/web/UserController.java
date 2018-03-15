@@ -26,11 +26,9 @@ public class UserController {
 		return "Foo";
 	}
 	
-	@RequestMapping(value = "/username/{username}", method = RequestMethod.GET)
+	@RequestMapping(value = "/username/{username:.+}")
 	User getUserByUsername(@PathVariable String username) {
 		return this.userService.findByUsername(username);
 	}
-	
-	
 	
 }
