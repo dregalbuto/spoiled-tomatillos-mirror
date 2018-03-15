@@ -16,15 +16,15 @@ public class UserTest {
 	@Test
 	public void testFirstName() {
 		u = new User();
-		u.setFirstName("test");
-		assertEquals("test", u.getFirstName());
+		u.setFirst_name("test");
+		assertEquals("test", u.getFirst_name());
 	}
 	
 	@Test
 	public void testLastName() {
 		u = new User();
-		u.setLastName("test");
-		assertEquals("test", u.getLastName());
+		u.setLast_name("test");
+		assertEquals("test", u.getLast_name());
 	}
 	
 	@Test
@@ -46,6 +46,8 @@ public class UserTest {
 		u = new User();
 		u.setPassword("superSecret");
 		assertTrue(BCrypt.checkpw("superSecret", u.getPassword()));
+		assertEquals(false,
+				u.getPassword().contentEquals("superSecret"));
 	}
 	
 	@Test
@@ -60,10 +62,10 @@ public class UserTest {
 	@Test
 	public void testTokenExpired() {
 		u = new User();
-		u.setTokenExpired(true);
-		assertTrue(u.isTokenExpired());
-		u.setTokenExpired(false);
-		assertFalse(u.isTokenExpired());
+		u.setToken_expired(true);
+		assertTrue(u.isToken_expired());
+		u.setToken_expired(false);
+		assertFalse(u.isToken_expired());
 	}
 	
 	@Test
