@@ -1,9 +1,13 @@
 package edu.northeastern.cs4500.spoiledTomatillos.data.movies;
 
+import edu.northeastern.cs4500.spoiledTomatillos.data.reviews.Review;
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 
 /**
  * Class for a movie in Spoiled Tomatillos.
@@ -24,6 +28,12 @@ public class Movie {
     private String imgURL;
     private String source;
     // list of reviews
+
+    /**
+     * A user has many reviews.
+     */
+    @OneToMany(mappedBy = "movies", cascade = CascadeType.ALL)
+    private Collection<Review> reviews;
 
     public Movie() {
         // Empty constructor
