@@ -22,7 +22,7 @@ import lombok.Data;
  */
 @Data
 @Entity(name="privileges")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http:localhost:3000")
 public class Privilege {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)

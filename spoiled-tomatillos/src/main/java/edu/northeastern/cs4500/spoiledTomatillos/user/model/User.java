@@ -12,20 +12,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * Class for a user of Spoiled Tomatillos
  */
 
+@Data
 @Entity(name="users")
 @CrossOrigin(origins = "http://localhost:3000")
 public class User {
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -36,59 +41,6 @@ public class User {
 	private String password;
 	private boolean enabled;
 	private boolean token_expired;
-	
-	public void setFirstName(String firstName) {
-		this.first_name = firstName;
-	}
-	
-	public String getFirstName() {
-		return first_name;
-	}
-	
-	public void setLastName(String lastName) {
-		this.last_name = lastName;
-	}
-	
-	public String getLastName() {
-		return last_name;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	
-	public void setTokenExpired(boolean tokenExpired) {
-		this.token_expired = tokenExpired;
-	}
-	
-	public boolean isTokenExpired() {
-		return token_expired;
-	}
-	
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-	
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
 
 	public void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -119,15 +71,7 @@ public class User {
           name = "role_id", referencedColumnName = "id")) 
 	
     private Collection<Role> roles;
-	
-	public void setRoles(Collection<Role> roles) {
-		this.roles = roles;
-	}
-	
-	public Collection<Role> getRoles() {
-		return roles;
-	}
-	
+
 	public User() {
 		
 	}	
