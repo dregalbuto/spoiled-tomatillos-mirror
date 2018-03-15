@@ -22,6 +22,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
     private UserService userService;
 	
+	/**
+	 * keep track of token data in database to provide RememberMe 
+	 * functionality
+	 * **/
+	 
+	@Autowired
+    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService);
+        auth.authenticationProvider(authenticationProvider());
+    }
+	
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -31,13 +42,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/css/**",
                         "/img/**",
                         "/webjars/**",
-						"/api/movies/**").permitAll()
+						"/api/movies/**",
+						"/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
                     .loginPage("/login")
                         .permitAll()
             .and()
+            		.csrf().disable()
                 .logout()
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
