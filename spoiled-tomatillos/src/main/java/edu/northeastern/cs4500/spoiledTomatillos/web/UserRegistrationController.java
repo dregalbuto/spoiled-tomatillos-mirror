@@ -11,19 +11,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.WebRequest;
 
 import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
 import edu.northeastern.cs4500.spoiledTomatillos.web.dto.UserRegistrationDto;
 
-/**
- * This controller is used on the registration page 
- * to create a new account from a registration form.
- *
- */
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
-@RequestMapping("/registration")
+@RequestMapping("/signup")
 public class UserRegistrationController {
 
     @Autowired
@@ -36,9 +33,9 @@ public class UserRegistrationController {
 
     @GetMapping
     public String showRegistrationForm(Model model) {
-        return "registration";
+        return "signup";
     }
-
+    
     @PostMapping
     public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto, 
                                       BindingResult result){

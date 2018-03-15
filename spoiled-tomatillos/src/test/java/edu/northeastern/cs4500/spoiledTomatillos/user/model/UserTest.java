@@ -7,11 +7,8 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
-/**
- * Tests for the User class
- *
- */
 public class UserTest {
 	@Autowired
 	User u;
@@ -48,6 +45,7 @@ public class UserTest {
 	public void testPassword() {
 		u = new User();
 		u.setPassword("superSecret");
+		assertTrue(BCrypt.checkpw("superSecret", u.getPassword()));
 		assertEquals(false,
 				u.getPassword().contentEquals("superSecret"));
 	}

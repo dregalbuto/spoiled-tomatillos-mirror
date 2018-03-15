@@ -41,7 +41,39 @@ public class User {
 	private String password;
 	private boolean enabled;
 	private boolean token_expired;
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	public boolean isToken_expired() {
+		return token_expired;
+	}
+	
+	public void setToken_expired(boolean tokenExpired) {
+		this.token_expired = tokenExpired;
+	}
+	
+	public void setFirstName(String firstName) {
+		this.first_name = firstName;
+	}
+	
+	public String getFirstName() {
+		return first_name;
+	}
 
+	public void setLastName(String lastName) {
+		this.last_name = lastName;
+	}
+	
+	public String getLastName() {
+		return last_name;
+	}
+	
 	public void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
 	}
