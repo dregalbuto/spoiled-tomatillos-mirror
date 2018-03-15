@@ -7,12 +7,7 @@ class Login extends Component{
     super(props);
     this.state={
       username:'',
-      password:'',
-      fb_username:'',
-      fb_firstname:'',
-      fb_lastname:'',
-      fb_email:'',
-      fb_password:''
+      password:''
     };
     this.handleClick = this.handleClick.bind(this);
 
