@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Tue Feb 13 17:23:57 EST 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-0161-9144-7077-0000167f9288 
-on database directory memory:/Users/Peter/git/team-24-spring18/spoiled-tomatillos/testdb with class loader sun.misc.Launcher$AppClassLoader@1d44bcfa 
-Loaded from file:/Users/Peter/.m2/repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
+Wed Mar 14 12:55:46 EDT 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-0162-2570-68c8-00000391ee90 
+on database directory memory:/Users/erinzhang/team-24-spring18/spoiled-tomatillos/testdb with class loader sun.misc.Launcher$AppClassLoader@15db9742 
+Loaded from file:/Users/erinzhang/.m2/repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_72-b15
-user.dir=/Users/Peter/git/team-24-spring18/spoiled-tomatillos
+java.runtime.version=1.8.0_161-b12
+user.dir=/Users/erinzhang/team-24-spring18/spoiled-tomatillos
 os.name=Mac OS X
 os.arch=x86_64
-os.version=10.11.6
+os.version=10.13.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

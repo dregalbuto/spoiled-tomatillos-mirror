@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.spoiledTomatillos.user.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,20 +11,26 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * Class for a user of Spoiled Tomatillos
  */
+
 @Data
 @Entity(name="users")
 @CrossOrigin(origins = "http://localhost:3000")
 public class User {
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -32,7 +39,25 @@ public class User {
 	private String email;
 	private String username;
 	private String password;
+	private boolean enabled;
+	private boolean token_expired;
 
+	public void setPassword(String password) {
+		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+	}
+	
+	private boolean checkPass(String plainPassword, String hashedPassword) {
+		boolean out = false;
+		if (BCrypt.checkpw(plainPassword, hashedPassword)) {
+			out = true;
+			System.out.println("The password matches.");
+		}
+		else {
+			out = false;
+			System.out.println("The password does not match.");
+		}
+		return out;
+	}
 	
 	/**
 	 * All of the roles this user has
@@ -46,7 +71,7 @@ public class User {
           name = "role_id", referencedColumnName = "id")) 
 	
     private Collection<Role> roles;
-	
+
 	public User() {
 		
 	}	
@@ -60,7 +85,7 @@ public class User {
 		this.last_name = last_name;
 		this.email = email;
 		this.username = username;
-		this.password = password;
+		this.setPassword(password);
 	}
 	
 }
