@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.spoiledTomatillos.user.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,8 @@ public class User {
 	private String email;
 	private String username;
 	private String password;
+	private boolean enabled;
+	private boolean token_expired;
 	
 	public void setFirstName(String firstName) {
 		this.first_name = firstName;
@@ -70,6 +73,22 @@ public class User {
 		return password;
 	}
 	
+	public void setTokenExpired(boolean tokenExpired) {
+		this.token_expired = tokenExpired;
+	}
+	
+	public boolean isTokenExpired() {
+		return token_expired;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
 
 	public void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -100,6 +119,14 @@ public class User {
           name = "role_id", referencedColumnName = "id")) 
 	
     private Collection<Role> roles;
+	
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
+	}
+	
+	public Collection<Role> getRoles() {
+		return roles;
+	}
 	
 	public User() {
 		
