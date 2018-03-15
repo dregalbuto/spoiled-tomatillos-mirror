@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class UserTest {
 	@Autowired
@@ -44,7 +45,7 @@ public class UserTest {
 	public void testPassword() {
 		u = new User();
 		u.setPassword("superSecret");
-		assertEquals("superSecret", u.getPassword());
+		assertEquals(BCrypt.hashpw("superSecret", BCrypt.gensalt()), u.getPassword());
 	}
 	
 	@Test
