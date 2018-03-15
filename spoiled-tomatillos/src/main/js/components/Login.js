@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import './Login.css';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
-
-const responseFacebook = (response) => {
-  console.log(response);
-}
-
 class Login extends Component{
   constructor(props) {
     super(props);
