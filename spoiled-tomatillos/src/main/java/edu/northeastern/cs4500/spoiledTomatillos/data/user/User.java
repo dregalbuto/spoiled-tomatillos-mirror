@@ -2,14 +2,9 @@ package edu.northeastern.cs4500.spoiledTomatillos.data.user;
 
 import java.util.Collection;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 
+import edu.northeastern.cs4500.spoiledTomatillos.data.reviews.Review;
 import lombok.Data;
 
 /**
@@ -41,7 +36,13 @@ public class User {
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
     private Collection<Role> roles;
-	
+
+	/**
+	 * A user has many reviews.
+	 */
+	@OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+	private Collection<Review> reviews;
+
 	public User() {
 		
 	}	
