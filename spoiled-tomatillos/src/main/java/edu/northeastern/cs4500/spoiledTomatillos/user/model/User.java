@@ -11,11 +11,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * Class for a user of Spoiled Tomatillos
@@ -24,7 +28,7 @@ import lombok.Data;
 @Entity(name="users")
 @CrossOrigin(origins = "http://localhost:3000")
 public class User {
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
