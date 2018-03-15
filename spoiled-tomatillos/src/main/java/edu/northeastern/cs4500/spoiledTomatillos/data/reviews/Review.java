@@ -27,14 +27,14 @@ public class Review {
      */
     @ManyToOne
     @JoinColumn(name="movies")
-    private Collection<Movie> movie;
+    private Movie movie;
 
     /**
      * A user has many reviews.
      */
     @ManyToOne
     @JoinColumn(name="users")
-    private Collection<User> user;
+    private User user;
 
     public Review() {
 
