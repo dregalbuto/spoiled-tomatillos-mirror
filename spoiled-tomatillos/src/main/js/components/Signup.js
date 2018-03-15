@@ -5,10 +5,7 @@ import "./Signup.css";
 import {Form, Button, FormGroup, ControlLabel, FormControl, Col} from 'react-bootstrap'
 import { Redirect } from 'react-router'
 
-class Signup extends Component {
-	
-	
-	
+class Signup extends Component {	
 	constructor(props) {
 	    super(props);
 	    this.state = { 
