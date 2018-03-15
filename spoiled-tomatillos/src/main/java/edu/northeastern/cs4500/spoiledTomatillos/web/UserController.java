@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
 
-/**
- * This controller serves User-specific API endpoints for the web app
- *
- */
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/user")
@@ -30,11 +26,9 @@ public class UserController {
 		return "Foo";
 	}
 	
-	@RequestMapping(value = "/username/{username}", method = RequestMethod.GET)
+	@RequestMapping(value = "/username/{username:.+}")
 	User getUserByUsername(@PathVariable String username) {
 		return this.userService.findByUsername(username);
 	}
-	
-	
 	
 }
