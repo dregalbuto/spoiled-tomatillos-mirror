@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import Login from './Login.js';
 import Signup from './Signup.js';
 import SearchBar from './SearchBar.js';
-import {Navbar, NavItem, NavDropdown, MenuItem, Nav} from 'react-bootstrap';
+import {Navbar, NavItem, NavDropdown, MenuItem, Nav, Carousel} from 'react-bootstrap';
+import MoviePoster from './../images/showman.jpg';
+import MoviePoster2 from './../images/breakfase.png';
 
 class Movies extends Component {
 
@@ -116,12 +118,23 @@ class Homepage extends Component {
 				</p>
 				</header>
 				<SearchBar />
-
-				<div className = "movie-items">
-				{
-					<img src = {this.state.data} alt="movie-item"></img>
-				}
-				</div>
+				
+				<Carousel>
+				  <Carousel.Item>
+				    <img width={450} height={250} alt="450x250" src={this.state.data} />
+				   
+				  </Carousel.Item>
+				  <Carousel.Item>
+				    <img width={450} height={250} alt="450x250" src={MoviePoster} />
+				    
+				  </Carousel.Item>
+				  <Carousel.Item>
+				    <img width={450} height={250} alt="450x250" src={MoviePoster2} />
+				   
+				  </Carousel.Item>
+				</Carousel>
+				
+				
 				<Movies />
 				<Celebs />
 				<Reviews/>

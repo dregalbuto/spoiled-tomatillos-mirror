@@ -13,6 +13,14 @@ module.exports = {
     },
     module: {
         loaders: [
+        		{
+        	      test: /\.(?:png|jpg|svg)$/,
+        	      loader: 'url-loader',
+        	      query: {
+        	        // Inline images smaller than 10kb as data URIs
+        	        limit: 10000
+        	      }
+        		},
             {
             		test: /.jsx?$/,
                 exclude: /(node_modules)/,
