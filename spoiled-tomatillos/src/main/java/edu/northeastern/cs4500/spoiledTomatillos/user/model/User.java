@@ -40,7 +40,7 @@ public class User {
 	private String username;
 	private String password;
 	private boolean enabled;
-	private boolean tokenExpired;
+	private boolean token_expired;
 	
 	public boolean isEnabled() {
 		return enabled;
@@ -50,11 +50,11 @@ public class User {
 		this.enabled = enabled;
 	}
 	
-	public boolean isTokenExpired() {
-		return tokenExpired;
+	public boolean isToken_expired() {
+		return token_expired;
 	}
 	
-	public void setTokenExpired(boolean tokenExpired) {
+	public void setToken_expired(boolean tokenExpired) {
 		this.tokenExpired = tokenExpired;
 	}
 	
