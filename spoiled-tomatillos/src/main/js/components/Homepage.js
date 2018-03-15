@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import './Home.css'
+
 import { Link } from 'react-router-dom';
 import Login from './Login.js';
 import Signup from './Signup.js';
 import SearchBar from './SearchBar.js';
+import {Navbar, NavItem, NavDropdown, MenuItem, Nav} from 'react-bootstrap'
 
 class Movies extends Component {
 
@@ -61,6 +62,29 @@ class Homepage extends Component {
       <div className="Homepage">
 
       <header className="header">
+
+      <Navbar>
+  <Navbar.Header>
+    <Navbar.Brand>
+      <a href="#home">YYYYESSSSSSSSSSSSSSSSSSSSSSSSs</a>
+    </Navbar.Brand>
+  </Navbar.Header>
+  <Nav>
+    <NavItem eventKey={1} href="#">
+      Link
+    </NavItem>
+    <NavItem eventKey={2} href="#">
+      Link
+    </NavItem>
+    <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+      <MenuItem eventKey={3.1}>Action</MenuItem>
+      <MenuItem eventKey={3.2}>Another action</MenuItem>
+      <MenuItem eventKey={3.3}>Something else here</MenuItem>
+      <MenuItem divider />
+      <MenuItem eventKey={3.4}>Separated link</MenuItem>
+    </NavDropdown>
+  </Nav>
+</Navbar>
 
       <nav id="topNav" className="navbar navbar-fixed-top">
       <div className="container-fluid">
