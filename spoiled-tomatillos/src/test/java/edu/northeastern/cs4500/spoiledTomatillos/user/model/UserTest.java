@@ -45,7 +45,7 @@ public class UserTest {
 	public void testPassword() {
 		u = new User();
 		u.setPassword("superSecret");
-		assertEquals(BCrypt.hashpw("superSecret", BCrypt.gensalt()), u.getPassword());
+		assertTrue(BCrypt.checkpw("superSecret", u.getPassword()));
 	}
 	
 	@Test
