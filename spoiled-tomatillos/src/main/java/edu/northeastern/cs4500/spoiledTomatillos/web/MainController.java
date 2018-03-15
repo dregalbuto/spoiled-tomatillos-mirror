@@ -1,3 +1,4 @@
+/*
 package edu.northeastern.cs4500.spoiledTomatillos.web;
 
 import org.springframework.stereotype.Controller;
@@ -22,3 +23,4 @@ public class MainController {
         return "user/index";
     }
 }
+*/
