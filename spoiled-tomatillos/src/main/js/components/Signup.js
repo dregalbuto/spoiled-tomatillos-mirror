@@ -6,6 +6,9 @@ import {Form, Button, FormGroup, ControlLabel, FormControl, Col} from 'react-boo
 import { Redirect } from 'react-router'
 
 class Signup extends Component {
+	
+	
+	
 	constructor(props) {
 	    super(props);
 	    this.state = { 
