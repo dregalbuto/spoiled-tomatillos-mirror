@@ -40,5 +40,28 @@ public class Review {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setId(int identification) {
+        this.id = identification;
+    }
+
+    public void setText(String reviewText) {
+        this.text = reviewText;
+    }
+
+    public void setRating(int reviewRating) {
+        this.rating = reviewRating;
+    }
 
 }
