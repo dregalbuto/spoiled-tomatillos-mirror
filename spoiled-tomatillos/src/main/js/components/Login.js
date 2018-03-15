@@ -7,12 +7,7 @@ class Login extends Component{
     super(props);
     this.state={
       username:'',
-      password:'',
-      fb_username:'',
-      fb_firstname:'',
-      fb_lastname:'',
-      fb_email:'',
-      fb_password:''
+      password:''
     };
     this.handleClick = this.handleClick.bind(this);
 
@@ -25,12 +20,11 @@ class Login extends Component{
     var newUser = {
       first_name: response.name,
       last_name: response.name,
-      email: response.name + "@facebook.com",
+      email: response.id + "@facebook.com",
       username: response.name,
       password: response.id
     };
-
-
+    
     fetch('/api/users',
     {   method: 'POST',
       headers: {
