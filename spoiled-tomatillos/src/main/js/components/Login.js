@@ -1,40 +1,77 @@
 import React, { Component } from 'react';
 import './Login.css';
-import FacebookLogin from 'react-facebook-login';
-import {Form, Button, FormGroup, ControlLabel, FormControl, Col} from 'react-bootstrap'
-
-const responseFacebook = (response) => {
-  console.log(response);
-}
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 class Login extends Component{
   constructor(props) {
     super(props);
     this.state={
-      username:"",
-      password:""
+      username:'',
+      password:'',
+      fb_username:'',
+      fb_firstname:'',
+      fb_lastname:'',
+      fb_email:'',
+      fb_password:''
     };
+    this.handleClick = this.handleClick.bind(this);
 
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onSubmit(event){
+  responseFacebook(response){
+    console.log("FACEBOOK RESPONSE");
+    console.log(response);
+
+    var newUser = {
+      first_name: response.name,
+      last_name: response.name,
+      email: response.name + "@facebook.com",
+      username: response.name,
+      password: response.id
+    };
+
+
+    fetch('/api/users',
+    {   method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newUser)
+    })
+    .then( () => {
+        console.log("POST success");
+        window.location = "/Home";
+      }
+    )
+    .catch( err => console.error(err))
+  }
+
+  handleClick(event){
     event.preventDefault;
+    var apiBaseUrl = "/api/";
+    var name = this.username.value;
+    var pass = this.password.value;
 
-    var apiBaseUrl = "http://localhost:8080/api/";
-    var self = this;
-
-    if(this.state.username.length <= 0 || this.state.password.length <= 0) {
+    if(name.length <= 0 || pass.length <= 0) {
       alert("empty fields");
       return;
     }
 
-    post('http://localhost:8080/api/users',{
-      username:this.state.username,
-      password:this.state.password
-    })
-
-
+    fetch('/api/users',{
+      username:name,
+      password:pass
+    }).then((res)=>{
+      return res.text();
+    }).then((tex) => {
+      var data = JSON.parse(tex);
+      var users = data["_embedded"].users;
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].username == name) {
+          window.location = "/Home";
+        }
+      }
+      alert("User not found");
+    });
   }
 
   render() {
@@ -42,66 +79,41 @@ class Login extends Component{
       <div className="Login">
       <div className="container-fluid">
       <h1>Login</h1>
-      
-      <Form horizontal onSubmit={this.onSubmit}>
-      
-      
-      <FormGroup controlId="formHorizontalUsername">
-		 <Col componentClass={ControlLabel} sm={2}>
-	      Username
-	    </Col>
-	      <Col sm={10}>
-	      <input
-	        type="text"
-	        floatingLabelText="username"
-	        onChange = {(event, newValue) => this.setState({username:newValue})}
-	        placeholder="username"/>
-	    </Col>
-		</FormGroup>
-		
-		
-		<FormGroup controlId="formHorizontalPassword">
-		 <Col componentClass={ControlLabel} sm={2}>
-		 Password
-		 </Col>
-	      <Col sm={10}>
-	      <input
-	        type="password"
-	        floatingLabelText="password"
-	        onChange = {(event, newValue) => this.setState({password:newValue})}
-	        placeholder="password"/>
-		</Col>
-		</FormGroup>
-       
-		
-		<FormGroup>
-		 <Col smOffset={2} sm={10}>
-		<Button type="submit" className="button button_wide">
-		Login
-		</Button>
-		</Col>
-		</FormGroup>
-	
+      <input
+      type="text"
+      className="username"
+      ref= {(input) => {this.username = input;}}
+      onChange = {(event, newValue) => this.setState((prev, props) =>
+      {prev.username = newValue; return prev;})}
+      placeholder="username"/>
 
-        <FacebookLogin
-          appId="1229282497194175"
-          autoLoad
-          callback={responseFacebook}
-          render={renderProps => (
-            <button onClick={renderProps.onClick}>This is my custom FB button</button>
-          )}
-        />
+      <input
+      type="password"
+      className="password"
+      ref= {(input) => {this.password = input;}}
+      onChange = {(event, newValue) => this.setState((prev, props) =>
+      {prev.password = newValue; console.log(newValue); return prev;})}
+      placeholder="password"/>
 
-        <a className="btn btn-success btn-block"
-        href="/Signup">Register</a>
-        
-        </Form>
-        </div>
-        </div>
+      <a className="btn btn-success btn-block" onClick={(event)=>this.handleClick(event)}
+      >Login</a>
 
-      
-      );
-    }
+      <FacebookLogin
+      appId="1229282497194175"
+      autoLoad
+      callback={this.responseFacebook}
+      render={renderProps => (
+        <button onClick={renderProps.onClick}>Login with facebook</button>
+      )}
+      />
+
+      <a className="btn btn-success btn-block"
+      href="/Signup">Register</a>
+    </div>
+    </div>
+
+    );
   }
+}
 
-  export default Login;
+export default Login;
