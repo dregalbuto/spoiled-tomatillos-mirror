@@ -26,11 +26,11 @@ class SearchElement extends Component {
    * otherwise.
    */
   render() {
-    if (this.state.data.title == {}) {
+    if (this.state.data.title == {} || this.state.data.releaseDate == undefined) {
       return null;
     }
     return <li><Link style={{"color":"inherit","text-decoration":"inherit",}}
-                     to={"/Movie/" + this.state.data.id}>{this.state.data.title}</Link></li>
+                     to={"/Movie/" + this.state.data.id}>{this.state.data.title} {"(" + this.state.data.releaseDate + ")"}</Link></li>
   }
 }
 
@@ -108,8 +108,8 @@ class SearchBar extends Component {
    */
   handleKeyPress(e) {
     if (e.key === 'Enter') {
-      this.searchBackend();
       e.preventDefault();
+      this.searchBackend();
     }
   }
 
@@ -123,7 +123,7 @@ class SearchBar extends Component {
         <form /*action='/search'*/ id='search-form' method='get' target='_top'>
           <input id='search-text' name='s' ref={(input) => {this.searchBox = input;}}
             placeholder='Search' type='text' onInput={this.handleType} onKeyPress={this.handleKeyPress}/>
-          <button id='search-button' /*type='submit'*/>
+          <button id='search-button' type='button'>
             <span>Search</span>
           </button>
         </form>
