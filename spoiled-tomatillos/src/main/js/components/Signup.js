@@ -27,6 +27,7 @@ class Signup extends Component {
 	  }
 
 	loadFromServer() {
+		// TODO use /signup instead of directly posting to /api/users
 		fetch('/api/users')
 	      .then((response) => response.json())
 	      .then((responseData) => {
@@ -86,7 +87,7 @@ class Signup extends Component {
 				<div className="create_account_screen">
 				<div className="create_account_form">
 				<h1>Create account</h1>
-				<p>Create a user account in Spoiled Tomatillos</p>
+				<p>Create a user account on Spoiled Tomatillos</p>
 
 				<Form horizontal onSubmit={this.onSubmit}>
 
@@ -110,8 +111,8 @@ class Signup extends Component {
 			    </Col>
 			      <Col sm={10}>
 				<input name = "confirmemail" placeholder = "Confirm Email" ref="confirmemail" type="text"
-					value={this.state.confirmemail}
-					onChange={this.onChange}
+					value="{this.state.confirmemail}"
+					onChange="{this.onChange}"
 				/>
 				</Col>
 				</FormGroup>
