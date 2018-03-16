@@ -40,8 +40,6 @@ class Login extends Component{
     .catch( err => console.error(err))
   }
 
-  // TODO move all logic to backend
-  
   handleClick(event){
     event.preventDefault;
     var apiBaseUrl = "/api/";
