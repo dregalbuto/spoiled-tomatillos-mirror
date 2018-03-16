@@ -42,36 +42,34 @@ public class User {
 	private boolean enabled;
 	private boolean token_expired;
 	
-	public boolean isEnabled() {
-		return enabled;
+	/**
+	 * All of the roles this user has
+	 */
+	@ManyToMany
+    @JoinTable( 
+        name = "users_roles", 
+        joinColumns = @JoinColumn(
+          name = "user_id", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(
+          name = "role_id", referencedColumnName = "id")) 
+    private Collection<Role> roles;
+	
+	public User() {
+		
 	}
 	
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-	
-	public boolean isToken_expired() {
-		return token_expired;
-	}
-	
-	public void setToken_expired(boolean tokenExpired) {
-		this.token_expired = tokenExpired;
-	}
-	
-	public void setFirstName(String firstName) {
+	/*
+	 May add roles into constructor later
+	 */
+	public User(String firstName, String lastName, String email, 
+			String username, String password) {
 		this.first_name = firstName;
-	}
-	
-	public String getFirstName() {
-		return first_name;
-	}
-
-	public void setLastName(String lastName) {
 		this.last_name = lastName;
-	}
-	
-	public String getLastName() {
-		return last_name;
+		this.email = email;
+		this.username = username;
+		this.setPassword(password);
+		this.enabled = true;
+		this.token_expired = false;
 	}
 	
 	public void setPassword(String password) {
@@ -89,35 +87,6 @@ public class User {
 			System.out.println("The password does not match.");
 		}
 		return out;
-	}
-	
-	/**
-	 * All of the roles this user has
-	 */
-	@ManyToMany
-    @JoinTable( 
-        name = "users_roles", 
-        joinColumns = @JoinColumn(
-          name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "role_id", referencedColumnName = "id")) 
-	
-    private Collection<Role> roles;
-
-	public User() {
-		
-	}	
-	
-	/*
-	 May add roles into constructor later
-	 */
-	public User(String first_name, String last_name, String email, 
-			String username, String password) {
-		this.first_name = first_name;
-		this.last_name = last_name;
-		this.email = email;
-		this.username = username;
-		this.setPassword(password);
 	}
 	
 }
