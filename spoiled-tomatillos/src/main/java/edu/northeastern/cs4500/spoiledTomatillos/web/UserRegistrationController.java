@@ -1,26 +1,22 @@
 package edu.northeastern.cs4500.spoiledTomatillos.web;
-
-import javax.validation.Valid;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.RestController;
 
 import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
 import edu.northeastern.cs4500.spoiledTomatillos.web.dto.UserRegistrationDto;
 
-@CrossOrigin(origins = "http://localhost:3000")
-@Controller
-@RequestMapping("/signup")
+/**
+ * Controller that performs actions on user signup.
+ */
+@RestController
 public class UserRegistrationController {
 
     @Autowired
@@ -31,25 +27,27 @@ public class UserRegistrationController {
         return new UserRegistrationDto();
     }
 
-    @GetMapping
-    public String showRegistrationForm(Model model) {
-        return "signup";
-    }
-    
-    @PostMapping
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto, 
-                                      BindingResult result){
+    @RequestMapping(path="api/signup", method=RequestMethod.POST)
+    public ResponseEntity<JSONObject> registerUserAccount(@RequestBody JSONObject request) throws JSONException{
 
-        User existing = userService.findByEmail(userDto.getEmail());
+        User existing = userService.findByEmail(request.get("email").toString());
         if (existing != null){
-            result.rejectValue("email", null, "There is already an account registered with that email");
+            //result.rejectValue("email", null, "There is already an account registered with that email");
+            return ResponseEntity.badRequest().body(
+            		new JSONObject().put("message", "user with this email already exists"));
         }
 
-        if (result.hasErrors()){
-            return "registration";
-        }
-
-        userService.save(userDto);
-        return "redirect:/registration?success";
+        String firstname = request.get("first_name").toString();
+        String lastname = request.get("last_name").toString();
+        String email = request.get("email").toString();
+        String username = request.get("username").toString();
+        String password = request.get("password").toString();
+        
+        	User newuser = new User(firstname, lastname, email, username, password);
+        	userService.save(newuser);
+        	
+        	return ResponseEntity.ok().body(
+        			new JSONObject().put("message", "user created"));	
+ 
     }
 }
