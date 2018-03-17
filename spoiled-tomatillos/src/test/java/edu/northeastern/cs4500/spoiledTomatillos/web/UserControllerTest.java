@@ -1,47 +1,41 @@
 package edu.northeastern.cs4500.spoiledTomatillos.web;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
-import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
-import edu.northeastern.cs4500.spoiledTomatillos.web.UserController;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class UserControllerTest {
+	
 	@Autowired
-    private MockMvc mvc;
+    private MockMvc mockMvc;
  
-    @MockBean
-    private UserService service;
- 
-    // write test cases here
     @Test
-    public void givenUsers_whenGetUsers_thenReturnJsonArray()
-      throws Exception {
-         
-        User diana = new User();
-        diana.setUsername("diana");
-        
-        List<User> allUsers = Arrays.asList(diana);
-     
-       // given(service.getAllUsers()).willReturn(allUsers);
-     
-       
+    public void info() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/user/username/erin.z"))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .string("{\"id\":1000000,"
+                        		+"\"first_name\":\"erin\"," 
+                        		+"\"last_name\":\"zhang\","
+                             + "\"email\":\"erinzhang@husky.neu.edu\","
+                             +"\"username\":\"erin.z\","
+                             +"\"password\":\"password\"," 
+                             +"\"enabled\":true," 
+                             +"\"token_expired\":false,"
+                             + "\"roles\":[]}"));
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/user/username/someRandomUser"))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(""));
     }
 }
