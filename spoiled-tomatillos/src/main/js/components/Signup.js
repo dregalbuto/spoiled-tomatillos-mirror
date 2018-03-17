@@ -31,13 +31,23 @@ class Signup extends Component {
 	  }
 
 	loadFromServer() {
-		fetch('/api/users')
-	      .then((response) => response.json())
-	      .then((responseData) => {
-	          this.setState({
-	              users: responseData._embedded.users,
-	          });
-	      });
+		fetch('api/signup')
+		.then(response => response.json())
+		.then(data => {   		
+			this.setState({
+				first_name: data.first_name,
+				last_name: data.last_name,
+				email: data.email,
+				username: data.username,
+				password: data.password
+			});
+		},
+		(error : any) => {
+		    let errorData = error.json().errors.children;
+		    for(let key in errorData) {
+		      errorData[key].errors ? this.formErrors[key]=errorData[key].errors[0] : this.formErrors[key] = null
+		    }
+		});
 	}
 
 	onCreate(newUser) {
