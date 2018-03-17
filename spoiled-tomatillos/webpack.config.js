@@ -13,16 +13,8 @@ module.exports = {
     },
     module: {
         loaders: [
-        		{
-        	      test: /\.(?:png|jpg|svg)$/,
-        	      loader: 'url-loader',
-        	      query: {
-        	        // Inline images smaller than 10kb as data URIs
-        	        limit: 10000
-        	      }
-        		},
             {
-            		test: /.jsx?$/,
+            	test: /.jsx?$/,
                 exclude: /(node_modules)/,
                 loader: 'babel-loader',
                 query: {
@@ -33,15 +25,11 @@ module.exports = {
                 test: /\.css$/,
                 exclude: /(node_modules)/,
                 loader: 'style-loader!css-loader'
-            }, 
-            {
+            }, {
                 test: /\.svg$/,
                 exclude: /(node_modules)/,
                 loader: 'svg-loader'
             }
-        ]//,
-        //resolve: {
-        //    extensions: ['', '.js', '.jsx', '.css']
-        //}
+        ]
     }
 };

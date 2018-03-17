@@ -122,8 +122,9 @@ class SearchBar extends Component {
       <div id='search-box'>
         <form /*action='/search'*/ id='search-form' method='get' target='_top'>
           <input id='search-text' name='s' ref={(input) => {this.searchBox = input;}}
+            style={{"color":"black",}}
             placeholder='Search' type='text' onInput={this.handleType} onKeyPress={this.handleKeyPress}/>
-          <button id='search-button' type='button'>
+          <button id='search-button' style={{"color":"black",}} type='button'>
             <span>Search</span>
           </button>
         </form>
