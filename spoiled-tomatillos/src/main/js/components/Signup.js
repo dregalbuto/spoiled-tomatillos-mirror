@@ -30,39 +30,39 @@ class Signup extends Component {
 	    this.onSubmit = this.onSubmit.bind(this);
 	  }
 
-	loadFromServer() {
-		fetch('api/signup')
-		.then(response => response.json())
-		.then(data => {   		
-			this.setState({
-				first_name: data.first_name,
-				last_name: data.last_name,
-				email: data.email,
-				username: data.username,
-				password: data.password
-			});
-		},
-		(error : any) => {
-		    let errorData = error.json().errors.children;
-		    for(let key in errorData) {
-		      errorData[key].errors ? this.formErrors[key]=errorData[key].errors[0] : this.formErrors[key] = null
-		    }
-		});
-	}
+//	loadFromServer() {
+//		fetch('api/signup')
+//		.then(response => response.json())
+//		.then(data => {   		
+//			this.setState({
+//				first_name: data.first_name,
+//				last_name: data.last_name,
+//				email: data.email,
+//				username: data.username,
+//				password: data.password
+//			});
+//		},
+//		(error : any) => {
+//		    let errorData = error.json().errors.children;
+//		    for(let key in errorData) {
+//		      errorData[key].errors ? this.formErrors[key]=errorData[key].errors[0] : this.formErrors[key] = null
+//		    }
+//		});
+//	}
 
-	onCreate(newUser) {
-		fetch('api/users',
-			      {   method: 'POST',
-			          headers: {
-			            'Content-Type': 'application/json',
-			          },
-			          body: JSON.stringify(newUser)
-			      })
-			      .then(
-			          res => this.loadFromServer()
-			      )
-			      .catch( err => console.error(err))
-	}
+//	onCreate(newUser) {
+//		fetch('/api/users',
+//			      {   method: 'POST',
+//			          headers: {
+//			            'Content-Type': 'application/json',
+//			          },
+//			          body: JSON.stringify(newUser)
+//			      })
+//			      .then(
+//			          res => this.loadFromServer()
+//			      )
+//			      .catch( err => console.error(err))
+//	}
 
 	componentDidMount() {
 		this.loadFromServer();
@@ -121,6 +121,8 @@ class Signup extends Component {
 		e.preventDefault();
 		console.log(this.state);
 
+		var url = '/api/signup';
+		
 		var newUser = {
 				first_name: this.state.first_name,
 				last_name: this.state.last_name,
@@ -128,8 +130,34 @@ class Signup extends Component {
 				username: this.state.username,
 				password: this.state.password
 				};
-	    this.onCreate(newUser);
+//	    this.onCreate(newUser);
+		
 	    this.setState({ fireRedirect: true })
+	   
+	    fetch(url, {
+	    		method: 'POST',
+	    		headers: {
+	    			'Accept': 'application/json',
+	    			'Content-Type': 'application/json',
+	    		},
+	    		body: JSON.stringify({
+	    			newUser
+	    		})
+	    })
+	    .then(response => response.json())
+		.then(data => {   	
+			// redirect to user home page with /user/ as path name TODO
+			//sessionStorage.setItem('userEmail', data.email);
+			console.log(data);
+
+		},
+		(error : any) => {
+		    let errorData = error.json().errors.children;
+		    for(let key in errorData) {
+		      errorData[key].errors ? this.formErrors[key]=errorData[key].errors[0] : this.formErrors[key] = null
+		    }
+		});
+
 
 	}
 
@@ -159,7 +187,7 @@ class Signup extends Component {
 			    </Col>
 				</FormGroup>
 
-
+				
 				 <FormGroup controlId="formHorizontalConfirmEmail">
 				 <Col componentClass={ControlLabel} sm={2}>
 			      Confirm Email

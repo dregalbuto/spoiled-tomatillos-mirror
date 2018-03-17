@@ -23,13 +23,14 @@ public class UserRegistrationController {
     private UserService userService;
 
     @ModelAttribute("user")
-    public UserRegistrationDto userRegistrationDto() {
+     public UserRegistrationDto userRegistrationDto() {
         return new UserRegistrationDto();
     }
 
-    @RequestMapping(path="api/signup", method=RequestMethod.POST)
+    @RequestMapping(path="/api/signup", method=RequestMethod.POST)
     public ResponseEntity<JSONObject> registerUserAccount(@RequestBody JSONObject request) throws JSONException{
 
+    	System.out.println("DEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUDEG  - email" +request);
         User existing = userService.findByEmail(request.get("email").toString());
         if (existing != null){
             //result.rejectValue("email", null, "There is already an account registered with that email");

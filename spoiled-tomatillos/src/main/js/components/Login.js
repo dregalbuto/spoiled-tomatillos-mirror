@@ -11,7 +11,6 @@ class Login extends Component{
       password:''
     };
     this.handleClick = this.handleClick.bind(this);
-
   }
 
   responseFacebook(response){
