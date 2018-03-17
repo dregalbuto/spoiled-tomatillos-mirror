@@ -44,6 +44,13 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByUsername(username);
 	}
 	
+	/**
+	 * called by UserRegistration controller to save a user to db
+	 * */
+	public void save(User user) {
+		userRepository.save(user);
+	}
+	
 	public User save(UserRegistrationDto registration){
         User user = new User();
         user.setFirst_name(registration.getFirstName());
@@ -51,6 +58,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(registration.getEmail());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Arrays.asList(new Role("ROLE_USER")));
+
         return userRepository.save(user);
     }
 	

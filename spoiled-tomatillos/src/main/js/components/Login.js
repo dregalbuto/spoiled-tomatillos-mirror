@@ -11,7 +11,6 @@ class Login extends Component{
       password:''
     };
     this.handleClick = this.handleClick.bind(this);
-
   }
 
   responseFacebook(response){
@@ -161,11 +160,13 @@ const styles = {
 };
 
 const smallMargin = {
-		margin:'10px'
+		margin:'10px',
+		text: 'black'
 };
 
 const margin = {
-		margin:'25px'
+		margin:'25px',
+		color: 'black'
 };
 
 const fbStyle = {

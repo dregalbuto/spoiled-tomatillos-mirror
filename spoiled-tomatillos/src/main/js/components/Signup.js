@@ -18,55 +18,111 @@ class Signup extends Component {
 			username: '',
 			password: '',
 			passwordconfirm: '',
-			fireRedirect: false
+			fireRedirect: false,
+			formErrors: {email: '', password: '', confirmemail:'', passwordconfirm:''},
+		    emailValid: false,
+		    passwordValid: false,
+		    confirmEmailValid: false,
+			confirmPasswordValid: false,
+		    formValid: false
 			};
 	    this.onChange = this.onChange.bind(this);
 	    this.onSubmit = this.onSubmit.bind(this);
 	  }
 
-	loadFromServer() {
-		fetch('/api/users')
-	      .then((response) => response.json())
-	      .then((responseData) => {
-	          this.setState({
-	              users: responseData._embedded.users,
-	          });
-	      });
-	}
+//	loadFromServer() {
+//		fetch('api/signup')
+//		.then(response => response.json())
+//		.then(data => {   		
+//			this.setState({
+//				first_name: data.first_name,
+//				last_name: data.last_name,
+//				email: data.email,
+//				username: data.username,
+//				password: data.password
+//			});
+//		},
+//		(error : any) => {
+//		    let errorData = error.json().errors.children;
+//		    for(let key in errorData) {
+//		      errorData[key].errors ? this.formErrors[key]=errorData[key].errors[0] : this.formErrors[key] = null
+//		    }
+//		});
+//	}
 
-	onCreate(newUser) {
-		fetch('api/users',
-			      {   method: 'POST',
-			          headers: {
-			            'Content-Type': 'application/json',
-			          },
-			          body: JSON.stringify(newUser)
-			      })
-			      .then(
-			          res => this.loadFromServer()
-			      )
-			      .catch( err => console.error(err))
-	}
+//	onCreate(newUser) {
+//		fetch('/api/users',
+//			      {   method: 'POST',
+//			          headers: {
+//			            'Content-Type': 'application/json',
+//			          },
+//			          body: JSON.stringify(newUser)
+//			      })
+//			      .then(
+//			          res => this.loadFromServer()
+//			      )
+//			      .catch( err => console.error(err))
+//	}
 
 	componentDidMount() {
 		this.loadFromServer();
 	}
 
 	onChange(e) {
-		this.setState({[e.target.name]: e.target.value });
+//		this.setState({[e.target.name]: e.target.value });
+		const name = e.target.name;
+		const value = e.target.value;
+		this.setState({[name]: value}, 
+                () => { this.validateField(name, value) });
 	}
+	
+	validateField(fieldName, value) {
+		  let fieldValidationErrors = this.state.formErrors;
+		  let emailValid = this.state.emailValid;
+		  let passwordValid = this.state.passwordValid;
+		  let confirmEmailValid = this.state.confirmEmailValid;
+		  let confirmPasswordValid = this.state.confirmPasswordValid;
 
-	validateEmail(event) {
-		// regex from http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		return re.test(event);
-	}
+		  switch(fieldName) {
+		    case 'email':
+		      emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+		      fieldValidationErrors.email = emailValid ? '' : ' is invalid';
+		      break;
+		    case 'password':
+		      passwordValid = value.length >= 6;
+		      fieldValidationErrors.password = passwordValid ? '': ' is too short';
+		      break;
+		    case 'confirmemail':
+		    	  confirmEmailValid = (value == this.state.email);
+		    	  fieldValidationErrors.confirmEmail = confirmEmailValid ? '': 'please enter the same email twice';
+		    	  break;
+		    case 'passwordconfirm':
+		    	  confirmPasswordValid = (value == this.state.password);
+		    	  fieldValidationErrors.confirmPassword = confirmPasswordValid ? '': 'password different from the first one';
+		    	  break;
+		    default:
+		      break;
+		  }
+		  this.setState({formErrors: fieldValidationErrors,
+		                  emailValid: emailValid,
+		                  passwordValid: passwordValid,
+		                  confirmEmailValid: confirmEmailValid,
+		                  confirmPasswordValid: confirmPasswordValid
+		                }, this.validateForm);
+		}
 
+		validateForm() {
+		  this.setState({formValid: this.state.emailValid && this.state.passwordValid
+			  && this.state.confirmEmailValid && this.state.confirmPasswordValid});
+		}
+		
 
 	onSubmit(e) {
 		e.preventDefault();
 		console.log(this.state);
 
+		var url = '/api/signup';
+		
 		var newUser = {
 				first_name: this.state.first_name,
 				last_name: this.state.last_name,
@@ -74,8 +130,34 @@ class Signup extends Component {
 				username: this.state.username,
 				password: this.state.password
 				};
-	    this.onCreate(newUser);
+//	    this.onCreate(newUser);
+		
 	    this.setState({ fireRedirect: true })
+	   
+	    fetch(url, {
+	    		method: 'POST',
+	    		headers: {
+	    			'Accept': 'application/json',
+	    			'Content-Type': 'application/json',
+	    		},
+	    		body: JSON.stringify({
+	    			newUser
+	    		})
+	    })
+	    .then(response => response.json())
+		.then(data => {   	
+			// redirect to user home page with /user/ as path name TODO
+			//sessionStorage.setItem('userEmail', data.email);
+			console.log(data);
+
+		},
+		(error : any) => {
+		    let errorData = error.json().errors.children;
+		    for(let key in errorData) {
+		      errorData[key].errors ? this.formErrors[key]=errorData[key].errors[0] : this.formErrors[key] = null
+		    }
+		});
+
 
 	}
 
@@ -88,7 +170,10 @@ class Signup extends Component {
 
 				<Form horizontal onSubmit={this.onSubmit}>
 
-
+				<div className="panel panel-default" style={errorBox}>
+				 <FormErrors formErrors={this.state.formErrors} />
+				</div>
+				 
 				<FormGroup controlId="formHorizontalEmail">
 				 <Col componentClass={ControlLabel} sm={2}>
 			      Email
@@ -102,7 +187,7 @@ class Signup extends Component {
 			    </Col>
 				</FormGroup>
 
-
+				
 				 <FormGroup controlId="formHorizontalConfirmEmail">
 				 <Col componentClass={ControlLabel} sm={2}>
 			      Confirm Email
@@ -184,7 +269,8 @@ class Signup extends Component {
 
 				<FormGroup>
 				 <Col smOffset={2} sm={10}>
-				<Button type="submit" className="button button_wide">
+				<Button type="submit" className="button button_wide"
+					disabled={!this.state.formValid}>
 				CREATE ACCOUNT
 				</Button>
 				</Col>
@@ -206,5 +292,24 @@ const inputBox = {
 		color: 'black',
 		fontSize: '13px'
 };
+
+const errorBox = {
+		color: 'black',
+		fontSize: '15px'
+};
+
+
+export const FormErrors = ({formErrors}) =>
+<div className='formErrors'>
+  {Object.keys(formErrors).map((fieldName, i) => {
+    if(formErrors[fieldName].length > 0){
+      return (
+        <p key={i}>{fieldName} {formErrors[fieldName]}</p>
+      )        
+    } else {
+      return '';
+    }
+  })}
+</div>
 
 export default Signup;
