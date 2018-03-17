@@ -7,8 +7,6 @@ import { Redirect } from 'react-router'
 
 class Signup extends Component {
 
-
-
 	constructor(props) {
 	    super(props);
 	    this.state = {
@@ -99,6 +97,7 @@ class Signup extends Component {
 			      <input name = "email" placeholder = "Email" ref="email" type="text"
 						value={this.state.email}
 						onChange={this.onChange}
+			      		style={inputBox}
 					/>
 			    </Col>
 				</FormGroup>
@@ -112,6 +111,7 @@ class Signup extends Component {
 				<input name = "confirmemail" placeholder = "Confirm Email" ref="confirmemail" type="text"
 					value={this.state.confirmemail}
 					onChange={this.onChange}
+					style={inputBox}
 				/>
 				</Col>
 				</FormGroup>
@@ -124,6 +124,7 @@ class Signup extends Component {
 				<input name = "first_name" placeholder = "First Name" ref="first_name" type="text"
 					value={this.state.first_name}
 					onChange={this.onChange}
+				style={inputBox}
 				/>
 				</Col>
 				</FormGroup>
@@ -136,6 +137,7 @@ class Signup extends Component {
 				<input name = "last_name" placeholder = "Last Name" ref="last_name" type="text"
 					value={this.state.last_name}
 					onChange={this.onChange}
+				style={inputBox}
 				/>
 				</Col>
 				</FormGroup>
@@ -149,6 +151,7 @@ class Signup extends Component {
 				<input name = "username" placeholder = "Username" ref="username"
 					value={this.state.username}
 					onChange={this.onChange}
+				style={inputBox}
 				/>
 				</Col>
 				</FormGroup>
@@ -161,6 +164,7 @@ class Signup extends Component {
 				<input name= "password" placeholder = "Password" type="password"
 					ref="password" value={this.state.passsword}
 					onChange={this.onChange}
+				style={inputBox}
 				/>
 				</Col>
 				</FormGroup>
@@ -173,6 +177,7 @@ class Signup extends Component {
 				<input name = "passwordconfirm" ref="passwordconfirm" placeholder = "Confirm Password"
 					type="password" value={this.state.passwordconfirm}
 					onChange={this.onChange}
+				style={inputBox}
 				/>
 				</Col>
 				</FormGroup>
@@ -196,5 +201,10 @@ class Signup extends Component {
 		)
 	}
 }
+
+const inputBox = {
+		color: 'black',
+		fontSize: '13px'
+};
 
 export default Signup;

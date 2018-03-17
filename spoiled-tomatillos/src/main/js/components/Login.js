@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Login.css';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import {Button} from 'react-bootstrap'
 
 class Login extends Component{
   constructor(props) {
@@ -73,6 +74,8 @@ class Login extends Component{
       <div className="Login">
       <div className="container-fluid">
       <h1>Login</h1>
+      
+      <div style={margin} className="input-group">
       <input
       type="text"
       className="username"
@@ -81,6 +84,9 @@ class Login extends Component{
       {prev.username = newValue; return prev;})}
       placeholder="username"/>
 
+    	  </div>
+      
+      <div style={margin} className="input-group">
       <input
       type="password"
       className="password"
@@ -89,25 +95,83 @@ class Login extends Component{
       {prev.password = newValue; console.log(newValue); return prev;})}
       placeholder="password"/>
 
-      <a className="btn btn-success btn-block" onClick={(event)=>this.handleClick(event)}
-      >Login</a>
+    	  </div>
+      
+      <div className="input-group">
+      <div className="checkbox">
+      <label>
+        <input id="login-remember" type="checkbox" name="remember" value="1"/> Remember me
+      
+        </label>
+    </div>
+    </div>
+    
+    <div style={smallMargin} className="form-group">
+    <div className="col-sm-12 controls">
+    
+    <Button 
+    		bsStyle="primary"
+    		onClick={(event)=>this.handleClick(event)}
+    bsSize="large">Login</Button>
 
-      <FacebookLogin
-      appId="1229282497194175"
-      autoLoad
-      callback={this.responseFacebook}
-      render={renderProps => (
-        <button onClick={renderProps.onClick}>Login with facebook</button>
-      )}
-      />
+    
 
-      <a className="btn btn-success btn-block"
-      href="/Signup">Register</a>
+    <FacebookLogin
+    appId="1229282497194175"
+    autoLoad
+    callback={this.responseFacebook}
+    render={renderProps => (
+      <Button bsStyle="info"
+    	  style={fbStyle}
+      bsSize="large"
+      onClick={renderProps.onClick}>Login with facebook</Button>
+    )}
+    />
+    
+    </div>
+    </div>
+      
+     
+    <div className="form-group">
+    <div className="col-md-12 control">
+        <div style={styles}>
+            Don't have an account?
+                
+            <Button 
+        		bsStyle="primary"
+        			href="/Signup"
+        bsSize="large">Sign up here</Button>
+
+        
+        </div>
+    </div>
+</div>    
+     
     </div>
     </div>
 
     );
   }
 }
+
+const styles = {
+		borderWidth: '1px solid#888',
+		paddingTop:'15px',
+		fontSize:'85%'
+};
+
+const smallMargin = {
+		margin:'10px'
+};
+
+const margin = {
+		margin:'25px'
+};
+
+const fbStyle = {
+		color: 'white',
+		textAlign: 'center',
+		fontSize: '18px'
+};
 
 export default Login;
