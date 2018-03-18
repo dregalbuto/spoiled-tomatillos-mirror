@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.movies;
+package edu.northeastern.cs4500.spoiledTomatillos.movies;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.movies.omdb;
+package edu.northeastern.cs4500.spoiledTomatillos.movies.omdb;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

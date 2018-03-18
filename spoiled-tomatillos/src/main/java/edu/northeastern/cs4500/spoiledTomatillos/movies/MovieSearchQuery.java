@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.movies;
+package edu.northeastern.cs4500.spoiledTomatillos.movies;
 
 import lombok.Data;
 import lombok.NonNull;

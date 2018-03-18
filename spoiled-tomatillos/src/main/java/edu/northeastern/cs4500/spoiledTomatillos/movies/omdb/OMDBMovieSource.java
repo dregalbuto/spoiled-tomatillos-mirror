@@ -1,8 +1,8 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.movies.omdb;
+package edu.northeastern.cs4500.spoiledTomatillos.movies.omdb;
 
-import edu.northeastern.cs4500.spoiledTomatillos.data.movies.ExternalMovieSource;
-import edu.northeastern.cs4500.spoiledTomatillos.data.movies.Movie;
-import edu.northeastern.cs4500.spoiledTomatillos.data.movies.MovieSearchQuery;
+import edu.northeastern.cs4500.spoiledTomatillos.movies.ExternalMovieSource;
+import edu.northeastern.cs4500.spoiledTomatillos.movies.Movie;
+import edu.northeastern.cs4500.spoiledTomatillos.movies.MovieSearchQuery;
 
 import org.springframework.web.client.RestTemplate;
 

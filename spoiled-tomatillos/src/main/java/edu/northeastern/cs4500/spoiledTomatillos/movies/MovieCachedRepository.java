@@ -1,6 +1,6 @@
-package edu.northeastern.cs4500.spoiledTomatillos.data.movies;
+package edu.northeastern.cs4500.spoiledTomatillos.movies;
 
-import edu.northeastern.cs4500.spoiledTomatillos.data.movies.omdb.OMDBMovieSource;
+import edu.northeastern.cs4500.spoiledTomatillos.movies.omdb.OMDBMovieSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
