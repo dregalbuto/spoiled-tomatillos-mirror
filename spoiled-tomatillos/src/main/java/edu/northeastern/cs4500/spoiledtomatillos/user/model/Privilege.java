@@ -2,13 +2,7 @@ package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 
 import java.util.Collection;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -35,7 +29,7 @@ public class Privilege {
     /**
      * All of the roles that have this privilege
      */
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
 	        name = "roles_privileges", 
 	        joinColumns = @JoinColumn(

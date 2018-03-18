@@ -4,23 +4,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Data;
 
 /**
  * Class for a user of Spoiled Tomatillos
@@ -60,7 +57,7 @@ public class User {
 	/**
 	 * All of the roles this user has
 	 */
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
     @JoinTable( 
         name = "users_roles", 
         joinColumns = @JoinColumn(
@@ -69,7 +66,12 @@ public class User {
           name = "role_id", referencedColumnName = "id"))
     @JsonProperty(value = "roles")
     private Collection<Role> roles;
-	
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonProperty(value = "reviews")
+	private Collection<Review> reviews;
+
 	public User() {
 		// Empty constructor for user.
 	}

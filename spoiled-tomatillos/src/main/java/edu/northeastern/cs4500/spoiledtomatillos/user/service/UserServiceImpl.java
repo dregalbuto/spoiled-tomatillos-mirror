@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 	 * called by UserRegistration controller to save a user to db
      */
 	public void save(User user) {
-		userRepository.save(user);
+		userRepository.saveAndFlush(user);
 	}
 	
 	@Override

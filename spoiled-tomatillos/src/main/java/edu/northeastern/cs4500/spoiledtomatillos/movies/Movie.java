@@ -1,5 +1,6 @@
 package edu.northeastern.cs4500.spoiledtomatillos.movies;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import lombok.Data;
 
@@ -32,6 +33,7 @@ public class Movie {
     /**
      * A user has many reviews.
      */
+    @JsonManagedReference
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private Collection<Review> reviews;
 

@@ -24,18 +24,18 @@ public class ReactControllerTest {
     @Test
     public void index() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/"))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void movie() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Movie/tt0000001"))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void bundle() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/built/bundle.js"))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

@@ -35,8 +35,8 @@ public class UserController {
 	}
 
 	/**
-	 * Get the user with given username.
-	 * @param username
+	 * Get the user with given id.
+	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = "/id/{id:.+}")
@@ -71,8 +71,10 @@ public class UserController {
         }
 
         try {
+            String token = user.getToken(password);
+            this.userService.save(user);
             return ResponseEntity.ok().body(
-                    new JSONObject().put("message", "logged in").put("token", user.getToken(password)).toString());
+                    new JSONObject().put("message", "logged in").put("token", token).toString());
         } catch (IllegalAccessException e) {
             return ResponseEntity.badRequest().body(
                     new JSONObject().put("message",
@@ -84,7 +86,7 @@ public class UserController {
 	/**
 	 * Takes in a JSON object with {first_name, last_name, email, username,
 	 * password} and create a new user
-	 * @param request JSON with {first_name, last_name, email, username, password}
+	 * @param strRequest JSON with {first_name, last_name, email, username, password}
 	 * @return
 	 * @throws JSONException
 	 */
