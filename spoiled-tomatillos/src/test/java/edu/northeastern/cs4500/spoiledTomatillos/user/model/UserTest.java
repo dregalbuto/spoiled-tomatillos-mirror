@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,12 @@ public class UserTest {
 	
 	@Test
 	public void testPassword() {
-		u = new User();
-		u.setPassword("superSecret");
-		assertTrue(BCrypt.checkpw("superSecret", u.getPassword()));
-		assertEquals(false,
-				u.getPassword().contentEquals("superSecret"));
+		u = new User("test_first", "test_last", "test@test",
+                "test_name", "superSecret");
+        assertTrue(u.checkPassword("superSecret"));
+        assertTrue(!u.checkPassword(""));
+        assertTrue(!u.checkPassword(null));
+        assertTrue(!u.checkPassword("not the right password"));
 	}
 	
 	@Test
@@ -60,12 +62,34 @@ public class UserTest {
 	}
 	
 	@Test
-	public void testTokenExpired() {
-		u = new User();
-		u.setToken_expired(true);
-		assertTrue(u.isToken_expired());
-		u.setToken_expired(false);
-		assertFalse(u.isToken_expired());
+	public void testToken() throws IllegalAccessException {
+	    Date d = new Date();
+        u = new User("test_first", "test_last", "test@test",
+                "test_name", "superSecret");
+        boolean err = false;
+        try {
+            u.getToken("wrong");
+        } catch (IllegalAccessException ex) {
+            err = true;
+        }
+        assertTrue(err);
+        assertFalse(u.validToken("wrong"));
+		u.setTokenExpired();
+        err = false;
+		try {
+            u.getToken("wrong");
+        } catch (IllegalAccessException ex) {
+		    err = true;
+        }
+        assertTrue(err);
+        err = false;
+        assertFalse(u.validToken("wrong"));
+        u.setTokenExpired();
+        String token = u.getToken("superSecret");
+        assertTrue(!token.equals(""));
+        assertTrue(u.validToken(token));
+        u.setTokenExpired();
+        assertFalse(u.validToken(token));
 	}
 	
 	@Test
