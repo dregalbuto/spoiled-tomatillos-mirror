@@ -121,7 +121,7 @@ class Signup extends Component {
 		e.preventDefault();
 		console.log(this.state);
 
-		var url = '/api/signup';
+		var url = '/api/user/signup';
 		
 		var newUser = {
 				first_name: this.state.first_name,
@@ -140,9 +140,7 @@ class Signup extends Component {
 	    			'Accept': 'application/json',
 	    			'Content-Type': 'application/json',
 	    		},
-	    		body: JSON.stringify({
-	    			newUser
-	    		})
+	    		body: JSON.stringify(newUser)
 	    })
 	    .then(response => response.json())
 		.then(data => {   	

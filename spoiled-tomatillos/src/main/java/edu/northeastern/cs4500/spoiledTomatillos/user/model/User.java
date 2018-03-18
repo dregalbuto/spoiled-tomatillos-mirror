@@ -1,7 +1,8 @@
 package edu.northeastern.cs4500.spoiledTomatillos.user.model;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,36 +12,50 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
-import lombok.ToString;
 
 /**
  * Class for a user of Spoiled Tomatillos
  */
-
 @Data
 @Entity(name="users")
-@CrossOrigin(origins = "http://localhost:3000")
 public class User {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty(value = "id")
 	private int id;
+    @JsonProperty(value = "first_name")
 	private String first_name;
+    @JsonProperty(value = "last_name")
 	private String last_name;
+    @JsonProperty(value = "email")
 	private String email;
+    @JsonProperty(value = "username")
 	private String username;
+    //Can add @JsonProperty(value = "password")
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
 	private String password;
+    @JsonProperty(value = "enabled")
 	private boolean enabled;
-	private boolean token_expired;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
+	private String token;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
+	private long tokenExpiration;
 	
 	/**
 	 * All of the roles this user has
@@ -51,15 +66,22 @@ public class User {
         joinColumns = @JoinColumn(
           name = "user_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
-          name = "role_id", referencedColumnName = "id")) 
+          name = "role_id", referencedColumnName = "id"))
+    @JsonProperty(value = "roles")
     private Collection<Role> roles;
 	
 	public User() {
-		
+		// Empty constructor for user.
 	}
-	
-	/*
-	 May add roles into constructor later
+
+	/**
+	 * Constructs a User with first, last name, email, username, encrypted
+	 * of given password with no permission and is enabled.
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param username
+	 * @param password
 	 */
 	public User(String firstName, String lastName, String email, 
 			String username, String password) {
@@ -69,24 +91,79 @@ public class User {
 		this.username = username;
 		this.setPassword(password);
 		this.enabled = true;
-		this.token_expired = false;
+		this.token = "";
+		this.tokenExpiration = 0;
 	}
-	
-	public void setPassword(String password) {
+
+	/**
+	 * Given password in plain text and saves it encrypted.
+	 * @param password user password in plain text.
+	 */
+	private void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 	
-	private boolean checkPass(String plainPassword, String hashedPassword) {
-		boolean out = false;
-		if (BCrypt.checkpw(plainPassword, hashedPassword)) {
-			out = true;
-			System.out.println("The password matches.");
-		}
-		else {
-			out = false;
-			System.out.println("The password does not match.");
-		}
-		return out;
+	public boolean checkPassword(String plainPassword) {
+		return BCrypt.checkpw(plainPassword, this.password);
 	}
-	
+
+    /**
+     * Get the current token if the password is valid. Token will have at least
+     * 10 minuets before it expires.
+     * @param plainPassword Plain text password of this user.
+     * @return token to access the user.
+     * @throws IllegalAccessException If the password is wrong or user is disabled.
+     */
+	public String getToken(String plainPassword) throws IllegalAccessException {
+        if (!this.isEnabled()) {
+            throw new IllegalAccessException("User is disabled");
+        }
+	    if (this.checkPassword(plainPassword)) {
+            this.updateTokenExpiration(600000);
+	        return this.token;
+        }
+        throw new IllegalAccessException("Do not have permission to access token");
+    }
+
+    /**
+     * Update the expiration of the current token or create a new one if expired.
+     * @param time how long until the current token expires.
+     */
+	private void updateTokenExpiration(long time) {
+	    if (this.isTokenExpired()) {
+	        this.token = UUID.randomUUID().toString();
+        }
+        this.tokenExpiration = new Date().getTime() + time;
+    }
+
+    /**
+     * Check if current token is expired.
+     * @return true if current token is expired.
+     */
+    private boolean isTokenExpired() {
+	    return new Date().after(new Date(this.tokenExpiration));
+    }
+
+    /**
+     * Set the current token as expired.
+     */
+    public void setTokenExpired() {
+        if (!isTokenExpired()) {
+            this.tokenExpiration = 0;
+        }
+    }
+
+    /**
+     * Check if the given token is valid. Make sure it has at least 10 minuets
+     * before expiring.
+     * @param token String to check if it is a valid token.
+     * @return true if given token is right and not expired.
+     */
+    public boolean validToken(String token) {
+        if (!this.isTokenExpired() && this.token.equals(token)) {
+            this.updateTokenExpiration(600000);
+            return true;
+        }
+        return false;
+    }
 }

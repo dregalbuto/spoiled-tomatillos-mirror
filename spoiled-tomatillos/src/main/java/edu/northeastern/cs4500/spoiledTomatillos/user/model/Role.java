@@ -22,7 +22,6 @@ import lombok.Data;
  */
 @Data
 @Entity(name="roles")
-@CrossOrigin(origins = "http://localhost:3000")
 public class Role {
 	/**
 	 * unique ID number for this role (used in database)

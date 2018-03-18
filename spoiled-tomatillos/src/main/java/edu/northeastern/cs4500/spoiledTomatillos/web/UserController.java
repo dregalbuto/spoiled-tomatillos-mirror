@@ -1,18 +1,21 @@
 package edu.northeastern.cs4500.spoiledTomatillos.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledTomatillos.user.service.UserService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+/**
+ * Controller for /api/user supports create and login all taking in a json
+ * object.
+ */
 @RestController
-@RequestMapping("/user")
+@RequestMapping(value = "/api/user")
 public class UserController {
 	private final UserService userService;
 	
@@ -20,15 +23,94 @@ public class UserController {
 	UserController(UserService userService) {
 		this.userService = userService;
 	}
-	
-	@RequestMapping(value = "/foo")
-	String getFoo() {
-		return "Foo";
-	}
-	
+
+	/**
+	 * Get the user with given username.
+	 * @param username
+	 * @return
+	 */
 	@RequestMapping(value = "/username/{username:.+}")
 	User getUserByUsername(@PathVariable String username) {
 		return this.userService.findByUsername(username);
 	}
-	
+
+	/**
+	 * Get the user with given username.
+	 * @param username
+	 * @return
+	 */
+	@RequestMapping(value = "/id/{id:.+}")
+	User getUserByID(@PathVariable String id) {
+		return this.userService.findById(Integer.valueOf(id));
+	}
+
+    @RequestMapping(value = "/login", method=RequestMethod.POST)
+    public ResponseEntity<String> loginAccount(@RequestBody String strRequest)
+			throws JSONException {
+        JSONObject request = new JSONObject(strRequest);
+        User user = userService.findByEmail(request.get("email").toString());
+        if (user == null){
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put("message",
+							"user with this email doesn't exist").toString());
+        }
+
+        String email = request.get("email").toString();
+        String password = request.get("password").toString();
+
+        if (!user.isEnabled()) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put("message",
+							"user with this email is disabled").toString());
+        }
+
+        if (!user.checkPassword(password)) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put("message",
+                            "wrong password").toString());
+        }
+
+        try {
+            return ResponseEntity.ok().body(
+                    new JSONObject().put("message", "logged in").put("token", user.getToken(password)).toString());
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put("message",
+                            "illegal access").toString());
+        }
+
+    }
+
+	/**
+	 * Takes in a JSON object with {first_name, last_name, email, username,
+	 * password} and create a new user
+	 * @param request JSON with {first_name, last_name, email, username, password}
+	 * @return
+	 * @throws JSONException
+	 */
+	@RequestMapping(value = "/signup", method=RequestMethod.POST)
+	public ResponseEntity<String> registerUserAccount(@RequestBody String strRequest)
+			throws JSONException {
+	    JSONObject request = new JSONObject(strRequest);
+		User existing = userService.findByEmail(request.get("email").toString());
+		if (existing != null){
+			return ResponseEntity.badRequest().body(
+					new JSONObject().put("message",
+							"user with this email already exists").toString());
+		}
+
+		String firstname = request.get("first_name").toString();
+		String lastname = request.get("last_name").toString();
+		String email = request.get("email").toString();
+		String username = request.get("username").toString();
+		String password = request.get("password").toString();
+
+		User newuser = new User(firstname, lastname, email, username, password);
+		userService.save(newuser);
+
+		return ResponseEntity.ok().body(
+				new JSONObject().put("message", "user created").toString());
+
+	}
+
 }

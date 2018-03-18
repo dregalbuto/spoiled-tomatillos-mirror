@@ -7,4 +7,5 @@ import edu.northeastern.cs4500.spoiledTomatillos.user.model.User;
 public interface UserRepository extends JpaRepository<User, Integer>{
 	User findByUsername(String username);
 	User findByEmail(String email);
+	User findById(int id);
 }
