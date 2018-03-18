@@ -25,3 +25,11 @@ nbdist/
 
 # Derby
 derby.log
+
+# React
+target/
+node_modules/
+src/main/resources/static/built/
+
+.project
+.metadata/
