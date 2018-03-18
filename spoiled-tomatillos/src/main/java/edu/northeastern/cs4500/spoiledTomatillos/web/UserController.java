@@ -30,7 +30,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/username/{username:.+}")
-	User getUserByUsername(@PathVariable String username) {
+	User getUserByUsername(@PathVariable(required = true) String username) {
 		return this.userService.findByUsername(username);
 	}
 
@@ -40,7 +40,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/id/{id:.+}")
-	User getUserByID(@PathVariable String id) {
+	User getUserByID(@PathVariable(required = true) String id) {
 		return this.userService.findById(Integer.valueOf(id));
 	}
 
