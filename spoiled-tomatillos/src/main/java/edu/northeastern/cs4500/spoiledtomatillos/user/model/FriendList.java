@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import lombok.Data;
+
+@Data
 @Entity
 public class FriendList {
 
@@ -17,18 +20,21 @@ public class FriendList {
     private Collection<User> request;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private Collection<User> frends;
+    private Collection<User> friends;
 
     public FriendList() {
         this.request = new ArrayList<>();
-        this.frends = new ArrayList<>();
+        this.friends = new ArrayList<>();
     }
 
     public boolean addRequest(User user) {
+        if (user == null) {
+            return false;
+        }
         if (!user.isEnabled() || !this.user.isEnabled()) {
             return false;
         }
-        for (User u : frends) {
+        for (User u : friends) {
             if (u.getId() == user.getId()) {
                 return false;
             }
@@ -43,10 +49,13 @@ public class FriendList {
     }
 
     public boolean acceptRequest(User user) {
+        if (user == null) {
+            return false;
+        }
         if (!user.isEnabled() || !this.user.isEnabled()) {
             return false;
         }
-        for (User u : frends) {
+        for (User u : friends) {
             if (u.getId() == user.getId()) {
                 return false;
             }
@@ -60,12 +69,17 @@ public class FriendList {
         if (!found) {
             return false;
         }
-        this.frends.add(user);
+        this.friends.add(user);
+        user.getFriends().addRequest(this.user);
+        user.getFriends().acceptRequest(this.user);
         this.request.remove(user);
         return true;
     }
 
     public boolean rejectRequest(User user) {
+        if (user == null) {
+            return false;
+        }
         if (!this.user.isEnabled()) {
             return false;
         }
@@ -75,11 +89,11 @@ public class FriendList {
                 found = true;
             }
         }
-        if (found) {
-            this.request.remove(user);
-            return true;
+        if (!found) {
+            return false;
         }
-        return false;
+        this.request.remove(user);
+        return true;
     }
 
     public boolean removeFriend(User user) {
@@ -92,10 +106,11 @@ public class FriendList {
                 found = true;
             }
         }
-        if (found) {
-            this.request.remove(user);
-            return true;
+        if (!found) {
+            return false;
         }
-        return false;
+        this.request.remove(user);
+        user.getFriends().removeFriend(this.user);
+        return true;
     }
 }

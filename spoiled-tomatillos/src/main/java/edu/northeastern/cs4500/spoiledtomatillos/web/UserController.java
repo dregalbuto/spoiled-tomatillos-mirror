@@ -93,7 +93,7 @@ public class UserController {
 	@RequestMapping(value = "/signup", method=RequestMethod.POST)
 	public ResponseEntity<String> registerUserAccount(@RequestBody String strRequest)
 			throws JSONException {
-	    JSONObject request = new JSONObject(strRequest);
+		JSONObject request = new JSONObject(strRequest);
 		User existing = userService.findByEmail(request.get("email").toString());
 		if (existing != null){
 			return ResponseEntity.badRequest().body(

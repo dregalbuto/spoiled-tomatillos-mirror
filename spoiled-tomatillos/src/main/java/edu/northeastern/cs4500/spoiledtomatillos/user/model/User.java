@@ -1,22 +1,36 @@
 package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.user.repository.UserRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import org.springframework.security.crypto.bcrypt.BCrypt;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 /**
@@ -67,14 +81,15 @@ public class User {
     @JsonProperty(value = "roles")
     private Collection<Role> roles;
 
-	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	  @JsonManagedReference
+	  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonProperty(value = "reviews")
-	private Collection<Review> reviews;
+	  private Collection<Review> reviews;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-	private FriendList friends = new FriendList();
+		@JsonProperty(value = "friends")
+	  private FriendList friends = new FriendList();
 
 	public User() {
 		// Empty constructor for user.
@@ -172,4 +187,12 @@ public class User {
         }
         return false;
     }
+
+	  public static boolean validLogin(String email, String token, UserService repo) {
+		    User user = repo.findByEmail(email);
+		    if (user == null || !user.isEnabled()) {
+			      return false;
+		    }
+		    return user.validToken(token);
+	  }
 }
