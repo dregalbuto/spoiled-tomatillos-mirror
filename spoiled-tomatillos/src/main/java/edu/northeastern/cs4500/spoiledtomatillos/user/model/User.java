@@ -72,6 +72,10 @@ public class User {
     @JsonProperty(value = "reviews")
 	private Collection<Review> reviews;
 
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+	private FriendList friends = new FriendList();
+
 	public User() {
 		// Empty constructor for user.
 	}

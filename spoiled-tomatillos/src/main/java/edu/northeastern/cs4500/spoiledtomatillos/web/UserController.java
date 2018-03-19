@@ -114,5 +114,4 @@ public class UserController {
 				new JSONObject().put("message", "user created").toString());
 
 	}
-
 }
