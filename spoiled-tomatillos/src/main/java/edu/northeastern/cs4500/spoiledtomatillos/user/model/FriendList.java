@@ -7,23 +7,35 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @Entity
 public class FriendList {
 
     @Id
+    //@Column(name="id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(generator = "foreigngen")
+    //@GenericGenerator(strategy = "foreign", name="foreigngen",
+    //        parameters = @org.hibernate.annotations.Parameter(name = "property", value="users"))
     private int id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    //@MapsId
+    //@JoinColumn(name = "id")
+    @OneToOne//(mappedBy = "friends")
     @JsonBackReference
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Collection<User> request;
+    //@ManyToMany(cascade = CascadeType.ALL)
+    //@JoinColumn(name="id")
+    @ElementCollection
+    private Collection<Integer> request;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Collection<User> friends;
+    //@ManyToMany(cascade = CascadeType.ALL)
+    //@JoinColumn(name="id")
+    @ElementCollection
+    private Collection<Integer> friends;
 
     public FriendList() {
         // Empty constructor
@@ -42,17 +54,17 @@ public class FriendList {
         if (!user.isEnabled() || !this.user.isEnabled()) {
             return false;
         }
-        for (User u : friends) {
-            if (u.getId() == user.getId()) {
+        for (int id : friends) {
+            if (id == user.getId()) {
                 return false;
             }
         }
-        for (User u : request) {
-            if (u.getId() == user.getId()) {
+        for (int id : request) {
+            if (id == user.getId()) {
                 return false;
             }
         }
-        this.request.add(user);
+        this.request.add(user.getId());
         return true;
     }
 
@@ -63,24 +75,24 @@ public class FriendList {
         if (!user.isEnabled() || !this.user.isEnabled()) {
             return false;
         }
-        for (User u : friends) {
-            if (u.getId() == user.getId()) {
+        for (int id : friends) {
+            if (id == user.getId()) {
                 return false;
             }
         }
         boolean found = false;
-        for (User u : request) {
-            if (u.getId() == user.getId()) {
+        for (int id : request) {
+            if (id == user.getId()) {
                 found = true;
             }
         }
         if (!found) {
             return false;
         }
-        this.friends.add(user);
+        this.friends.add(user.getId());
         user.getFriends().addRequest(this.user);
         user.getFriends().acceptRequest(this.user);
-        this.request.remove(user);
+        this.request.remove(user.getId());
         return true;
     }
 
@@ -92,15 +104,15 @@ public class FriendList {
             return false;
         }
         boolean found = false;
-        for (User u : request) {
-            if (u.getId() == user.getId()) {
+        for (int id : request) {
+            if (id == user.getId()) {
                 found = true;
             }
         }
         if (!found) {
             return false;
         }
-        this.request.remove(user);
+        this.request.remove(user.getId());
         return true;
     }
 
@@ -109,15 +121,15 @@ public class FriendList {
             return false;
         }
         boolean found = false;
-        for (User u : request) {
-            if (u.getId() == user.getId()) {
+        for (int id : request) {
+            if (id == user.getId()) {
                 found = true;
             }
         }
         if (!found) {
             return false;
         }
-        this.request.remove(user);
+        this.request.remove(user.getId());
         user.getFriends().removeFriend(this.user);
         return true;
     }

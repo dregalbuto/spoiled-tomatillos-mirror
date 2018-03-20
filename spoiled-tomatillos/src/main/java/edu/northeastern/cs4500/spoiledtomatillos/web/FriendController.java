@@ -150,6 +150,5 @@ public class FriendController {
             return ResponseEntity.badRequest().body(
                     new JSONObject().put("message", "Error processing request").toString());
         }
-
     }
 }

@@ -36,7 +36,7 @@ public class UserControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/erin.z"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"id\":1,\"first_name\":\"erin\",\"last_name\":\"zhang\",\"email\":\"erinzhang@husky.neu.edu\",\"username\":\"erin.z\",\"enabled\":true,\"roles\":[],\"reviews\":[]}"));
+                        .string("{\"id\":1,\"first_name\":\"erin\",\"last_name\":\"zhang\",\"email\":\"erinzhang@husky.neu.edu\",\"username\":\"erin.z\",\"enabled\":true,\"roles\":[],\"reviews\":[],\"friends\":{\"id\":1,\"request\":[],\"friends\":[]}}"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/someRandomUser"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(""));

@@ -1,6 +1,10 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import edu.northeastern.cs4500.spoiledtomatillos.user.model.FriendList;
+import edu.northeastern.cs4500.spoiledtomatillos.user.repository.FriendListRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +22,12 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 @RequestMapping(value = "/api/user")
 public class UserController {
 	private final UserService userService;
+	private final FriendListRepository friendListRepository;
 	
 	@Autowired
-	UserController(UserService userService) {
+	UserController(UserService userService, FriendListRepository friendListRepository) {
 		this.userService = userService;
+		this.friendListRepository = friendListRepository;
 	}
 
 	/**
@@ -108,7 +114,19 @@ public class UserController {
 		String password = request.get("password").toString();
 
 		User newuser = new User(firstname, lastname, email, username, password);
-		userService.save(newuser);
+		System.out.println("||||||||");
+        try {
+            System.out.println(new ObjectMapper().writeValueAsString(newuser));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        userService.save(newuser);
+        newuser = this.userService.findByEmail(email);
+        FriendList friendList = new FriendList(newuser);
+        newuser.setFriends(friendList);
+        friendListRepository.save(friendList);
+        userService.save(newuser);
+
 
 		return ResponseEntity.ok().body(
 				new JSONObject().put("message", "user created").toString());
