@@ -1,5 +1,7 @@
 package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +16,7 @@ public class FriendList {
     private int id;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -23,6 +26,11 @@ public class FriendList {
     private Collection<User> friends;
 
     public FriendList() {
+        // Empty constructor
+    }
+
+    public FriendList(User user) {
+        this.user = user;
         this.request = new ArrayList<>();
         this.friends = new ArrayList<>();
     }

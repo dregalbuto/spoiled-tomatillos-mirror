@@ -86,10 +86,11 @@ public class User {
     @JsonProperty(value = "reviews")
 	  private Collection<Review> reviews;
 
-	  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = false)
     @PrimaryKeyJoinColumn
 		@JsonProperty(value = "friends")
-	  private FriendList friends = new FriendList();
+		@JsonManagedReference
+	  private FriendList friends;
 
 	public User() {
 		// Empty constructor for user.
@@ -114,6 +115,7 @@ public class User {
 		this.enabled = true;
 		this.token = "";
 		this.tokenExpiration = 0;
+		this.friends = new FriendList(this);
 	}
 
 	/**
