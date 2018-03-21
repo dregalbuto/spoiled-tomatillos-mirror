@@ -1,5 +1,6 @@
 package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
+import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.user.repository.UserRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
@@ -83,6 +85,10 @@ public class User {
     @JsonProperty(value = "friends")
     @JsonManagedReference
     private FriendList friends;
+
+    @JsonBackReference
+    @ManyToMany
+    private Collection<Group> groups;
 
     public User() {
         // Empty constructor fo

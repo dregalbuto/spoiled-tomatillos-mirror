@@ -1,6 +1,8 @@
 package edu.northeastern.cs4500.spoiledtomatillos.reviews;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import lombok.Data;
@@ -38,6 +40,10 @@ public class Review {
     @ManyToOne//(cascade = CascadeType.ALL)
     //@JoinColumn(name="users")
     private User user;
+
+    @JsonBackReference
+    @ManyToOne
+    private Group group;
 
     public Review() {
 
