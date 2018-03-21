@@ -34,11 +34,17 @@ public class FriendController {
                     new JSONObject().put("message", "Not a valid login").toString());
         }
         User u = this.userService.findByEmail(email);
-        boolean success = u.getFriends().addRequest(this.userService.findByEmail(targetEmail));
+        User target = this.userService.findByEmail(targetEmail);
+        if (target == null) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put("message", "Target doesn't existe").toString());
+        }
+        boolean success = target.getFriends().addRequest(u);
         if (!success) {
             return ResponseEntity.badRequest().body(
                     new JSONObject().put("message", "Failed to send friend request").toString());
         }
+        this.userService.save(target);
         this.userService.save(u);
         return ResponseEntity.ok().body(
                 new JSONObject().put("message", "Success").toString());
@@ -56,12 +62,14 @@ public class FriendController {
                     new JSONObject().put("message", "Not a valid login").toString());
         }
         User u = this.userService.findByEmail(email);
-        boolean success = u.getFriends().acceptRequest(this.userService.findByEmail(targetEmail));
+        User targetUser = this.userService.findByEmail(targetEmail);
+        boolean success = u.getFriends().acceptRequest(targetUser);
         if (!success) {
             return ResponseEntity.badRequest().body(
                     new JSONObject().put("message", "Failed accept request").toString());
         }
         this.userService.save(u);
+        this.userService.save(targetUser);
         return ResponseEntity.ok().body(
                 new JSONObject().put("message", "Success").toString());
     }
@@ -101,12 +109,14 @@ public class FriendController {
                     new JSONObject().put("message", "Not a valid login").toString());
         }
         User u = this.userService.findByEmail(email);
-        boolean success = u.getFriends().removeFriend(this.userService.findByEmail(targetEmail));
+        User targetUser = this.userService.findByEmail(targetEmail);
+        boolean success = u.getFriends().removeFriend(targetUser);
         if (!success) {
             return ResponseEntity.badRequest().body(
                     new JSONObject().put("message", "Failed unfrend").toString());
         }
         this.userService.save(u);
+        this.userService.save(targetUser);
         return ResponseEntity.ok().body(
                 new JSONObject().put("message", "Success").toString());
 

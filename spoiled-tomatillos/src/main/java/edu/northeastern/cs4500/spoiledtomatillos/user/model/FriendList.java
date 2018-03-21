@@ -121,7 +121,7 @@ public class FriendList {
             return false;
         }
         boolean found = false;
-        for (int id : request) {
+        for (int id : friends) {
             if (id == user.getId()) {
                 found = true;
             }
@@ -129,8 +129,8 @@ public class FriendList {
         if (!found) {
             return false;
         }
-        this.request.remove(user.getId());
-        user.getFriends().removeFriend(this.user);
+        this.friends.remove(user.getId());
+        user.getFriends().getFriends().remove(this.user.getId());
         return true;
     }
 }
