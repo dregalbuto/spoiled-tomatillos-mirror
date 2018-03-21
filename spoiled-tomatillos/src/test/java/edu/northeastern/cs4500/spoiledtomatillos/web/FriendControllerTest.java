@@ -199,25 +199,4 @@ public class FriendControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().string("[]"));
   }
-
-  @Test
-  public void acceptFriendRequest() throws Exception {
-  }
-
-  @Test
-  public void rejectFriendRequest() throws Exception {
-  }
-
-  @Test
-  public void unfriend() throws Exception {
-  }
-
-  @Test
-  public void list() throws Exception {
-  }
-
-  @Test
-  public void request() throws Exception {
-  }
-
 }

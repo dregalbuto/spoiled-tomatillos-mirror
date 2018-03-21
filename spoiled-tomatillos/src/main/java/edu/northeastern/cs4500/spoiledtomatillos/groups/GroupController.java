@@ -17,31 +17,36 @@ public class GroupController {
 
   @RequestMapping("/create")
   public ResponseEntity<String> create(@RequestBody(required = true)String strRequest) {
-
+    return null;
   }
 
   @RequestMapping("/delete")
   public ResponseEntity<String> delete(@RequestBody(required = true)String strRequest) {
-
+    return null;
   }
 
   @RequestMapping("/join")
   public ResponseEntity<String> join(@RequestBody(required = true)String strRequest) {
-
+    return null;
   }
 
   @RequestMapping("/leave")
   public ResponseEntity<String> leave(@RequestBody(required = true)String strRequest) {
-
+    return null;
   }
 
   @RequestMapping("/appendlist")
   public ResponseEntity<String> appendList(@RequestBody(required = true)String strRequest) {
-
+    return null;
   }
 
   @RequestMapping("/post")
   public ResponseEntity<String> post(@RequestBody(required = true)String strRequest) {
+    return null;
+  }
 
+  @RequestMapping("/search")
+  public ResponseEntity<String> search(@RequestBody(required = true)String strRequest) {
+    return null;
   }
 }

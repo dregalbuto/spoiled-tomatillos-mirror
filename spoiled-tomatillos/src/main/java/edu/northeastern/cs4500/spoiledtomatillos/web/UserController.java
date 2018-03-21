@@ -114,12 +114,6 @@ public class UserController {
 		String password = request.get("password").toString();
 
 		User newuser = new User(firstname, lastname, email, username, password);
-		System.out.println("||||||||");
-        try {
-            System.out.println(new ObjectMapper().writeValueAsString(newuser));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
         userService.save(newuser);
         newuser = this.userService.findByEmail(email);
         FriendList friendList = new FriendList(newuser);
