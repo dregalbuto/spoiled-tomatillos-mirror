@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { Rating } from 'semantic-ui-react';
 import App from './App.js';
 import registerServiceWorker from './registerServiceWorker.js';
 import Login from './components/Login.js';
