@@ -42,7 +42,7 @@ public class Review {
     private User user;
 
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne//(cascade = Casca)
     private Group group;
 
     public Review() {

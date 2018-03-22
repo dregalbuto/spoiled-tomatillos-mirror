@@ -1,10 +1,14 @@
 package edu.northeastern.cs4500.spoiledtomatillos.groups;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -40,6 +44,16 @@ public class GroupControllerTest {
 
     }
 
+    private int count(String name) throws Exception {
+        JSONObject search = new JSONObject();
+        search.put("s", name);
+        String ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/search")
+                .contentType(MediaType.APPLICATION_JSON).content(search.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        return new JSONArray(ret).length();
+    }
+
     @Test
     public void createAndDeleteGroup() throws Exception {
         JSONObject request = new JSONObject();
@@ -56,147 +70,125 @@ public class GroupControllerTest {
         request2.put("username", "test_gu2");
         request2.put("password", "passw0rd");
         String token2 = signupLogin(request2);
+        int count = count("TestingGroupName");
 
-        //Get request
-        JSONObject friendlist1 = new JSONObject();
-        friendlist1.put("email", "test_ge@a.co");
-        friendlist1.put("token", token1);
-        JSONObject friendlist2 = new JSONObject();
-        friendlist2.put("email", "test_ge2@a.co");
-        friendlist2.put("token", token2);
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/search")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-
-        // Sending request
-        friendlist1.put("targetEmail", "test_ge2@a.co");
-        friendlist2.put("targetEmail", "test_ge@a.co");
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/send")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"message\":\"Success\"}"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
+        //Create group
+        JSONObject create = new JSONObject();
+        create.put("email","test_ge@a.co");
+        create.put("token", token1);
+        create.put("blacklist","test_ge@a.co");
+        create.put("groupName", "TestingGroupName");
+        create.put("blacklist", "true");
+        create.put("movieId", "tt0000001");
+        String ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/create")
+                .contentType(MediaType.APPLICATION_JSON).content(create.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        assertEquals(1, new JSONArray(cont).length());
+        String groupId = new JSONObject(ret).getString("groupId");
+        JSONObject group1 = new JSONObject();
+        group1.put("email", "test_ge@a.co");
+        group1.put("token", token1);
+        group1.put("groupId", groupId);
+        JSONObject group2 = new JSONObject();
+        group2.put("email", "test_ge2@a.co");
+        group2.put("token", token2);
+        group2.put("groupId", groupId);
 
-        // Rejecting request
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/reject")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
+        //Get it
+        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
+                "\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
+                "\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+
+        //Search
+        assertEquals(count + 1, count("TestingGroupName"));
+
+        //Add blacklist
+        JSONObject bl = new JSONObject();
+        bl.put("email", "test_ge@a.co");
+        bl.put("token", token1);
+        bl.put("groupId", groupId);
+        bl.put("userEmail", "test_ge2@a.co");
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
+                .contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
 
-        // Sending request
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/send")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"message\":\"Success\"}"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        String cont2 = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
+        //Join blacklisted
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
+                .contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        //Get it
+        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        assertEquals(1, new JSONArray(cont2).length());
+        assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
+                "\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[[0-9]+\\]," +
+                "\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
 
-        // Accepting request
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/accept")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
+        //Remove from blacklist
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
+                .contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        String cont3 = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        assertEquals(1, new JSONArray(cont3).length());
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        String cont4 = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        assertEquals(1, new JSONArray(cont4).length());
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
 
-        // Unfriend request
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/unfriend")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+        //Join
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
+                .contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        //Post
+        JSONObject post = new JSONObject();
+        post.put("email", "test_ge@a.co");
+        post.put("token", token1);
+        post.put("groupId", groupId);
+        post.put("rating", "2");
+        post.put("text", "Wat");
+        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/post")
+                .contentType(MediaType.APPLICATION_JSON).content(post.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"message\":\"Success\"}"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+                .andReturn().getResponse().getContentAsString();
+
+        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+                .andReturn().getResponse().getContentAsString();
+        JSONArray reviews = new JSONArray(new JSONObject(ret).get("reviews").toString());
+        for (int i = 0; i < reviews.length(); i++) {
+            // Delete
+            JSONObject delReq = new JSONObject();
+            delReq.put("email", "test_ge@a.co");
+            delReq.put("token", token1);
+            delReq.put("postId", reviews.getInt(i));
+            this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/delete")
+                    .contentType(MediaType.APPLICATION_JSON).content(delReq.toString()))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
+        }
+
+        //Leave
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/leave")
+                .contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        //Get it
+        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
-                .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
+                "\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
+                "\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+
+        //Delete it
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/delete")
+                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        //Search
+        assertEquals(count, count("TestingGroupName"));
     }
 
 }

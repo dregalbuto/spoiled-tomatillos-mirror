@@ -2,20 +2,17 @@ package edu.northeastern.cs4500.spoiledtomatillos.groups;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
@@ -23,23 +20,29 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.mapping.FetchProfile;
 
 /**
  * Group object for data of a group
  */
 @Data
-@Entity
+@Entity(name = "usergroup")
+@JsonSerialize(using = GroupSeralizer.class)
 public class Group {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  private String name;
+
+  @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+          CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
   @JoinColumn//(name = "id")
   private User creator;
 
   @JsonManagedReference
-  @ManyToMany(cascade = CascadeType.ALL)
+  @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+          CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
   @JoinColumn//(name = "id")
   private Collection<User> users;
 
@@ -56,13 +59,19 @@ public class Group {
   private Movie topic;
 
   @JsonManagedReference
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
   private Collection<Review> reviews;
 
-  public Group(User creator, Movie topic) {
+
+  public Group() {
+    //Default constructor
+  }
+
+  public Group(User creator, Movie topic, String name, boolean isBlackList) {
     this.creator = creator;
+    this.name = name;
     this.users = new ArrayList<>();
-    this.isBlackList = true;
+    this.isBlackList = isBlackList;
     this.idList = new ArrayList<>();
     this.topic = topic;
     this.reviews = new ArrayList<>();
@@ -82,10 +91,57 @@ public class Group {
     return false;
   }
 
+  public boolean removeUser(User user) {
+    if (user == null) {
+      return false;
+    }
+    return this.getUsers().remove(user);
+  }
+
   public boolean contains(User user) {
     if (user == null) {
       return false;
     }
     return this.getCreator().getId() == user.getId() || this.users.contains(user);
+  }
+}
+class GroupSeralizer extends StdSerializer<Group> {
+
+  public GroupSeralizer() {
+    this(null);
+  }
+
+  protected GroupSeralizer(Class<Group> t) {
+    super(t);
+  }
+
+  @Override
+  public void serialize(Group group, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    jsonGenerator.writeStartObject();
+    jsonGenerator.writeNumberField("id", group.getId());
+    jsonGenerator.writeStringField("name", group.getName());
+    jsonGenerator.writeObjectFieldStart("creator");
+    jsonGenerator.writeNumberField("id",group.getCreator().getId());
+    jsonGenerator.writeEndObject();
+    jsonGenerator.writeArrayFieldStart("users");
+    for (User u : group.getUsers()) {
+      jsonGenerator.writeNumber(u.getId());
+    }
+    jsonGenerator.writeEndArray();
+    jsonGenerator.writeArrayFieldStart("idList");
+    for (Integer i : group.getIdList()) {
+      jsonGenerator.writeNumber(i);
+    }
+    jsonGenerator.writeEndArray();
+    jsonGenerator.writeObjectFieldStart("topic");
+    jsonGenerator.writeStringField("id",group.getTopic().getId());
+    jsonGenerator.writeEndObject();
+    jsonGenerator.writeArrayFieldStart("reviews");
+    for (Review r : group.getReviews()) {
+      jsonGenerator.writeNumber(r.getId());
+    }
+    jsonGenerator.writeEndArray();
+    jsonGenerator.writeBooleanField("blacklist",group.isBlackList());
+    jsonGenerator.writeEndObject();
   }
 }
