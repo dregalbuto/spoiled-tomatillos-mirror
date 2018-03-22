@@ -38,18 +38,18 @@ public class MovieControllerTest {
 
     @Test
     public void info() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/info?id=tt0000001"))
+        String ret = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/info?id=tt0000001"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"id\":\"tt0000001\",\"titleType\":\"movie\"," +
-                                "\"title\":\"Carmencita\",\"releaseDate\":\"10 Mar 1894\"," +
-                                "\"genres\":\"Documentary, Short\",\"actors\":\"Carmencita\"," +
-                                "\"description\":\"Performing on what looks like a small wooden stage, " +
-                                "wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita " +
-                                "does a dance with kicks and twirls, a smile always on her face.\"," +
-                                "\"runtimeMinuets\":\"1 min\"," +
-                                "\"imgURL\":\"https://images-na.ssl-images-amazon.com/images/M/MV5BMjAzNDEwMzk3OV5B" +
-                                "Ml5BanBnXkFtZTcwOTk4OTM5Ng@@._V1_SX300.jpg\",\"source\":\"OMDB\",\"reviews\":[]}"));
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(ret.startsWith("{\"id\":\"tt0000001\",\"titleType\":\"movie\"," +
+                "\"title\":\"Carmencita\",\"releaseDate\":\"10 Mar 1894\"," +
+                "\"genres\":\"Documentary, Short\",\"actors\":\"Carmencita\"," +
+                "\"description\":\"Performing on what looks like a small wooden stage, " +
+                "wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita " +
+                "does a dance with kicks and twirls, a smile always on her face.\"," +
+                "\"runtimeMinuets\":\"1 min\"," +
+                "\"imgURL\":\"https://images-na.ssl-images-amazon.com/images/M/MV5BMjAzNDEwMzk3OV5B" +
+                "Ml5BanBnXkFtZTcwOTk4OTM5Ng@@._V1_SX300.jpg\",\"source\":\"OMDB\",\"reviews\":["));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/info?id=asd"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(""));
