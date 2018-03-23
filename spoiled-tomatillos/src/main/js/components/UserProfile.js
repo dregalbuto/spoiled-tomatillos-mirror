@@ -18,7 +18,7 @@ import {
   Visibility,
   Item,
   Label,
-  Step, Table
+  Step, Table, Statistic
 } from 'semantic-ui-react'
 
 class UserProfile extends Component {
@@ -43,9 +43,45 @@ class UserProfile extends Component {
 		        marginTop: '1.5em',
 		      }}
 		    >
-		    
+		    <Grid>
+		    <Grid.Column width={4}>
 		    <Image circular src='https://react.semantic-ui.com/assets/images/avatar/large/patrick.png' />
 		    {' '}Patrick
+		    </Grid.Column>
+		    <Grid.Column width={9}>
+		    
+		    <Segment inverted>
+		    <Statistic.Group inverted>
+		      <Statistic color='blue' size='small'>
+		        <Statistic.Value>39</Statistic.Value>
+		        <Statistic.Label>Movies Watched</Statistic.Label>
+		      </Statistic>
+		      <Statistic color='blue' size='small'>
+		        <Statistic.Value>562</Statistic.Value>
+		        <Statistic.Label>Friends</Statistic.Label>
+		      </Statistic>
+		      <Statistic color='blue' size='small'>
+		        <Statistic.Value>7</Statistic.Value>
+		        <Statistic.Label>Groups</Statistic.Label>
+		      </Statistic>
+		    </Statistic.Group>
+		    </Segment>
+		    
+		    
+		    </Grid.Column>
+		    <Grid.Column width={3}>
+		     
+
+		    <Header as='h3' icon inverted>
+		    <Icon name='settings' />
+		    Account Settings
+		    
+		  </Header>
+		  
+		    </Grid.Column>
+		  </Grid>
+		  
+		    
 		</Header>
 		    
 		   </Container>
