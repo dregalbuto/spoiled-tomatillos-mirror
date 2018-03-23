@@ -42,8 +42,13 @@ class UserProfile extends Component {
 		        fontWeight: 'normal',
 		        marginTop: '1.5em',
 		      }}
-		    />
-		  </Container>
+		    >
+		    
+		    <Image circular src='https://react.semantic-ui.com/assets/images/avatar/large/patrick.png' />
+		    {' '}Patrick
+		</Header>
+		    
+		   </Container>
 		   
 		    <Segment style={{ padding: '8em 0em' }} vertical>
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Favourite Movies</Header>
@@ -70,7 +75,7 @@ class UserProfile extends Component {
 	    		          		src='https://ia.media-imdb.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_SY1000_CR0,0,674,1000_AL_.jpg'/>
 	    		          </Grid.Column>   
 	    		   </Grid>
-          
+	    		<Button floated='right' basic inverted color='grey'>More</Button>
 		    </Segment>
 		    
 		    <Segment style={{ padding: '8em 0em' }} vertical>
@@ -84,6 +89,7 @@ class UserProfile extends Component {
 		        <Segment>Content</Segment>
 		      </Segment.Group>
 		    </Container>
+		    <Button floated='right' basic inverted color='grey'>More</Button>
 		    </Segment>
 		    
 		    
@@ -157,7 +163,7 @@ class UserProfile extends Component {
 		      </Item.Group>
 		    </Container>
 
-		    
+		    <Button floated='right' basic inverted color='grey'>More</Button>
 		    </Segment>
 		    
 		    <Segment style={{ padding: '8em 0em' }} vertical>
@@ -167,10 +173,35 @@ class UserProfile extends Component {
 		      <Header.Content>
 		        Friends
 		      </Header.Content>
+		        
 		    </Header>
+		    
+		    <List relaxed>
+		    <List.Item>
+		      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/daniel.jpg' />
+		      <List.Content>
+		        <List.Header as='a'>Daniel Louise</List.Header>
+		        <List.Description style={{color:'white'}}>Last seen watching <a><b>Arrested Development</b></a> just now.</List.Description>
+		      </List.Content>
+		    </List.Item>
+		    <List.Item>
+		      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/stevie.jpg' />
+		      <List.Content>
+		        <List.Header as='a'>Stevie Feliciano</List.Header>
+		        <List.Description style={{color:'white'}}>Last seen watching <a><b>Bob's Burgers</b></a> 10 hours ago.</List.Description>
+		      </List.Content>
+		    </List.Item>
+		    <List.Item>
+		      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/elliot.jpg' />
+		      <List.Content>
+		        <List.Header as='a'>Elliot Fu</List.Header>
+		        <List.Description style={{color:'white'}}>Last seen watching <a><b>The Godfather Part 2</b></a> yesterday.</List.Description>
+		      </List.Content>
+		    </List.Item>
+		  </List>
 		   
 		  </div>
-		    
+		  <Button floated='right' basic inverted color='grey'>More</Button>
 		    </Segment>
 		    
 			</div>
