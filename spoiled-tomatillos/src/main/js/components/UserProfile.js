@@ -20,6 +20,7 @@ import {
   Label,
   Step, Table, Statistic
 } from 'semantic-ui-react'
+import {Navbar, NavItem, NavDropdown, Nav, MenuItem} from 'react-bootstrap';
 
 class UserProfile extends Component {
 	constructor(props) {
@@ -30,6 +31,60 @@ class UserProfile extends Component {
 	render() {
 		return(
 			<div>
+			
+			<nav id="topNav" className="navbar navbar-fixed-top">
+			<div className="container-fluid">
+			
+			<Navbar inverse collapseOnSelect>
+			  <Navbar.Header>
+			    <Navbar.Brand>
+			      <a href="#brand">Spoiled Tomatillos</a>
+			    </Navbar.Brand>
+			    <Navbar.Toggle />
+			  </Navbar.Header>
+			  <Navbar.Collapse>
+			    <Nav>
+			      <NavItem eventKey={1} href="#">
+			        Movies
+			      </NavItem>
+			      <NavItem eventKey={2} href="#">
+			        Reviews
+			      </NavItem>
+			        <NavItem eventKey={3} href="#">
+			        News
+			      </NavItem>
+			      <NavDropdown eventKey={3} title="Categories" id="basic-nav-dropdown">
+			        <MenuItem eventKey={3.1}>Comedy</MenuItem>
+			        <MenuItem eventKey={3.2}>Sci-Fi</MenuItem>
+			        <MenuItem eventKey={3.3}>Horror</MenuItem>
+			        <MenuItem eventKey={3.4}>Romance</MenuItem>
+			        <MenuItem eventKey={3.5}>Action</MenuItem>
+			        <MenuItem eventKey={3.6}>Drama</MenuItem>
+
+			        <MenuItem divider />
+			        <MenuItem eventKey={3.7}>More</MenuItem>
+			      </NavDropdown>
+			    </Nav>
+			    
+			    <Nav pullRight>
+			    <NavItem>
+			    		<Icon link name='user outline' />
+			        
+			    </NavItem>
+			    <NavItem>
+			    		<Icon link name='empty heart' />
+			    </NavItem>
+			    		<NavItem>
+			    			<Icon link name='discussions'/>
+			    		</NavItem>
+			    </Nav>
+			    
+			  </Navbar.Collapse>
+			</Navbar>
+			
+			</div>
+			</nav>
+			
 			
 			
 			<Container text>
@@ -113,20 +168,34 @@ class UserProfile extends Component {
 	    		   </Grid>
 	    		<Button floated='right' basic inverted color='grey'>More</Button>
 		    </Segment>
-		    
-		    <Segment style={{ padding: '8em 0em' }} vertical>
+		  
+		    <Segment inverted>
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>My Reviews</Header>
-		    <Container>
-		      <Segment.Group>
-		        <Segment as='a'>Lady Bird: a touching throwback to the adolescent years
-		        	</Segment>
-		        <Segment>Content</Segment>
-		        <Segment>Content</Segment>
-		        <Segment>Content</Segment>
-		      </Segment.Group>
-		    </Container>
+		    <List divided inverted relaxed>
+		      <List.Item>
+		        <List.Content>
+		          <List.Header>Lady Bird</List.Header>
+		          a touching throwback to the adolescent years
+		        </List.Content>
+		      </List.Item>
+		      <List.Item>
+		        <List.Content>
+		          <List.Header>	
+		          Pacific Rim: Uprising</List.Header>
+		          A well done sequel
+		        </List.Content>
+		      </List.Item>
+		      <List.Item>
+		        <List.Content>
+		          <List.Header>Unsane</List.Header>
+		          The best film of Berlinale was shot on an iPhone!
+		        </List.Content>
+		      </List.Item>
+		    </List>
 		    <Button floated='right' basic inverted color='grey'>More</Button>
-		    </Segment>
+		  </Segment>
+		  
+		  
 		    
 		    
 		    <Segment style={{ padding: '8em 0em' }} vertical>
