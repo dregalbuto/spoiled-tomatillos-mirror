@@ -9,6 +9,7 @@ import Signup from './components/Signup.js';
 import Homepage from './components/Homepage.js';
 import UserHome from './components/Home.js';
 import Movie from './components/Movie.js';
+import Profile from './components/UserProfile.js';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -20,6 +21,7 @@ ReactDOM.render(
       <Route path = "/Signup" component = {Signup}/>
       <Route path = "/Movie/:id" component = {Movie}/>
       <Route path = "/User" component = {UserHome}/>
+      <Route path = "/Profile" component = {Profile}/>
     </div>
     </BrowserRouter>
     , document.getElementById('react'));
