@@ -18,24 +18,33 @@ import {
   Visibility,
   Item,
   Label,
-  Step, Table, Statistic
+  Modal
 } from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem, ListGroup, ListGroupItem} from 'react-bootstrap';
 
+
+
+
 class Groups extends Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 		this.state = {
-			
-		}
-//		 this.handleItemClick = this.handleItemClick.bind(this);
+				open: false,
+		};
+		this.open = this.open.bind(this);
+	    this.close = this.close.bind(this);
 	}
+
 	
-//	handleItemClick(e) {
-//		this.setState({activeItem: e.target.value });
-//		
-//	}
+	open(e) {
+		this.setState({ open: true })
+	}
+	close(e){
+		this.setState({ open: false })
+	}
+
 	render() {
+		const { open } = this.state
 		return(
 			<div>
 			
@@ -110,28 +119,147 @@ class Groups extends Component {
 		  
 		   <ListGroupItem header="Group A" href="#">
 		     Description A
-		     	<Icon floated='right' link name='settings' />
-		   </ListGroupItem>
+		     	
+		     <Icon floated='right' link name='settings' />
+		    	
+		    	 <Modal 
+		 	 	open={open}
+		 		onOpen={this.open}
+		 		onClose={this.close}
+		 		style={{height: 300}} 
+		 		trigger={  
+		 	 	<Button icon>
+		 	 		<Icon floated='right' link name='delete' />
+		 	 			</Button>
+		 		} 
+		 		basic 
+		 		size='small'>
+		    
+		 		<Header icon='archive' content='Are you sure to delete this group?' />
+		 			<Modal.Content>
+		 				<p>Once you confirm, you will lose the members and reviews in this group.</p>
+		 			</Modal.Content>
+		 			<Modal.Actions>
+		 				<Button basic color='red' inverted onClick={this.close}>
+		 					<Icon name='remove' /> No
+		 				</Button>
+		 					
+		 				<Button color='green' inverted onClick={this.close}>
+		 					<Icon name='checkmark' /> Yes
+		 				</Button>
+		 			</Modal.Actions>
+		 		</Modal>
+		 		
+		   
+		    	 </ListGroupItem>
 		     <ListGroupItem header="Group B" href="#">
 		     Description B
 
 		     	<Icon floated='right' link name='settings' />
+		     	
+		     		
+			    	 <Modal 
+			 	 	open={open}
+			 		onOpen={this.open}
+			 		onClose={this.close}
+			 		style={{height: 300}} 
+			 		trigger={  
+			 	 	<Button icon>
+			 	 		<Icon floated='right' link name='delete' />
+			 	 			</Button>
+			 		} 
+			 		basic 
+			 		size='small'>
+			    
+			 		<Header icon='archive' content='Are you sure to delete this group?' />
+			 			<Modal.Content>
+			 				<p>Once you confirm, you will lose the members and reviews in this group.</p>
+			 			</Modal.Content>
+			 			<Modal.Actions>
+			 				<Button basic color='red' inverted onClick={this.close}>
+			 					<Icon name='remove' /> No
+			 				</Button>
+			 					
+			 				<Button color='green' inverted onClick={this.close}>
+			 					<Icon name='checkmark' /> Yes
+			 				</Button>
+			 			</Modal.Actions>
+			 		</Modal>
+			 		
+			 		
 		     </ListGroupItem>
 		     <ListGroupItem header="Group C" href="#">
 		     Description C
+		     
 		     <Icon floated='right' link name='settings' />
+		    	 
+		    	 <Modal 
+		 	 	open={open}
+		 		onOpen={this.open}
+		 		onClose={this.close}
+		 		style={{height: 300}} 
+		 		trigger={  
+		 	 	<Button icon>
+		 	 		<Icon floated='right' link name='delete' />
+		 	 			</Button>
+		 		} 
+		 		basic 
+		 		size='small'>
 		    
+		 		<Header icon='archive' content='Are you sure to delete this group?' />
+		 			<Modal.Content>
+		 				<p>Once you confirm, you will lose the members and reviews in this group.</p>
+		 			</Modal.Content>
+		 			<Modal.Actions>
+		 				<Button basic color='red' inverted onClick={this.close}>
+		 					<Icon name='remove' /> No
+		 				</Button>
+		 					
+		 				<Button color='green' inverted onClick={this.close}>
+		 					<Icon name='checkmark' /> Yes
+		 				</Button>
+		 			</Modal.Actions>
+		 		</Modal>
+		 		
 		   </ListGroupItem>
 		     <ListGroupItem header="Group D" href="#">
 		     Description D
 		     <Icon floated='right' link name='settings' />	    
-		   </ListGroupItem>
+		    	 
+		    	 <Modal 
+		 	 	open={open}
+		 		onOpen={this.open}
+		 		onClose={this.close}
+		 		style={{height: 300}} 
+		 		trigger={  
+		 	 	<Button icon>
+		 	 		<Icon floated='right' link name='delete' />
+		 	 			</Button>
+		 		} 
+		 		basic 
+		 		size='small'>
+		    
+		 		<Header icon='archive' content='Are you sure to delete this group?' />
+		 			<Modal.Content>
+		 				<p>Once you confirm, you will lose the members and reviews in this group.</p>
+		 			</Modal.Content>
+		 			<Modal.Actions>
+		 				<Button basic color='red' inverted onClick={this.close}>
+		 					<Icon name='remove' /> No
+		 				</Button>
+		 					
+		 				<Button color='green' inverted onClick={this.close}>
+		 					<Icon name='checkmark' /> Yes
+		 				</Button>
+		 			</Modal.Actions>
+		 		</Modal>
+		 		
+		     </ListGroupItem>
 		 </ListGroup>
 		 
 		 
 		 <Segment inverted>
 	      <Button floated='right' basic inverted color='blue'>Add</Button>
-	      <Button floated='right' basic inverted color='red'>Delete</Button>
 	      
 	    </Segment>
 	     
@@ -140,6 +268,7 @@ class Groups extends Component {
 		)
 	}
 }
+
 
 const style = {
 		h3: {
