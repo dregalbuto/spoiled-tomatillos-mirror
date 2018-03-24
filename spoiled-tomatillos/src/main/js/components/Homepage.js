@@ -56,6 +56,7 @@ class Homepage extends Component {
 			})
 		})
 	}
+	
 	render() {
 		return (
 				<div className="Homepage">

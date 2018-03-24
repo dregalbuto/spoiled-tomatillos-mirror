@@ -10,6 +10,7 @@ import Homepage from './components/Homepage.js';
 import UserHome from './components/Home.js';
 import Movie from './components/Movie.js';
 import Profile from './components/UserProfile.js';
+import Groups from './components/Groups.js';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -22,7 +23,8 @@ ReactDOM.render(
       <Route path = "/Movie/:id" component = {Movie}/>
       <Route path = "/User" component = {UserHome}/>
       <Route path = "/Profile" component = {Profile}/>
-    </div>
+      <Route path = "/Groups" component={Groups}/>
+      </div>
     </BrowserRouter>
     , document.getElementById('react'));
 
