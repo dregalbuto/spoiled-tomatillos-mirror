@@ -18,7 +18,7 @@ ReactDOM.render(
       <Route path = "/Login" component = {Login}/>
       <Route path = "/Signup" component = {Signup}/>
       <Route path = "/Movie/:id" component = {Movie}/>
-      <Route path = "/User" component = {UserHome}/>
+      <Route path = "/User/:userId" component = {UserHome}/>
     </div>
     </BrowserRouter>
     , document.getElementById('react'));
