@@ -1,5 +1,9 @@
 package edu.northeastern.cs4500.spoiledtomatillos.movies;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +13,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
 
 import static org.junit.Assert.*;
 
@@ -24,21 +32,28 @@ public class MovieCachedRepositoryTest {
 
     @Autowired
     private MovieRepository movieRepository;
-
+    @Autowired
+    private ReviewRepository reviewRepository;
     MovieCachedRepository movieCachedRepository;
+
 
     @Before
     public void setUp() {
         entityManager.clear();
-        movieCachedRepository = new MovieCachedRepository(movieRepository);
+        movieCachedRepository = new MovieCachedRepository(movieRepository, reviewRepository);
     }
 
     @Test
-    public void getMovie() {
+    public void getMovie() throws JsonProcessingException {
         String id = "tt0000001";
         assertEquals(null, this.movieCachedRepository.getMovie(null));
         assertEquals(id, this.movieCachedRepository.getMovie(id).getId());
-        assertEquals("Carmencita", this.movieCachedRepository.getMovie(id).getTitle());
+        Movie movie = this.movieCachedRepository.getMovie(id);
+        assertEquals("Carmencita", movie.getTitle());
+        List<Review> reviewList = this.reviewRepository.findByMovieAndUserIsNull(movie);
+        assertEquals(1, reviewList.size());
+        assertEquals("{\"id\":2,\"text\":\"\",\"rating\":0}",
+                new ObjectMapper().writeValueAsString(reviewList.get(0)));
     }
 
     @Test

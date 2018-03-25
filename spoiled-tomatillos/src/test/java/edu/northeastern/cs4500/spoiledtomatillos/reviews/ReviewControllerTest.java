@@ -28,19 +28,30 @@ public class ReviewControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    private String signupLogin(JSONObject per) throws Exception {
+        // Signup
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/signup")
+                .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
+                .andDo(MockMvcResultHandlers.print());
+
+        // Login
+        String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        return new JSONObject(cont).getString("token");
+    }
+
     @Test
     public void postViewDeleteReview() throws Exception {
         // Login
         JSONObject loginJson = new JSONObject();
+        loginJson.put("first_name", "erin");
+        loginJson.put("last_name", "zhang");
         loginJson.put("email", "erinzhang@husky.neu.edu");
+        loginJson.put("username", "erin.z");
         loginJson.put("password", "passw0rd");
-        String token;
-        String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
-                .contentType(MediaType.APPLICATION_JSON).content(loginJson.toString()))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        System.out.println("TOKEN:|||||||\n" + cont);
-        token = new JSONObject(cont).getString("token");
+        String token = signupLogin(loginJson);
 
         // Post
         JSONObject postReq = new JSONObject();
@@ -50,7 +61,7 @@ public class ReviewControllerTest {
         postReq.put("text", "Test review for a thingy");
         postReq.put("movieId", "tt0000001");
         String postId;
-        cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/post")
+        String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/post")
                 .contentType(MediaType.APPLICATION_JSON).content(postReq.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
