@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import './Login.css';
 import axios from 'axios';
 import {Button} from 'react-bootstrap';
+import { Redirect } from 'react-router';
 
 class Login extends Component{
   constructor(props) {
     super(props);
     this.state={
       username:'',
-      password:''
+      password:'',
+      id:null,
+      fireRedirect: false
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -40,6 +43,20 @@ console.log(pass);
     .then(response => response.json())
   .then(data => {
     console.log(data);
+    if(data.hasOwnProperty("token")) {
+      var token = data.token;
+      fetch("/api/user/email/" + name)
+          .then(res=>res.json())
+          .then(res=>{console.log(res);
+            json=>this.setState({id:res.id})});
+
+
+      this.setState({ fireRedirect: true })
+    }
+    else {
+      var error = data.message;
+      alert(error);
+    }
   },
   (error : any) => {
       let errorData = error.json().errors.children;
@@ -89,6 +106,9 @@ console.log(pass);
           onClick={(event)=>this.handleClick(event)}
           bsSize="large">Login</Button>
 
+  				{this.state.fireRedirect && (
+  				          <Redirect to={"/User/"+this.state.id}/>
+  				        )}
 
 
 

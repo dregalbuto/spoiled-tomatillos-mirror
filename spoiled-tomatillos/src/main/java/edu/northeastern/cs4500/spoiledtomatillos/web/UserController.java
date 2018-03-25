@@ -49,6 +49,16 @@ public class UserController {
 	User getUserByID(@PathVariable(required = true) String id) {
 		return this.userService.findById(Integer.valueOf(id));
 	}
+	
+	/**
+	 * Get the user with given email address.
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/email/{email:.+}")
+	User getUserByEmail(@PathVariable(required = true) String email) {
+		return this.userService.findByEmail(email);
+	}
 
     @RequestMapping(value = "/login", method=RequestMethod.POST)
     public ResponseEntity<String> loginAccount(@RequestBody String strRequest)
