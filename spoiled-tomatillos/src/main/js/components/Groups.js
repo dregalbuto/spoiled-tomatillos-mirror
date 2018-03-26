@@ -18,9 +18,46 @@ import {
   Visibility,
   Item,
   Label,
-  Modal
+  Modal,
+  Form
 } from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem, ListGroup, ListGroupItem} from 'react-bootstrap';
+
+class GroupForm extends Component {
+	constructor() {
+		super();
+		this.state= {
+				
+		};
+		this.handleChange = this.handleChange.bind(this);
+	}
+	handleChange(e) {
+		const name = e.target.name;
+		const value = e.target.value;
+		this.setState({ [name]:value })
+	}
+	
+	render() {
+		const { value } = this.state
+		return (
+				<Form>
+		        <Form.Group widths='equal'>
+		        	  <Form.Input fluid label='Group name' placeholder='Group name' />
+		          <Form.Input fluid label='Movie name' placeholder='Movie name' />
+		        
+		        </Form.Group>
+		          
+		        <Form.Group inline>
+		          <label>Who can see this group?</label>
+		          <Form.Radio label='Public' value='public' checked={value === 'public'} onChange={this.handleChange} />
+		          <Form.Radio label='Private' value='private' checked={value === 'private'} onChange={this.handleChange} />
+		        </Form.Group>
+		        <Form.TextArea label='Group Description' placeholder='Tell your members more about this group...' />
+		        	<Form.Button>Add friends</Form.Button>
+		      </Form>
+		)
+	}
+}
 
 
 class NestedModal extends Component {
@@ -51,7 +88,7 @@ class NestedModal extends Component {
 					onOpen={this.open}
 		        		onClose={this.close}
 					trigger={<Button floated='right' basic color='blue'>Add</Button>}
-		 			style={{height: 400}} >
+		 			style={{height: 500}} >
 						<Modal.Header>Add a Group</Modal.Header>
 						<Modal.Content image scrolling>
 							<Image
@@ -62,7 +99,7 @@ class NestedModal extends Component {
 
 		      <Modal.Description>
 		        <Header>Group Description</Header>
-		        <p style={{color:'black'}}>This is an example of expanded content that will cause the modal's dimmer to scroll</p>
+		        <GroupForm />
 
 		        
 		      </Modal.Description>
