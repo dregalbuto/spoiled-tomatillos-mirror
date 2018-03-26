@@ -3,6 +3,7 @@ import { Redirect } from 'react-router'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
+import Reviews from './components/Reviews.js';
 import {
 	  Button, 
 	  Header,
@@ -38,7 +39,7 @@ class NavigationBar extends Component {
 				      <NavItem eventKey={1} href="#">
 				        Movies
 				      </NavItem>
-				      <NavItem eventKey={2} href="#">
+				      <NavItem eventKey={2} href="/Reviews">
 				        Reviews
 				      </NavItem>
 				        <NavItem eventKey={3} href="#">

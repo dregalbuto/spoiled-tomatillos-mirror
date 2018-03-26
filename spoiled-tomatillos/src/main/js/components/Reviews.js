@@ -73,13 +73,10 @@ class AddReview extends Component {
 		        Add <Icon name='right chevron' />
 		      </Button>
 		    </Modal.Actions>
-		  </Modal>
-		  
-		  
+		  </Modal>	  
 		)
 	}	
-	
-	
+
 }
 
 
@@ -212,6 +209,7 @@ class ReviewList extends Component {
 	render() {
 		return(
 				<div>
+				 <Link to="/Profile"><Button basic inverted color='blue'>Back</Button></Link>
 				 <Table celled padded>
 				    <Table.Header>
 				      <Table.Row>

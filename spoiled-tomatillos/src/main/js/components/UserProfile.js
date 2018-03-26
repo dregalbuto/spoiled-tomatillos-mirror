@@ -145,9 +145,6 @@ class UserProfile extends Component {
 		    <Link to="/Reviews"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 		  </Segment>
 		  
-		  
-		    
-		    
 		    <Segment style={{ padding: '8em 0em' }} vertical>
 		 
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Groups</Header>

@@ -210,6 +210,7 @@ class Groups extends Component {
 			<div>
 			
 			<NavigationBar />
+			<Link to="/Profile"><Button basic inverted color='blue'>Back</Button></Link>
 		   <Header
 			as='h2'
 				content='My Groups'
@@ -363,9 +364,7 @@ class Groups extends Component {
 		 		
 		     </ListGroupItem>
 		 </ListGroup>
-		 
-		 
-		 
+		
 		 <Segment inverted>
 		 <NestedModal />
 	      
