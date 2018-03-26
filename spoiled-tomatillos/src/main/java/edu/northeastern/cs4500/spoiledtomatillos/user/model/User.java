@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
@@ -123,8 +124,26 @@ public class User {
      *
      * @param password user password in plain text.
      */
-    private void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static SecureRandom rnd = new SecureRandom();
+
+    private static String randomString(int len){
+        StringBuilder sb = new StringBuilder(len);
+        for ( int i = 0; i < len; i++ ) {
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        return sb.toString();
+    }
+
+    public String randomPassword() {
+        String randomStr = randomString(12);
+        this.setTokenExpired();
+        this.setPassword(randomStr);
+        return randomStr;
     }
 
     public boolean checkPassword(String plainPassword) {
