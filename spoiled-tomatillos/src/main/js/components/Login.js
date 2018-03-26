@@ -20,14 +20,6 @@ class Login extends Component{
     };
   }
 
-  componentWillMount() {
-    this.mounted = false
-  }
-
-  componentDidMount() {
-    this.mounted = true
-  }
-
   handleClick(event){
     event.preventDefault;
     var name = this.username.value;
@@ -118,7 +110,7 @@ class Login extends Component{
           bsSize="large">Login</Button>
 
   				{this.state.fireRedirect && (
-  				          <Redirect to={"/User/"+this.state.id}/>
+  				          <Redirect to={"/user/"+this.state.id}/>
   				        )}
 
 

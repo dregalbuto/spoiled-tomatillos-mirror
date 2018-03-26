@@ -24,11 +24,6 @@ class Navigation extends Component {
 
 ///////////////// User Profle /////////////////////
 class UserProfile extends Component {
-  constructor(props){
-    super(props);
-  }
-
-
   render() {
     return (
       <div className="UserProfile">
@@ -92,6 +87,18 @@ class TitleList extends Component {
 
 ///////////////// Home /////////////////////
 class Home extends Component {
+
+  constructor(props){
+    super(props);
+    console.log(this.props.match.params.id);
+    fetch("/api/user/id/" + props.match.params.id)
+        .then(response => response.json()).then(response=>{console.log(response)});
+
+  }
+
+
+
+
   render() {
     return (
 
