@@ -5,29 +5,40 @@ import {Button} from 'react-bootstrap';
 import { Redirect } from 'react-router';
 
 class Login extends Component{
+
+
+
   constructor(props) {
     super(props);
     this.state={
       username:'',
       password:'',
-      id:null,
-      fireRedirect: false
+      fireRedirect: false,
+      id:0,
+      mounted:false,
+      token:0
     };
-    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentWillMount() {
+    this.mounted = false
+  }
+
+  componentDidMount() {
+    this.mounted = true
   }
 
   handleClick(event){
     event.preventDefault;
     var name = this.username.value;
     var pass = this.password.value;
+    var fetchedData = {};
 
     if(name.length <= 0 || pass.length <= 0) {
       alert("empty fields");
       return;
     }
 
-console.log(name);
-console.log(pass);
     var data = {
       "email":name,
       "password":pass
@@ -47,11 +58,11 @@ console.log(pass);
       var token = data.token;
       fetch("/api/user/email/" + name)
           .then(res=>res.json())
-          .then(res=>{console.log(res);
-            json=>this.setState({id:res.id})});
-
-
-      this.setState({ fireRedirect: true })
+          .then(res=>{
+            fetchedData = res;
+            this.state.id = fetchedData.id;
+            this.setState({ fireRedirect: true});
+            });
     }
     else {
       var error = data.message;
@@ -103,7 +114,7 @@ console.log(pass);
 
           <Button
           bsStyle="primary"
-          onClick={(event)=>this.handleClick(event)}
+          onClick={this.handleClick.bind(this)}
           bsSize="large">Login</Button>
 
   				{this.state.fireRedirect && (
