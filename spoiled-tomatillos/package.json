@@ -21,6 +21,7 @@
   "homepage": "https://github.com/spring-guides/tut-react-and-spring-data-rest",
   "dependencies": {
     "atom": "^1.1.0",
+    "axios": "^0.18.0",
     "react": "^15.6.2",
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-form": "^0.1.4-beta6",

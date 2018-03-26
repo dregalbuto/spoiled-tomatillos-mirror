@@ -22,7 +22,7 @@ ReactDOM.render(
       <Route path = "/Login" component = {Login}/>
       <Route path = "/Signup" component = {Signup}/>
       <Route path = "/Movie/:id" component = {Movie}/>
-      <Route path = "/User" component = {UserHome}/>
+      <Route path = "/user/:id" component = {UserHome}/>
       <Route path = "/Profile" component = {Profile}/>
       <Route path = "/Groups" component={Groups}/>
       <Route path = "/Reviews" component={Reviews}/>
