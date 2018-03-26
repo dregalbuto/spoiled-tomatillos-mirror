@@ -3,7 +3,7 @@ import { Redirect } from 'react-router'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import Reviews from './components/Reviews.js';
+import Reviews from './Reviews.js';
 import {
 	  Button, 
 	  Header,
