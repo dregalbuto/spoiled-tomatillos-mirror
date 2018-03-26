@@ -23,7 +23,64 @@ import {
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem, ListGroup, ListGroupItem} from 'react-bootstrap';
 
 
+class NestedModal extends Component {
+	constructor() {
+		super();
+		this.state = {
+				open:false,
+		};
+		
+		this.open = this.open.bind(this);
+	    this.close = this.close.bind(this);
+	    }
+		
 
+	  open() {
+		  this.setState({ open: true })
+	  }
+	  close() {
+		  this.setState({ open: false })
+	  }
+	  
+	render() {
+		  const { open } = this.state
+		return (
+				<Modal 
+					dimmer={false}
+				 	open={open}
+					onOpen={this.open}
+		        		onClose={this.close}
+					trigger={<Button floated='right' basic color='blue'>Add</Button>}
+		 			style={{height: 400}} >
+						<Modal.Header>Add a Group</Modal.Header>
+						<Modal.Content image scrolling>
+							<Image
+							size='medium'
+								src='https://react.semantic-ui.com/assets/images/wireframe/image.png'
+									wrapped
+								/>
+
+		      <Modal.Description>
+		        <Header>Group Description</Header>
+		        <p style={{color:'black'}}>This is an example of expanded content that will cause the modal's dimmer to scroll</p>
+
+		        
+		      </Modal.Description>
+		    </Modal.Content>
+		    <Modal.Actions>
+		    		<Button basic color='red' onClick={this.close}>
+				<Icon name='remove' /> Cancel
+			</Button>
+		      <Button primary onClick={this.close}>
+		        Add <Icon name='right chevron' />
+		      </Button>
+		    </Modal.Actions>
+		  </Modal>
+		  
+		  
+		)
+	}
+}
 
 class Groups extends Component {
 	constructor() {
@@ -33,6 +90,7 @@ class Groups extends Component {
 		};
 		this.open = this.open.bind(this);
 	    this.close = this.close.bind(this);
+	    
 	}
 
 	
@@ -152,16 +210,17 @@ class Groups extends Component {
 		 		
 		   
 		    	 </ListGroupItem>
-		     <ListGroupItem header="Group B" href="#">
+		     
+		    	 <ListGroupItem header="Group B" href="#">
 		     Description B
 
 		     	<Icon floated='right' link name='settings' />
 		     	
 		     		
 			    	 <Modal 
-			 	 	open={open}
-			 		onOpen={this.open}
-			 		onClose={this.close}
+			    	 		open={open}
+				 		onOpen={this.open}
+				 		onClose={this.close}
 			 		style={{height: 300}} 
 			 		trigger={  
 			 	 	<Button icon>
@@ -222,7 +281,8 @@ class Groups extends Component {
 		 		</Modal>
 		 		
 		   </ListGroupItem>
-		     <ListGroupItem header="Group D" href="#">
+		    
+		   <ListGroupItem header="Group D" href="#">
 		     Description D
 		     <Icon floated='right' link name='settings' />	    
 		    	 
@@ -258,8 +318,10 @@ class Groups extends Component {
 		 </ListGroup>
 		 
 		 
+		 
 		 <Segment inverted>
-	      <Button floated='right' basic inverted color='blue'>Add</Button>
+		 <NestedModal />
+	      
 	      
 	    </Segment>
 	     
