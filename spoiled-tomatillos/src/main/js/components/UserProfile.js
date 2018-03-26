@@ -21,6 +21,7 @@ import {
   Step, Table, Statistic
 } from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class UserProfile extends Component {
 	constructor(props) {
@@ -38,7 +39,7 @@ class UserProfile extends Component {
 			<Navbar inverse collapseOnSelect>
 			  <Navbar.Header>
 			    <Navbar.Brand>
-			      <a href="#brand">Spoiled Tomatillos</a>
+			      <a href="/Home">Spoiled Tomatillos</a>
 			    </Navbar.Brand>
 			    <Navbar.Toggle />
 			  </Navbar.Header>
@@ -68,14 +69,14 @@ class UserProfile extends Component {
 			    
 			    <Nav pullRight>
 			    <NavItem>
-			    		<Icon link name='user outline' />
-			        
+			    		<Link to="/Profile"><Icon link name='user outline' /></Link>
+			    		
 			    </NavItem>
 			    <NavItem>
 			    		<Icon link name='empty heart' />
 			    </NavItem>
 			    		<NavItem>
-			    			<Icon link name='discussions'/>
+			    		<Link to="/Groups"><Icon link='/Groups' name='discussions'/></Link>
 			    		</NavItem>
 			    </Nav>
 			    
@@ -192,7 +193,7 @@ class UserProfile extends Component {
 		        </List.Content>
 		      </List.Item>
 		    </List>
-		    <Button floated='right' basic inverted color='grey'>More</Button>
+		    <Link to="/Reviews"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 		  </Segment>
 		  
 		  
@@ -268,7 +269,7 @@ class UserProfile extends Component {
 		      </Item.Group>
 		    </Container>
 
-		    <Button floated='right' basic inverted color='grey'>More</Button>
+		    <Link to="/Groups"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 		    </Segment>
 		    
 		    <Segment style={{ padding: '8em 0em' }} vertical>

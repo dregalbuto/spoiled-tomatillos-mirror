@@ -2,6 +2,11 @@ import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
+import Homepage from './Homepage.js';
+import Profile from './UserProfile.js';
+import Groups from './Groups.js';
+
 import {
 	  Button,
 	  Container,
@@ -291,7 +296,7 @@ class NavBar extends Component {
 				<Navbar inverse collapseOnSelect>
 				  <Navbar.Header>
 				    <Navbar.Brand>
-				      <a href="#brand">Spoiled Tomatillos</a>
+				      <a href="/Home">Spoiled Tomatillos</a>
 				    </Navbar.Brand>
 				    <Navbar.Toggle />
 				  </Navbar.Header>
@@ -321,14 +326,16 @@ class NavBar extends Component {
 				    
 				    <Nav pullRight>
 				    <NavItem>
-				    		<Icon link name='user outline' />
+				    		<Link to="/Profile"><Icon link name='user outline' /></Link>
 				        
 				    </NavItem>
 				    <NavItem>
+				    
 				    		<Icon link name='empty heart' />
 				    </NavItem>
 				    		<NavItem>
-				    			<Icon link name='discussions'/>
+				    		 	<Link to="/Groups"><Icon link='/Groups' name='discussions'/></Link>
+				    			
 				    		</NavItem>
 				    </Nav>
 				    

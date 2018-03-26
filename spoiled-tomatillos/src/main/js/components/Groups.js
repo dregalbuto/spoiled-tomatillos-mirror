@@ -22,6 +22,9 @@ import {
   Form
 } from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem, ListGroup, ListGroupItem} from 'react-bootstrap';
+import Profile from './UserProfile.js';
+import { Link } from 'react-router-dom';
+
 
 class ManageGroup extends Component {
 	constructor() {
@@ -215,7 +218,7 @@ class Groups extends Component {
 			<Navbar inverse collapseOnSelect>
 			  <Navbar.Header>
 			    <Navbar.Brand>
-			      <a href="#brand">Spoiled Tomatillos</a>
+			      <a href="/Home">Spoiled Tomatillos</a>
 			    </Navbar.Brand>
 			    <Navbar.Toggle />
 			  </Navbar.Header>
@@ -245,14 +248,14 @@ class Groups extends Component {
 			    
 			    <Nav pullRight>
 			    <NavItem>
-			    		<Icon link name='user outline' />
+			    <Link to="/Profile"><Icon link name='user outline' /></Link>
 			        
 			    </NavItem>
 			    <NavItem>
 			    		<Icon link name='empty heart' />
 			    </NavItem>
 			    		<NavItem>
-			    			<Icon link name='discussions'/>
+			    		<Link to="/Groups"><Icon link='/Groups' name='discussions'/></Link>
 			    		</NavItem>
 			    </Nav>
 			    
