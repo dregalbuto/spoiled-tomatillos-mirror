@@ -23,6 +23,72 @@ import {
 } from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem, ListGroup, ListGroupItem} from 'react-bootstrap';
 
+class ManageGroup extends Component {
+	constructor() {
+		super();
+		this.state= {
+			open:false,
+		};
+		this.open = this.open.bind(this);
+	    this.close = this.close.bind(this);
+	}
+	  open() {
+		  this.setState({ open: true })
+	  }
+	  close() {
+		  this.setState({ open: false })
+	  }
+	  
+	
+	render() {
+		const { open } = this.state
+		return (
+				<Modal 
+				dimmer={false}
+			 	open={open}
+				onOpen={this.open}
+	        		onClose={this.close}
+				trigger={
+						<Button icon>
+							<Icon floated='right' link name='settings' />
+						</Button>
+						}
+	 			style={{height: 400}} >
+					<Modal.Header>Edit Group Settings</Modal.Header>
+					<Modal.Content image scrolling>
+						<Image
+						size='medium'
+							src='https://react.semantic-ui.com/assets/images/wireframe/image.png'
+								wrapped
+							/>
+
+	      <Modal.Description>
+	        <Header>Placeholder - Group Name</Header>
+	        
+	        This will be added later to manage group settings.
+
+	        
+	      </Modal.Description>
+	    </Modal.Content>
+	    <Modal.Actions>
+	    		<Button basic color='red' onClick={this.close}>
+			<Icon name='remove' /> Cancel
+		</Button>
+	      <Button primary onClick={this.close}>
+	        Add <Icon name='right chevron' />
+	      </Button>
+	    </Modal.Actions>
+	  </Modal>
+	  
+	  
+	  
+			
+		)
+	}
+	
+}
+
+
 class GroupForm extends Component {
 	constructor() {
 		super();
@@ -214,9 +280,9 @@ class Groups extends Component {
 		  
 		   <ListGroupItem header="Group A" href="#">
 		     Description A
-		     	
-		     <Icon floated='right' link name='settings' />
-		    	
+
+		    <ManageGroup />
+		     
 		    	 <Modal 
 		 	 	open={open}
 		 		onOpen={this.open}
@@ -250,9 +316,7 @@ class Groups extends Component {
 		     
 		    	 <ListGroupItem header="Group B" href="#">
 		     Description B
-
-		     	<Icon floated='right' link name='settings' />
-		     	
+		     <ManageGroup />
 		     		
 			    	 <Modal 
 			    	 		open={open}
@@ -287,8 +351,7 @@ class Groups extends Component {
 		     <ListGroupItem header="Group C" href="#">
 		     Description C
 		     
-		     <Icon floated='right' link name='settings' />
-		    	 
+		     <ManageGroup />
 		    	 <Modal 
 		 	 	open={open}
 		 		onOpen={this.open}
@@ -321,7 +384,7 @@ class Groups extends Component {
 		    
 		   <ListGroupItem header="Group D" href="#">
 		     Description D
-		     <Icon floated='right' link name='settings' />	    
+		     <ManageGroup />
 		    	 
 		    	 <Modal 
 		 	 	open={open}
