@@ -13,9 +13,72 @@ import {
 	  Item,
 	  Label,
 	  Modal,
-	  Form
+	  Form,
+	  Table, 
+	  Rating
 	} from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem} from 'react-bootstrap';
+
+class ReviewTable extends Component {
+	constructor() {
+		super();
+		this.state = {
+			
+		};
+		
+	}
+	render() {
+		return(
+				<Table celled padded>
+			    <Table.Header>
+			      <Table.Row>
+			        <Table.HeaderCell singleLine>Movie Name</Table.HeaderCell>
+			        <Table.HeaderCell>Date</Table.HeaderCell>
+			        <Table.HeaderCell>Your Rating</Table.HeaderCell>
+			        <Table.HeaderCell>Movie Rating</Table.HeaderCell>
+			        <Table.HeaderCell>Comments</Table.HeaderCell>
+			      </Table.Row>
+			    </Table.Header>
+
+			    <Table.Body>
+			      <Table.Row>
+			        <Table.Cell>
+			          <Header as='h2' textAlign='center'>Avengers: Infinity War(2018) </Header>
+			        </Table.Cell>
+			        <Table.Cell singleLine>Action, Adventure, Fantasy</Table.Cell>
+			        <Table.Cell>
+			          <Rating icon='star' defaultRating={4} maxRating={5} />
+			        </Table.Cell>
+			        <Table.Cell textAlign='right'>
+			            4.3/5.0 <br />
+			          <a href='#'>23 Reviews</a>
+			        </Table.Cell>
+			        <Table.Cell>
+			        As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality.
+			        </Table.Cell>
+			      </Table.Row>
+			      <Table.Row>
+			        <Table.Cell>
+			          <Header as='h2' textAlign='center'>A</Header>
+			        </Table.Cell>
+			        <Table.Cell singleLine>Weight</Table.Cell>
+			        <Table.Cell>
+			          <Rating icon='star' defaultRating={3} maxRating={3} />
+			        </Table.Cell>
+			        <Table.Cell textAlign='right'>
+			            100% <br />
+			          <a href='#'>65 studies</a>
+			        </Table.Cell>
+			        <Table.Cell>
+			            Creatine is the reference compound for power improvement, with numbers from one meta-analysis to assess
+			            potency
+			        </Table.Cell>
+			      </Table.Row>
+			    </Table.Body>
+			  </Table>
+		)
+	}
+}
 
 	
 class NavBar extends Component {
@@ -95,7 +158,7 @@ class Reviews extends Component {
 		return (
 			<div>
 			<NavBar />	
-			
+			<ReviewTable />
 			
 			</div>
 		)
