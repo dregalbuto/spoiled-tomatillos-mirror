@@ -1,0 +1,106 @@
+package edu.northeastern.cs4500.spoiledTomatillos.web.dto;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import edu.northeastern.cs4500.spoiledTomatillos.user.constraint.FieldMatch;
+
+import javax.validation.constraints.AssertTrue;
+
+@FieldMatch.List({
+        @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match"),
+        @FieldMatch(first = "email", second = "confirmEmail", message = "The email fields must match")
+})
+public class UserRegistrationDto {
+
+    @NotEmpty
+    private String first_name;
+
+    @NotEmpty
+    private String last_name;
+
+    @NotEmpty
+    private String username;
+    
+    @NotEmpty
+    private String password;
+
+    @NotEmpty
+    private String confirmPassword;
+
+    @Email
+    @NotEmpty
+    private String email;
+
+    @Email
+    @NotEmpty
+    private String confirmEmail;
+
+    @AssertTrue
+    private Boolean terms;
+
+    public String getFirstName() {
+        return first_name;
+    }
+
+    public void setFirstName(String firstName) {
+        this.first_name = firstName;
+    }
+
+    public String getLastName() {
+        return last_name;
+    }
+
+    public void setLastName(String lastName) {
+        this.last_name = lastName;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getConfirmEmail() {
+        return confirmEmail;
+    }
+
+    public void setConfirmEmail(String confirmEmail) {
+        this.confirmEmail = confirmEmail;
+    }
+
+    public Boolean getTerms() {
+        return terms;
+    }
+
+    public void setTerms(Boolean terms) {
+        this.terms = terms;
+    }
+
+}
