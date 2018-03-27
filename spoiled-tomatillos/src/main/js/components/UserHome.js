@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './UserHome.css';
 import { Link } from 'react-router-dom';
 import NavigationBar from './NavigationBar.js';
-
+import SearchBar from './SearchBar.js';
+import { Embed } from 'semantic-ui-react'
 
 class FeaturesButton extends Component {
   render() {
@@ -14,23 +15,23 @@ class FeaturesButton extends Component {
 ///////////////// Features /////////////////////
 class Features extends Component {
 
-  _handleClick() {
-    return (
-      console.log("CLICKED!!!!!!!"),
-      <Link to="/Movie">TESTING</Link>
-    );
-  }
-
   render() {
     return (
       <div id="features" className="Features" style={{backgroundImage: 'url(https://therealsasha.wordpress.com/2015/03/01/interstellar-review/)'}}>
       <div className="content">
-      <img className="logo" src="http://entjunkie.blogspot.com/2014/11/interstellar-2014-film-review.html" alt="movie-bg" />
-      <h2>Watch interstellar now</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque id quam sapiente unde voluptatum alias vero debitis, magnam quis quod.</p>
+     
+      <Embed
+      id='2LqzF5WauAw'
+      placeholder='https://ia.media-imdb.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SY1000_SX675_AL_.jpg'
+      source='youtube'
+    />
+      
+    	  <a href="http://www.imdb.com/title/tt0816692/?ref_=tt_mv_close"> <h2>Watch interstellar now</h2> </a>
+     
+      
       <div className="button-wrapper">
 
-      <FeaturesButton onClick={this._handleClick} primary={true} text="Watch now">
+      <FeaturesButton primary={true} text="Watch now">
       </FeaturesButton>
 
       <FeaturesButton primary={false} text="+ My list" />
@@ -70,7 +71,9 @@ class Home extends Component {
       
       <header>
       <NavigationBar />
+      <SearchBar />
       </header>
+      
       <Features />
 
       <div className="TitleList">

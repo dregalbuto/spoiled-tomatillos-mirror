@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import Reviews from './Reviews.js';
-import SearchBar from './SearchBar.js';
 import {
 	  Button, 
 	  Header,
@@ -58,8 +57,6 @@ class NavigationBar extends Component {
 				        <MenuItem eventKey={3.7}>More</MenuItem>
 				      </NavDropdown>
 				    </Nav>
-				    
-					<SearchBar />
 					
 				    <Nav pullRight>
 				    <NavItem>
