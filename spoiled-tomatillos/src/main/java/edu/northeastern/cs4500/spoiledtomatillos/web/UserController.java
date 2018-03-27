@@ -1,8 +1,6 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.FriendList;
 import edu.northeastern.cs4500.spoiledtomatillos.user.repository.FriendListRepository;
 import org.json.JSONException;
@@ -64,37 +62,37 @@ public class UserController {
     public ResponseEntity<String> loginAccount(@RequestBody String strRequest)
 			throws JSONException {
         JSONObject request = new JSONObject(strRequest);
-        User user = userService.findByEmail(request.get("email").toString());
+        User user = userService.findByEmail(request.get(JsonStrings.EMAIL).toString());
         if (user == null){
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-							"user with this email doesn't exist").toString());
+                    new JSONObject().put(JsonStrings.MESSAGE,
+							JsonStrings.USER_NOT_FOUND).toString());
         }
 
-        String email = request.get("email").toString();
-        String password = request.get("password").toString();
+        String password = request.get(JsonStrings.SECRET).toString();
 
         if (!user.isEnabled()) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-							"user with this email is disabled").toString());
+                    new JSONObject().put(JsonStrings.MESSAGE,
+							JsonStrings.USER_DISABLED).toString());
         }
 
         if (!user.checkPassword(password)) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-                            "wrong password").toString());
+                    new JSONObject().put(JsonStrings.MESSAGE,
+                           JsonStrings.INCORRECT_PWD).toString());
         }
 
         try {
             String token = user.getToken(password);
             this.userService.save(user);
             return ResponseEntity.ok().body(
-                    new JSONObject().put("message", "logged in").put("token", token).toString());
+                    new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.LOGGED_IN)
+                    .put(JsonStrings.TOKEN, token).toString());
         } catch (IllegalAccessException e) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-                            "illegal access").toString());
+                    new JSONObject().put(JsonStrings.MESSAGE,
+                            JsonStrings.ILLEGAL_ACCESS).toString());
         }
 
     }
@@ -110,11 +108,11 @@ public class UserController {
 	public ResponseEntity<String> registerUserAccount(@RequestBody String strRequest)
 			throws JSONException {
 		JSONObject request = new JSONObject(strRequest);
-		User existing = userService.findByEmail(request.get("email").toString());
+		User existing = userService.findByEmail(request.get(JsonStrings.EMAIL).toString());
 		if (existing != null){
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put("message",
-							"user with this email already exists").toString());
+					new JSONObject().put(JsonStrings.MESSAGE,
+							JsonStrings.USER_EXISTS).toString());
 		}
 
 		String firstname = request.get("first_name").toString();
@@ -133,7 +131,7 @@ public class UserController {
 
 
 		return ResponseEntity.ok().body(
-				new JSONObject().put("message", "user created").toString());
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 
 	}
 }

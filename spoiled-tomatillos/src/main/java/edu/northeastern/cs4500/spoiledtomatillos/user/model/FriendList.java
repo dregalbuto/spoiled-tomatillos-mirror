@@ -13,124 +13,100 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 public class FriendList {
 
-    @Id
-    //@Column(name="id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    //@GeneratedValue(generator = "foreigngen")
-    //@GenericGenerator(strategy = "foreign", name="foreigngen",
-    //        parameters = @org.hibernate.annotations.Parameter(name = "property", value="users"))
-    private int id;
+	@Id
+	//@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(generator = "foreigngen")
+	//@GenericGenerator(strategy = "foreign", name="foreigngen",
+	//        parameters = @org.hibernate.annotations.Parameter(name = "property", value="users"))
+	private int id;
 
-    //@MapsId
-    //@JoinColumn(name = "id")
-    @OneToOne//(mappedBy = "friends")
-    @JsonBackReference
-    private User user;
+	//@MapsId
+	//@JoinColumn(name = "id")
+	@OneToOne//(mappedBy = "friends")
+	@JsonBackReference
+	private User user;
 
-    //@ManyToMany(cascade = CascadeType.ALL)
-    //@JoinColumn(name="id")
-    @ElementCollection
-    private Collection<Integer> request;
+	//@ManyToMany(cascade = CascadeType.ALL)
+	//@JoinColumn(name="id")
+	@ElementCollection
+	private Collection<Integer> requests;
 
-    //@ManyToMany(cascade = CascadeType.ALL)
-    //@JoinColumn(name="id")
-    @ElementCollection
-    private Collection<Integer> friends;
+	//@ManyToMany(cascade = CascadeType.ALL)
+	//@JoinColumn(name="id")
+	@ElementCollection
+	private Collection<Integer> friends;
 
-    public FriendList() {
-        // Empty constructor
-    }
+	public FriendList() {
+		// Empty constructor
+	}
 
-    public FriendList(User user) {
-        this.user = user;
-        this.request = new ArrayList<>();
-        this.friends = new ArrayList<>();
-    }
+	public FriendList(User user) {
+		this.user = user;
+		this.requests = new ArrayList<>();
+		this.friends = new ArrayList<>();
+	}
 
-    public boolean addRequest(User user) {
-        if (user == null) {
-            return false;
-        }
-        if (!user.isEnabled() || !this.user.isEnabled()) {
-            return false;
-        }
-        for (int id : friends) {
-            if (id == user.getId()) {
-                return false;
-            }
-        }
-        for (int id : request) {
-            if (id == user.getId()) {
-                return false;
-            }
-        }
-        this.request.add(user.getId());
-        return true;
-    }
+	public boolean addRequest(User friend) {
+		if (friend == null) {
+			return false;
+		}
+		if (!friend.isEnabled() || !this.user.isEnabled()) {
+			return false;
+		}
+		if (friends.contains(friend.getId())) {
+			return false;
+		}
+		if (requests.contains(friend.getId())) {
+			return false;
+		}
+		this.requests.add(friend.getId());
+		return true;
+	}
 
-    public boolean acceptRequest(User user) {
-        if (user == null) {
-            return false;
-        }
-        if (!user.isEnabled() || !this.user.isEnabled()) {
-            return false;
-        }
-        for (int id : friends) {
-            if (id == user.getId()) {
-                return false;
-            }
-        }
-        boolean found = false;
-        for (int id : request) {
-            if (id == user.getId()) {
-                found = true;
-            }
-        }
-        if (!found) {
-            return false;
-        }
-        this.friends.add(user.getId());
-        user.getFriends().addRequest(this.user);
-        user.getFriends().acceptRequest(this.user);
-        this.request.remove(user.getId());
-        return true;
-    }
+	public boolean acceptRequest(User friend) {
+		if (friend == null) {
+			return false;
+		}
+		if (!friend.isEnabled() || !this.user.isEnabled()) {
+			return false;
+		}
+		if (friends.contains(friend.getId())) {
+			return false;
+		}
+		if (!requests.contains(friend.getId())) {
+			return false;
+		}
+		this.friends.add(friend.getId());
+		friend.getFriends().addRequest(this.user);
+		friend.getFriends().acceptRequest(this.user);
+		this.requests.remove(friend.getId());
+		return true;
+	}
 
-    public boolean rejectRequest(User user) {
-        if (user == null) {
-            return false;
-        }
-        if (!this.user.isEnabled()) {
-            return false;
-        }
-        boolean found = false;
-        for (int id : request) {
-            if (id == user.getId()) {
-                found = true;
-            }
-        }
-        if (!found) {
-            return false;
-        }
-        this.request.remove(user.getId());
-        return true;
-    }
+	public boolean rejectRequest(User friend) {
+		if (friend == null) {
+			return false;
+		}
+		if (!friend.isEnabled() || !this.user.isEnabled()) {
+			return false;
+		}
+		if (!requests.contains(friend.getId())) {
+			return false;
+		}
+		this.requests.remove(friend.getId());
+		return true;
+	}
 
-    public boolean removeFriend(User user) {
-        if (!this.user.isEnabled()) {
-            return false;
-        }
-        boolean found = false;
-        for (int id : friends) {
-            if (id == user.getId()) {
-                found = true;
-            }
-        }
-        if (!found) {
-            return false;
-        }
-        this.friends.remove(user.getId());
-        user.getFriends().getFriends().remove(this.user.getId());
-        return true;
-    }
+	public boolean removeFriend(User friend) {
+		if (!friend.isEnabled() || !this.user.isEnabled()) {
+			return false;
+		}
+		if (!friends.contains(friend.getId())) {
+			return false;
+		}
+		this.friends.remove(friend.getId());
+		friend.getFriends().getFriends().remove(this.user.getId());
+		return true;
+	}
 }

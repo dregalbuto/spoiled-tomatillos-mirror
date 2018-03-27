@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OMDBMovieSource implements ExternalMovieSource {
-    private final String APIKEY = "3ef62c6c";
+    private static final String APIKEY = "3ef62c6c";
 
     /**
      * Get movie from external source using given identifier.

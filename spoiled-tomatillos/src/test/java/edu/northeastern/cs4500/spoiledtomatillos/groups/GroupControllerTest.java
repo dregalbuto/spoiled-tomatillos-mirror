@@ -1,14 +1,10 @@
 package edu.northeastern.cs4500.spoiledtomatillos.groups;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -27,7 +23,6 @@ public class GroupControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
 
     private String signupLogin(JSONObject per) throws Exception {
         // Signup

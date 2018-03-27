@@ -9,18 +9,13 @@ import java.util.Collection;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.mapping.FetchProfile;
 
 /**
  * Group object for data of a group

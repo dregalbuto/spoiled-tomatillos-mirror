@@ -31,7 +31,7 @@ public class Movie {
     // list of reviews
 
     /**
-     * A user has many reviews.
+     * A movie has many reviews.
      */
     @JsonManagedReference
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)

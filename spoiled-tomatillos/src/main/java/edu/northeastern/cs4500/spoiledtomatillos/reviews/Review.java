@@ -8,8 +8,6 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Collection;
-
 
 /**
  * Class for a review written by a user
