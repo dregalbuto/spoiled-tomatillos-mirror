@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import cookie from 'react-cookies'
 import './UserHome.css';
 import { Link } from 'react-router-dom';
 import NavigationBar from './NavigationBar.js';
 import SearchBar from './SearchBar.js';
-import { Embed } from 'semantic-ui-react'
+import { Embed, Header } from 'semantic-ui-react'
 
 class FeaturesButton extends Component {
   render() {
@@ -59,12 +60,27 @@ class Home extends Component {
 
   constructor(props){
     super(props);
+    this.state = {
+		cookies: ''
+	};
     console.log(this.props.match.params.id);
     fetch("/api/user/id/" + props.match.params.id)
         .then(response => response.json()).then(response=>{console.log(response)});
 
   }
 
+ 
+  componentWillMount() {
+	  {
+		  /* Load cookie from login page
+		   * user:  user_token,	id, email, username
+		   * */
+	  }
+	  this.state =  { cookies: cookie.load('user') }
+	  console.log("UserHome: ");
+	  console.log(this.state.cookies);
+	}
+  
   render() {
     return (    
       <div>
@@ -72,6 +88,8 @@ class Home extends Component {
       <header>
       <NavigationBar />
       <SearchBar />
+      <Header as='h4' inverted color='blue' size='huge'>Hi, {this.state.cookies.username}</Header>
+      
       </header>
       
       <Features />

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cookie from 'react-cookies'
 import './Login.css';
 import axios from 'axios';
 import {Button} from 'react-bootstrap';
@@ -11,6 +12,7 @@ class Login extends Component{
     this.state={
       username:'',
       password:'',
+      first_name:'',
       fireRedirect: false,
       id:0,
       mounted:false,
@@ -51,6 +53,17 @@ class Login extends Component{
           .then(res=>{
             fetchedData = res;
             this.state.id = fetchedData.id;
+            this.state.first_name = fetchedData.first_name;
+            {/*
+            Save user information in a cookie
+            */}
+            cookie.save('user',  
+            	{
+            		user_token: token,
+            		id: this.state.id,
+            		email: name,
+            		username: this.state.first_name
+            } );
             this.setState({ fireRedirect: true});
             });
     }
