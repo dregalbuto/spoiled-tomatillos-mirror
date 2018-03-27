@@ -16,7 +16,9 @@ class Login extends Component{
       fireRedirect: false,
       id:0,
       mounted:false,
-      token:0
+      token:0,
+      reviews: [],
+      friends: []
     };
   }
 
@@ -54,6 +56,8 @@ class Login extends Component{
             fetchedData = res;
             this.state.id = fetchedData.id;
             this.state.first_name = fetchedData.first_name;
+            this.state.reviews = fetchedData.reviews;
+            this.state.friends = fetchedData.friends;
             {/*
             Save user information in a cookie
             */}
@@ -62,7 +66,10 @@ class Login extends Component{
             		user_token: token,
             		id: this.state.id,
             		email: name,
-            		username: this.state.first_name
+            		username: this.state.first_name,
+            		reviews: this.state.reviews,
+            		friends: this.state.friends
+            		
             } );
             this.setState({ fireRedirect: true});
             });

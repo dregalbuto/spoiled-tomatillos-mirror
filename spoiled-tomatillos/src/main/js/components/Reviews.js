@@ -8,6 +8,7 @@ import Profile from './UserProfile.js';
 import Groups from './Groups.js';
 import NavigationBar from './NavigationBar.js';
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem} from 'react-bootstrap';
+import cookie from 'react-cookies'
 import {
 	  Button,
 	  Container,
@@ -30,11 +31,23 @@ class AddReview extends Component {
 		super();
 		this.state = {
 				open:false,
+				cookies: ''
 		};
 		
 		this.open = this.open.bind(this);
 	    this.close = this.close.bind(this);
-	    }
+	  }
+	componentWillMount() {
+		  {
+			  /* Load cookie from login page
+			   * user:  user_token,	id, email, username
+			   * */
+		  }
+		  this.state =  { cookies: cookie.load('user') }
+		  console.log("Reviews ");
+		  console.log(this.state.cookies);
+	}
+	
 	  open() {
 		  this.setState({ open: true })
 	  }
