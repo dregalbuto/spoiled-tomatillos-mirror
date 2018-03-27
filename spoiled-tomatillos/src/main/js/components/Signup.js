@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 var _ = require('underscore');
 import "./Signup.css";
-import {Form, Button, FormGroup, ControlLabel, FormControl, Col} from 'react-bootstrap'
+import {Form,FormGroup, ControlLabel, FormControl, Col} from 'react-bootstrap'
 import { Redirect } from 'react-router'
+import { Button, Modal } from 'semantic-ui-react'
 
-class Signup extends Component {
 
+class SignupForm extends Component {
 	constructor(props) {
-	    super(props);
-	    this.state = {
-	    		/* initial state */
+		super(props);
+		this.state={
+			/* initial state */
 	    		email: '',
 	    		confirmemail:'',
 	    		first_name:'',
@@ -19,61 +20,17 @@ class Signup extends Component {
 			password: '',
 			passwordconfirm: '',
 			fireRedirect: false,
-			formErrors: {email: '', password: '', confirmemail:'', passwordconfirm:''},
 		    emailValid: false,
 		    passwordValid: false,
 		    confirmEmailValid: false,
 			confirmPasswordValid: false,
-		    formValid: false
-			};
-	    this.onChange = this.onChange.bind(this);
+		    formValid: false,
+			formErrors: {email: '', password: '', confirmemail:'', passwordconfirm:''},
+		}
+		
 	    this.onSubmit = this.onSubmit.bind(this);
-	  }
-
-//	loadFromServer() {
-//		fetch('api/signup')
-//		.then(response => response.json())
-//		.then(data => {   		
-//			this.setState({
-//				first_name: data.first_name,
-//				last_name: data.last_name,
-//				email: data.email,
-//				username: data.username,
-//				password: data.password
-//			});
-//		},
-//		(error : any) => {
-//		    let errorData = error.json().errors.children;
-//		    for(let key in errorData) {
-//		      errorData[key].errors ? this.formErrors[key]=errorData[key].errors[0] : this.formErrors[key] = null
-//		    }
-//		});
-//	}
-
-//	onCreate(newUser) {
-//		fetch('/api/users',
-//			      {   method: 'POST',
-//			          headers: {
-//			            'Content-Type': 'application/json',
-//			          },
-//			          body: JSON.stringify(newUser)
-//			      })
-//			      .then(
-//			          res => this.loadFromServer()
-//			      )
-//			      .catch( err => console.error(err))
-//	}
-
-	componentDidMount() {
-		this.loadFromServer();
-	}
-
-	onChange(e) {
-//		this.setState({[e.target.name]: e.target.value });
-		const name = e.target.name;
-		const value = e.target.value;
-		this.setState({[name]: value}, 
-                () => { this.validateField(name, value) });
+	    this.onChange = this.onChange.bind(this);
+		
 	}
 	
 	validateField(fieldName, value) {
@@ -109,31 +66,34 @@ class Signup extends Component {
 		                  confirmEmailValid: confirmEmailValid,
 		                  confirmPasswordValid: confirmPasswordValid
 		                }, this.validateForm);
-		}
+	}
 
-		validateForm() {
+	validateForm() {
 		  this.setState({formValid: this.state.emailValid && this.state.passwordValid
 			  && this.state.confirmEmailValid && this.state.confirmPasswordValid});
-		}
+	}
 		
-
+	onChange(e) {
+		const name = e.target.name;
+		const value = e.target.value;
+		this.setState({[name]: value}, () => { this.validateField(name, value) });
+	}
+	
+	
 	onSubmit(e) {
 		e.preventDefault();
 		console.log(this.state);
-
-		var url = '/api/user/signup';
 		
+		var url = '/api/user/signup';
 		var newUser = {
 				first_name: this.state.first_name,
 				last_name: this.state.last_name,
 				email: this.state.email,
 				username: this.state.username,
 				password: this.state.password
-				};
-//	    this.onCreate(newUser);
-		
-	    this.setState({ fireRedirect: true })
-	   
+		};		
+		this.setState({ fireRedirect: true })
+	  
 	    fetch(url, {
 	    		method: 'POST',
 	    		headers: {
@@ -146,6 +106,7 @@ class Signup extends Component {
 		.then(data => {   	
 			// redirect to user home page with /user/ as path name TODO
 			//sessionStorage.setItem('userEmail', data.email);
+		
 			console.log(data);
 
 		},
@@ -156,16 +117,12 @@ class Signup extends Component {
 		    }
 		});
 
-
+	   
 	}
-
+	
 	render() {
-		return(
-				<div className="create_account_screen">
-				<div className="create_account_form">
-				<h1>Create account</h1>
-				<p>Create a user account in Spoiled Tomatillos</p>
-
+		return (
+				<div>
 				<Form horizontal onSubmit={this.onSubmit}>
 
 				<div className="panel panel-default" style={errorBox}>
@@ -184,104 +141,111 @@ class Signup extends Component {
 					/>
 			    </Col>
 				</FormGroup>
-
 				
 				 <FormGroup controlId="formHorizontalConfirmEmail">
-				 <Col componentClass={ControlLabel} sm={2}>
-			      Confirm Email
-			    </Col>
-			      <Col sm={10}>
-				<input name = "confirmemail" placeholder = "Confirm Email" ref="confirmemail" type="text"
-					value={this.state.confirmemail}
-					onChange={this.onChange}
-					style={inputBox}
-				/>
-				</Col>
+				 <Col componentClass={ControlLabel} sm={2}>Confirm Email</Col>
+			      	<Col sm={10}>
+			      		<input name = "confirmemail" placeholder = "Confirm Email" ref="confirmemail" type="text"
+			      			value={this.state.confirmemail}
+			      			onChange={this.onChange}
+			      			style={inputBox}/>
+			      	</Col>
 				</FormGroup>
 
 				 <FormGroup controlId="formHorizontalFirstName">
-				 <Col componentClass={ControlLabel} sm={2}>
-			      First Name
-			    </Col>
-			      <Col sm={10}>
-				<input name = "first_name" placeholder = "First Name" ref="first_name" type="text"
-					value={this.state.first_name}
-					onChange={this.onChange}
-				style={inputBox}
-				/>
+				 <Col componentClass={ControlLabel} sm={2}>First Name</Col>
+			     <Col sm={10}>
+			     	<input name = "first_name" placeholder = "First Name" ref="first_name" type="text"
+			     		value={this.state.first_name}
+			     		onChange={this.onChange}
+			     		style={inputBox}/>
 				</Col>
 				</FormGroup>
 
 				 <FormGroup controlId="formHorizontalLastName">
-				 <Col componentClass={ControlLabel} sm={2}>
-				 Last Name
+				 <Col componentClass={ControlLabel} sm={2}>Last Name</Col>
+			     <Col sm={10}>
+			     	<input name = "last_name" placeholder = "Last Name" ref="last_name" type="text"
+			     		value={this.state.last_name}
+			     		onChange={this.onChange}
+			     		style={inputBox}/>
 				 </Col>
-			      <Col sm={10}>
-				<input name = "last_name" placeholder = "Last Name" ref="last_name" type="text"
-					value={this.state.last_name}
-					onChange={this.onChange}
-				style={inputBox}
-				/>
-				</Col>
-				</FormGroup>
-
+				 </FormGroup>
 
 				 <FormGroup controlId="formHorizontalUserName">
-				 <Col componentClass={ControlLabel} sm={2}>
-				 User Name
-				 </Col>
-			      <Col sm={10}>
-				<input name = "username" placeholder = "Username" ref="username"
+				 <Col componentClass={ControlLabel} sm={2}>User Name</Col>
+			     <Col sm={10}>
+			     	<input name = "username" placeholder = "Username" ref="username"
 					value={this.state.username}
 					onChange={this.onChange}
-				style={inputBox}
-				/>
-				</Col>
-				</FormGroup>
-
+			     	style={inputBox}/>
+				 </Col>
+				 </FormGroup>
+				 
 				 <FormGroup controlId="formHorizontalPassword">
-				 <Col componentClass={ControlLabel} sm={2}>
-				 Password
+				 <Col componentClass={ControlLabel} sm={2}>Password</Col>
+			     <Col sm={10}>
+			     	<input name= "password" placeholder = "Password" type="password"
+			     		ref="password" value={this.state.passsword}
+			     		onChange={this.onChange}
+			     		style={inputBox}/>
 				 </Col>
-			      <Col sm={10}>
-				<input name= "password" placeholder = "Password" type="password"
-					ref="password" value={this.state.passsword}
-					onChange={this.onChange}
-				style={inputBox}
-				/>
-				</Col>
-				</FormGroup>
-
+				 </FormGroup>
+				 
 				 <FormGroup controlId="formHorizontalConfirmpassword">
-				 <Col componentClass={ControlLabel} sm={2}>
-				Confirm Password
+				 <Col componentClass={ControlLabel} sm={2}>Confirm Password</Col>
+			     <Col sm={10}>
+			     	<input name = "passwordconfirm" ref="passwordconfirm" placeholder = "Confirm Password"
+			     		type="password" value={this.state.passwordconfirm}
+			     		onChange={this.onChange}
+			     		style={inputBox}/>
 				 </Col>
-			      <Col sm={10}>
-				<input name = "passwordconfirm" ref="passwordconfirm" placeholder = "Confirm Password"
-					type="password" value={this.state.passwordconfirm}
-					onChange={this.onChange}
-				style={inputBox}
-				/>
-				</Col>
-				</FormGroup>
+				 </FormGroup>
+
 
 				<FormGroup>
-				 <Col smOffset={2} sm={10}>
-				<Button type="submit" className="button button_wide"
-					disabled={!this.state.formValid}>
-				CREATE ACCOUNT
-				</Button>
-				</Col>
+					<Col smOffset={2} sm={10}>
+					<Modal trigger={
+						<Button type="submit" className="button button_wide"
+							disabled={!this.state.formValid}>CREATE ACCOUNT</Button>}
+					 style={{height: 200}} 
+					 header='Your account is created.'
+						    content='You can now log in with your account.'
+						    actions={[
+						      'Cancel',
+						      { key: 'done', content: 'Done', positive: true },
+						    ]}
+					/>
+
+					</Col>
 				</FormGroup>
-
-
+				 
 				</Form>
-				{this.state.fireRedirect && (
-				          <Redirect to="/Login"/>
-				        )}
+				
+				
+				</div>
+		)
+	}
+}
 
-				</div>
-				</div>
+
+class Signup extends Component {
+	constructor(props) {
+	    super(props);
+	    this.state = {}; 
+	}
+
+	render() {
+		return(
+		  <div className="create_account_screen">
+			<div className="create_account_form">
+			<h1>Create account</h1>
+			<p>Create a user account in Spoiled Tomatillos</p>
+				
+			<SignupForm />	
+		
+			</div>
+		  </div>
 		)
 	}
 }
