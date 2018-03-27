@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
@@ -142,6 +144,9 @@ public class UserController {
 
 	}
 
+	@Autowired
+	public JavaMailSender emailSender;
+
 	/**
 	 * Takes in a request for resetting password and sent to email.
 	 * @param strRequest takes in email
@@ -160,7 +165,12 @@ public class UserController {
 		}
 		String pass = user.randomPassword();
 		this.userService.save(user);
-		//todo Mail out the password
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(user.getEmail());
+		message.setSubject("Reset Password Request");
+		message.setText("Your password have been reset, go to /change with password: " + pass
+						+ " to change your password");
+		this.emailSender.send(message);
 		return ResponseEntity.ok().body(
 						new JSONObject().put("message", "email sent").toString());
 	}

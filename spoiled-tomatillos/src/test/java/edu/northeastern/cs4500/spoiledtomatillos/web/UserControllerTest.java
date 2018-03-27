@@ -25,7 +25,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void registerAndInfo() throws Exception {
+    public void registerAndInfoAndLogin() throws Exception {
         JSONObject request = new JSONObject();
         request.put("first_name", "erin");
         request.put("last_name", "zhang");
@@ -45,16 +45,72 @@ public class UserControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/someRandomUser"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(""));
+
+
+        JSONObject loginRe = new JSONObject();
+        loginRe.put("email", "erinzhang@husky.neu.edu");
+        loginRe.put("password", "passw0rd");
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(loginRe.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private String signupLogin(JSONObject per) throws Exception {
+        // Signup
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/signup")
+                .contentType(MediaType.APPLICATION_JSON).content(per.toString()));
+
+        // Login
+        String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        return new JSONObject(cont).getString("token");
     }
 
     @Test
-    public void login() throws Exception {
+    public void loginAdminAndPromote() throws Exception {
         JSONObject request = new JSONObject();
-        request.put("email", "erinzhang@husky.neu.edu");
-        request.put("password", "passw0rd");
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+        request.put("email", "tomatillosspoiled@gmail.com");
+        request.put("password", "admin");
+        String token  = new JSONObject(
+                this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
                 .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
-                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString()).getString("token");
+
+        JSONObject erin = new JSONObject();
+        erin.put("first_name", "erin");
+        erin.put("last_name", "zhang");
+        erin.put("email", "erinzhang@husky.neu.edu");
+        erin.put("username", "erin.z");
+        erin.put("password", "passw0rd");
+        this.signupLogin(erin);
+
+        String str = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/erin.z"))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(str.matches("\\{\"id\"\\:[0-9]+,\"first_name\"\\:\"erin\",\"last_name\"\\:\"zhang\"," +
+                "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
+                "\"enabled\"\\:true,\"roles\"\\:\\[\\],\"reviews\"\\:\\[\\]," +
+                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"request\"\\:\\[\\],\"friends\"\\:\\[\\]\\}\\}"));
+
+        JSONObject promotion = new JSONObject();
+        promotion.put("email", "tomatillosspoiled@gmail.com");
+        promotion.put("token", token);
+        promotion.put("targetEmail", "erinzhang@husky.neu.edu");
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/promote")
+                .contentType(MediaType.APPLICATION_JSON).content(promotion.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+        str = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/erin.z"))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        System.out.println("||||||||||||||\n" + str);
+        assertTrue(str.matches("\\{\"id\"\\:[0-9]+,\"first_name\"\\:\"erin\",\"last_name\"\\:\"zhang\"," +
+                "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
+                "\"enabled\"\\:true,\"roles\"\\:\\[\\{\"id\"\\:[0-9]+,\"name\"\\:\"ROLE_ADMIN\"," +
+                "\"privileges\"\\:\\[\\]\\}\\],\"reviews\"\\:\\[\\]," +
+                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"request\"\\:\\[\\],\"friends\"\\:\\[\\]\\}\\}"));
     }
 }

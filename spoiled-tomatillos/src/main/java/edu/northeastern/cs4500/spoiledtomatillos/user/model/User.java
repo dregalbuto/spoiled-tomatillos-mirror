@@ -64,6 +64,7 @@ public class User {
     /**
      * All of the roles this user has
      */
+    @JsonManagedReference
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
