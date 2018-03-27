@@ -1,5 +1,6 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,17 +56,22 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    private String signupLogin(JSONObject per) throws Exception {
-        // Signup
+    private void signup(JSONObject per) throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/signup")
                 .contentType(MediaType.APPLICATION_JSON).content(per.toString()));
+    }
 
-        // Login
+    private String login(JSONObject per) throws Exception {
         String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
                 .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         return new JSONObject(cont).getString("token");
+    }
+
+    private String signupLogin(JSONObject per) throws Exception {
+        this.signup(per);
+        return this.login(per);
     }
 
     @Test
@@ -106,11 +112,51 @@ public class UserControllerTest {
         str = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/erin.z"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        System.out.println("||||||||||||||\n" + str);
         assertTrue(str.matches("\\{\"id\"\\:[0-9]+,\"first_name\"\\:\"erin\",\"last_name\"\\:\"zhang\"," +
                 "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\{\"id\"\\:[0-9]+,\"name\"\\:\"ROLE_ADMIN\"," +
                 "\"privileges\"\\:\\[\\]\\}\\],\"reviews\"\\:\\[\\]," +
                 "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"request\"\\:\\[\\],\"friends\"\\:\\[\\]\\}\\}"));
+    }
+
+    @Test
+    public void resetAndForgetPassword() throws Exception {
+        JSONObject erin = new JSONObject();
+        erin.put("first_name", "erin");
+        erin.put("last_name", "zhang");
+        erin.put("email", "erinzhang@husky.neu.edu");
+        erin.put("username", "erin.z");
+        erin.put("password", "passw0rd");
+        this.signupLogin(erin);
+
+        erin.put("newPassword", "alternate");
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/change")
+                .contentType(MediaType.APPLICATION_JSON).content(erin.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+
+        JSONObject erinNew = new JSONObject();
+        erinNew.put("email", "erinzhang@husky.neu.edu");
+        erinNew.put("password", "alternate");
+        String token = this.login(erinNew);
+
+        JSONObject nobody = new JSONObject();
+        nobody.put("email", "nobody@nobody.neu.edu");
+        nobody.put("first_name", "erin");
+        nobody.put("last_name", "zhang");
+        nobody.put("username", "erin.z");
+        nobody.put("password", "passw0rd");
+        this.signupLogin(nobody);
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/forget")
+                .contentType(MediaType.APPLICATION_JSON).content(nobody.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        erinNew.put("newPassword", "passw0rd");
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/change")
+                .contentType(MediaType.APPLICATION_JSON).content(erinNew.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
     }
 }

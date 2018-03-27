@@ -52,7 +52,8 @@ public class MovieCachedRepositoryTest {
         assertEquals("Carmencita", movie.getTitle());
         List<Review> reviewList = this.reviewRepository.findByMovieAndUserIsNull(movie);
         assertEquals(1, reviewList.size());
-        assertEquals("{\"id\":2,\"text\":\"\",\"rating\":0}",
+        assertEquals("{\"id\":2,\"text\":\"\",\"rating\":\"0\"," +
+                        "\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"}}",
                 new ObjectMapper().writeValueAsString(reviewList.get(0)));
     }
 
