@@ -21,7 +21,7 @@ class App extends Component {
 		<Navbar inverse collapseOnSelect>
 		  <Navbar.Header>
 		    <Navbar.Brand>
-		      <a href="#brand">Spoiled Tomatillos</a>
+		      <a href="/Home">Spoiled Tomatillos</a>
 		    </Navbar.Brand>
 		    <Navbar.Toggle />
 		  </Navbar.Header>

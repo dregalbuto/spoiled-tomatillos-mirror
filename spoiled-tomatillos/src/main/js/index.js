@@ -7,7 +7,7 @@ import registerServiceWorker from './registerServiceWorker.js';
 import Login from './components/Login.js';
 import Signup from './components/Signup.js';
 import Homepage from './components/Homepage.js';
-import UserHome from './components/Home.js';
+import UserHome from './components/UserHome.js';
 import Movie from './components/Movie.js';
 import Profile from './components/UserProfile.js';
 import Groups from './components/Groups.js';
