@@ -1,6 +1,5 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
-import ch.qos.logback.core.net.ObjectWriter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +37,6 @@ public class FriendControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn().getResponse().getContentAsString();
     return new JSONObject(cont).getString("token");
-
   }
 
   @Test

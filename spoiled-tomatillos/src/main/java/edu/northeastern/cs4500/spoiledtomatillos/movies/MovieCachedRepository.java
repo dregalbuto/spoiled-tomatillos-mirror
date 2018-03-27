@@ -1,6 +1,9 @@
 package edu.northeastern.cs4500.spoiledtomatillos.movies;
 
 import edu.northeastern.cs4500.spoiledtomatillos.movies.omdb.OMDBMovieSource;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +18,19 @@ import java.util.List;
 @Service
 public class MovieCachedRepository {
     private MovieRepository movieRepository;
+    private ReviewRepository reviewRepository;
     private List<ExternalMovieSource> sources;
     /**
      * Constructor to create a MovieCachedRepository with needed repo.
      * @param movieRepository Cache to use for Movie.
      */
     @Autowired
-    public MovieCachedRepository(MovieRepository movieRepository) {
+    public MovieCachedRepository(MovieRepository movieRepository, ReviewRepository reviewRepository) {
         this.movieRepository = movieRepository;
+        this.reviewRepository = reviewRepository;
         this.sources = new ArrayList<>();
         this.sources.add(new OMDBMovieSource());
+        //Add more external movie sources here.
     }
 
     /**
@@ -43,7 +49,10 @@ public class MovieCachedRepository {
         for (ExternalMovieSource ems : this.sources) {
             Movie movie = ems.getMovie(id);
             if (movie != null) {
-                this.movieRepository.saveAndFlush(movie);
+                movie = this.movieRepository.saveAndFlush(movie);
+                for (Review review : ems.importCriticReview(movie)) {
+                    this.reviewRepository.saveAndFlush(review);
+                }
                 return movie;
             }
         }

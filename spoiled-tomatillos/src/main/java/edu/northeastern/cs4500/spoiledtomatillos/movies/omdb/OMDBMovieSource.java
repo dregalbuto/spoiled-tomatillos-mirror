@@ -3,6 +3,7 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies.omdb;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.ExternalMovieSource;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieSearchQuery;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -63,6 +64,27 @@ public class OMDBMovieSource implements ExternalMovieSource {
         }
         return ids;
     }
+
+    /**
+     * Import the critic review for a certain id.
+     *
+     * @param movie the movie to import.
+     * @return All the reviews we have for a given movie.
+     */
+    @Override
+    public List<Review> importCriticReview(Movie movie) {
+        OMDBMovie omdbMovie = new RestTemplate().getForObject(
+                "http://www.omdbapi.com/?apikey={key}&i={id}", OMDBMovie.class, APIKEY, movie.getId());
+        if (omdbMovie.getImdbID() == null) {
+            return null;
+        }
+        List<Review> reviews = new ArrayList<>();
+        for (OMDBMovieRatings omdbMovieRatings : omdbMovie.getRatings()) {
+            reviews.add(new Review("", 0, movie, null));
+        }
+        return reviews;
+    }
+
 
     /**
      * Convert from Movie to a matching external source as it would be from
