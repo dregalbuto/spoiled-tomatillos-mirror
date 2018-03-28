@@ -12,7 +12,7 @@ public class JsonStrings {
 	public static final String MOVIE_ID = "movieId";
 	public static final String RATING = "rating";
 	public static final String TEXT = "text";
-	public static final String POST_ID = "postId";
+	public static final String REVIEW_ID = "reviewId";
 	public static final String TARGET_EMAIL = "targetEmail";
 	public static final String SECRET = "password";
 	public static final String LOGGED_IN = "Logged in successfully";
