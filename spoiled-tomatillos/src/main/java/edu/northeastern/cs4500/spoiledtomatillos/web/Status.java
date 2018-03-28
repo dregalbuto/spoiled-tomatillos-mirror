@@ -7,8 +7,8 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 
 public abstract class Status {
-	User user;
-	boolean userExists;
+	private User user;
+	private boolean userExists;
 	
 	Status(UserService userService, String email) {
 		userExists = false;

@@ -62,19 +62,12 @@ public class UserController {
     public ResponseEntity<String> loginAccount(@RequestBody String strRequest)
 			throws JSONException {
         JSONObject request = new JSONObject(strRequest);
-        User user = userService.findByEmail(request.get(JsonStrings.EMAIL).toString());
-        if (user == null){
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE,
-							JsonStrings.USER_NOT_FOUND).toString());
+        String email = request.getString(JsonStrings.EMAIL);
+        Status userStatus = new TargetStatus(userService, email);
+        if (userStatus.getResponse() != null) {
+        		return userStatus.getResponse();
         }
-
-        if (!user.isEnabled()) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE,
-							JsonStrings.USER_DISABLED).toString());
-        }
-        
+        User user = userStatus.getUser();
         String password = request.get(JsonStrings.SECRET).toString();        
 
         if (!user.checkPassword(password)) {
