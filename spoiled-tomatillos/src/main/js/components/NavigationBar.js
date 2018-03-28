@@ -67,7 +67,7 @@ class NavigationBar extends Component {
 				    		<Icon link name='empty heart' />
 				    </NavItem>
 				    		<NavItem>
-				    		<Link to="/Groups"><Icon link='/Groups' name='discussions'/></Link>
+				    		<Link to="/Groups"><Icon link name='discussions'/></Link>
 				    		</NavItem>
 				    </Nav>
 				    
