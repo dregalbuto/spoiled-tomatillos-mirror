@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import org.hibernate.annotations.GenericGenerator;
 
 @Data
+@EqualsAndHashCode(exclude={"user"})
 @Entity
 public class FriendList {
 
