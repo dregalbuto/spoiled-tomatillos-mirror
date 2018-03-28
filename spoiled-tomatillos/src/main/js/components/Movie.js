@@ -68,8 +68,6 @@ class Movie extends Component {
           		<Rating icon='star' size='massive' defaultRating={3} maxRating={5} />
           </div>
           		
-         
-          		
           		
           <Comment.Group>	
             <Header as='h3' dividing>Comments</Header>
