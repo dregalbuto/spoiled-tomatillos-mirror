@@ -117,7 +117,6 @@ public class User {
         this.enabled = true;
         this.token = "";
         this.tokenExpiration = 0;
-        //this.friends = new FriendList(this);
     }
 
     /**
