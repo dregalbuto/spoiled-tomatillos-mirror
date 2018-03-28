@@ -82,7 +82,7 @@ public class User {
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
-    @OneToOne(mappedBy = "user")//, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     //@PrimaryKeyJoinColumn
     @JsonProperty(value = "friends")
     @JsonManagedReference
@@ -117,6 +117,7 @@ public class User {
         this.enabled = true;
         this.token = "";
         this.tokenExpiration = 0;
+        this.friends = new FriendList(this);
     }
 
     /**
