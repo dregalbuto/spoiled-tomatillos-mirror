@@ -17,15 +17,15 @@ public class UserTest {
 	@Test
 	public void testFirstName() {
 		u = new User();
-		u.setFirst_name("test");
-		assertEquals("test", u.getFirst_name());
+		u.setFirstName("test");
+		assertEquals("test", u.getFirstName());
 	}
 	
 	@Test
 	public void testLastName() {
 		u = new User();
-		u.setLast_name("test");
-		assertEquals("test", u.getLast_name());
+		u.setLastName("test");
+		assertEquals("test", u.getLastName());
 	}
 	
 	@Test

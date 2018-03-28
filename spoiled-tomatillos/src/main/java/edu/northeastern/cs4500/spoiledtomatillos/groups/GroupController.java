@@ -48,7 +48,7 @@ public class GroupController {
 		String movieId = request.getString(JsonStrings.MOVIE_ID);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -56,14 +56,14 @@ public class GroupController {
 		Movie movie = this.movieCachedRepository.getMovie(movieId);
 		if (movie == null) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.MOVIE_NOT_FOUND).toString());
 		}
 
 		Group group = new Group(u, movie, groupName, "true".equalsIgnoreCase(privacy));
 		group = this.groupRepository.save(group);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.JSON_MESSAGE, JsonStrings.SUCCESS)
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
 				.put(JsonStrings.GROUP_ID, group.getId()).toString());
 	}
 
@@ -76,7 +76,7 @@ public class GroupController {
 		String groupId = request.getString(JsonStrings.GROUP_ID);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -85,11 +85,11 @@ public class GroupController {
 		if (group.getCreator().getId() == u.getId()) {
 			this.groupRepository.delete(group);
 			return ResponseEntity.ok().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.SUCCESS).toString());
 		}
 		return ResponseEntity.badRequest().body(
-				new JSONObject().put(JsonStrings.JSON_MESSAGE
+				new JSONObject().put(JsonStrings.MESSAGE
 						, JsonStrings.NO_PERMISSION).toString());
 	}
 
@@ -102,7 +102,7 @@ public class GroupController {
 		String groupId = request.getString(JsonStrings.GROUP_ID);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -110,12 +110,12 @@ public class GroupController {
 		Group group = groupRepository.findOne(Integer.valueOf(groupId));
 		if (!group.addUser(u)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
 		}
 		this.groupRepository.save(group);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.JSON_MESSAGE, JsonStrings.SUCCESS)
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
 				.put(JsonStrings.GROUP_ID, group.getId()).toString());
 	}
 
@@ -128,7 +128,7 @@ public class GroupController {
 		String groupId = request.getString(JsonStrings.GROUP_ID);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -136,12 +136,12 @@ public class GroupController {
 		Group group = groupRepository.findOne(Integer.valueOf(groupId));
 		if (!group.removeUser(u)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
 		}
 		this.groupRepository.save(group);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.JSON_MESSAGE, JsonStrings.SUCCESS)
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
 				.put(JsonStrings.GROUP_ID, group.getId()).toString());
 	}
 
@@ -155,7 +155,7 @@ public class GroupController {
 		String userEmail = request.getString(JsonStrings.USER_EMAIL);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -165,17 +165,17 @@ public class GroupController {
 
 		if (group.getCreator().getId() != u.getId()) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
 		if (!group.getIdList().add(otherUser.getId())) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
 		}
 		this.groupRepository.save(group);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.JSON_MESSAGE, JsonStrings.SUCCESS)
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
 				.put(JsonStrings.GROUP_ID, group.getId()).toString());
 	}
 
@@ -189,7 +189,7 @@ public class GroupController {
 		String userEmail = request.getString(JsonStrings.USER_EMAIL);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -199,17 +199,17 @@ public class GroupController {
 
 		if (group.getCreator().getId() != u.getId()) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
 		if (!group.getIdList().remove(otherUser.getId())) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
 		}
 		this.groupRepository.save(group);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.JSON_MESSAGE, JsonStrings.SUCCESS)
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
 				.put(JsonStrings.GROUP_ID, group.getId()).toString());
 	}
 
@@ -224,7 +224,7 @@ public class GroupController {
 		String text = request.getString(JsonStrings.TEXT);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -233,14 +233,14 @@ public class GroupController {
 
 		if (!group.contains(u)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
 		Review review = new Review(text, Integer.valueOf(rating), group.getTopic(), u);
 		group.getReviews().add(review);
 		this.groupRepository.save(group);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.JSON_MESSAGE, JsonStrings.SUCCESS)
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
 				.put(JsonStrings.GROUP_ID, group.getId()).toString());
 	}
 
@@ -253,7 +253,7 @@ public class GroupController {
 		String groupId = request.getString(JsonStrings.GROUP_ID);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.INVALID_LOGIN).toString());
 		}
 		User u = this.userService.findByEmail(email);
@@ -262,7 +262,7 @@ public class GroupController {
 
 		if (!group.contains(u)) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
 		this.groupRepository.save(group);
@@ -271,7 +271,7 @@ public class GroupController {
 					new ObjectMapper().writeValueAsString(group));
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.ERROR).toString());
 		}
 	}
@@ -292,7 +292,7 @@ public class GroupController {
 					new ObjectMapper().writeValueAsString(groups));
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.JSON_MESSAGE
+					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.ERROR).toString());
 		}
 	}

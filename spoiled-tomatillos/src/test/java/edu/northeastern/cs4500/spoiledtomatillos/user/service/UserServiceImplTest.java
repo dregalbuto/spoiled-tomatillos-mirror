@@ -2,6 +2,7 @@ package edu.northeastern.cs4500.spoiledtomatillos.user.service;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,4 +39,14 @@ public class UserServiceImplTest {
         assertThat("result", result, is(sameInstance(testUser)));
         verify(mockUserRepository).findByUsername("test123");
     }
+	
+	@Test
+	public void testFindUserByUsername() {
+		User testUser = new User();
+		testUser.setUsername("test123");
+		testUser.setEmail("user@test.com");
+		when(mockUserRepository.findByEmail("user@test.com")).thenReturn(testUser);
+		User result = userService.findByEmail("user@test.com");
+		assertEquals("test123", result.getUsername());
+	}
 }

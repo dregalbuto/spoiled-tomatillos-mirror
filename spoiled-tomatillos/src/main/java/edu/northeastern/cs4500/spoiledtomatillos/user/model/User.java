@@ -37,14 +37,16 @@ public class User {
     @JsonProperty(value = "id")
     private int id;
     @JsonProperty(value = "first_name")
-    private String first_name;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
     @JsonProperty(value = "last_name")
-    private String last_name;
+    private String lastName;
     @JsonProperty(value = "email")
     private String email;
     @JsonProperty(value = "username")
     private String username;
-    //Can add @JsonProperty(value = "password")
+    @JsonProperty(value = "password")
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @JsonIgnore
@@ -107,8 +109,8 @@ public class User {
      */
     public User(String firstName, String lastName, String email,
                 String username, String password) {
-        this.first_name = firstName;
-        this.last_name = lastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.username = username;
         this.setPassword(password);
@@ -181,7 +183,7 @@ public class User {
     }
 
     /**
-     * Check if the given token is valid. Make sure it has at least 10 minuets
+     * Check if the given token is valid. Make sure it has at least 10 minutes
      * before expiring.
      *
      * @param token String to check if it is a valid token.

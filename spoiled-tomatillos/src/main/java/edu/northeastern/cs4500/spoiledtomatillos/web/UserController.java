@@ -69,18 +69,18 @@ public class UserController {
 							JsonStrings.USER_NOT_FOUND).toString());
         }
 
-        String password = request.get(JsonStrings.SECRET).toString();
-
         if (!user.isEnabled()) {
             return ResponseEntity.badRequest().body(
                     new JSONObject().put(JsonStrings.MESSAGE,
 							JsonStrings.USER_DISABLED).toString());
         }
+        
+        String password = request.get(JsonStrings.SECRET).toString();        
 
         if (!user.checkPassword(password)) {
             return ResponseEntity.badRequest().body(
                     new JSONObject().put(JsonStrings.MESSAGE,
-                           JsonStrings.INCORRECT_PWD).toString());
+                           JsonStrings.BAD_SECRET).toString());
         }
 
         try {

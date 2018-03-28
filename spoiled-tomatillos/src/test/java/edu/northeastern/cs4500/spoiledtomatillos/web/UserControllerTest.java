@@ -41,7 +41,7 @@ public class UserControllerTest {
         assertTrue(str.matches("\\{\"id\"\\:[0-9]+,\"first_name\"\\:\"erin\",\"last_name\"\\:\"zhang\"," +
                 "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\],\"reviews\"\\:\\[\\]," +
-                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"request\"\\:\\[\\],\"friends\"\\:\\[\\]\\}\\}"));
+                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"requests\"\\:\\[\\],\"friends\"\\:\\[\\]\\}\\}"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/someRandomUser"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(""));

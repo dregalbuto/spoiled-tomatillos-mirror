@@ -44,18 +44,18 @@ public class ReviewController {
         User user = userService.findByEmail(email);
         if (user == null) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.USER_NOT_FOUND).toString());
         }
         if (!user.validToken(token)) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.TOKEN_EXPIRED).toString());
         }
         Movie movie = movieCachedRepository.getMovie(movieId);
         if (movie == null) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.MOVIE_NOT_FOUND).toString());
         }
 
@@ -77,30 +77,30 @@ public class ReviewController {
         User user = userService.findByEmail(email);
         if (user == null) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.USER_NOT_FOUND).toString());
         }
         if (!user.validToken(token)) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.TOKEN_EXPIRED).toString());
         }
         Review review = this.reviewRepository.findOne(new Integer(postId));
         if (review == null) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.REVIEW_NOT_FOUND).toString());
         }
         if (review.getUser().getId() != user.getId()) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.NO_PERMISSION).toString());
         }
 
         this.reviewRepository.delete(review);
 
         return ResponseEntity.ok().body(
-                new JSONObject().put(JsonStrings.JSON_MESSAGE
+                new JSONObject().put(JsonStrings.MESSAGE
                 		, JsonStrings.SUCCESS).toString());
     }
 
@@ -112,7 +112,7 @@ public class ReviewController {
         Review review = this.reviewRepository.findOne(new Integer(postId));
         if (review == null) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.JSON_MESSAGE
+                    new JSONObject().put(JsonStrings.MESSAGE
                     		, JsonStrings.REVIEW_NOT_FOUND).toString());
         }
         return ResponseEntity.ok().body(

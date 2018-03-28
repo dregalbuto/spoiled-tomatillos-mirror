@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import edu.northeastern.cs4500.spoiledtomatillos.Helper;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -24,21 +26,7 @@ public class GroupControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private String signupLogin(JSONObject per) throws Exception {
-        // Signup
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/signup")
-                .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
-                .andDo(MockMvcResultHandlers.print());
-
-        // Login
-        String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
-                .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        return new JSONObject(cont).getString("token");
-
-    }
-
+    
     private int count(String name) throws Exception {
         JSONObject search = new JSONObject();
         search.put("s", name);
@@ -57,14 +45,14 @@ public class GroupControllerTest {
         request.put("email", "test_ge@a.co");
         request.put("username", "test_gu");
         request.put("password", "passw0rd");
-        String token1 = signupLogin(request);
+        String token1 = Helper.signupLogin(request, mockMvc);
         JSONObject request2 = new JSONObject();
         request2.put("first_name", "test_gf2");
         request2.put("last_name", "test_gl2");
         request2.put("email", "test_ge2@a.co");
         request2.put("username", "test_gu2");
         request2.put("password", "passw0rd");
-        String token2 = signupLogin(request2);
+        String token2 = Helper.signupLogin(request2, mockMvc);
         int count = count("TestingGroupName");
 
         //Create group
