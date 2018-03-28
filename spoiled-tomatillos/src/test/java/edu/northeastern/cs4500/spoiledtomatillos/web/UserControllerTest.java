@@ -1,5 +1,7 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
+import static org.junit.Assert.assertEquals;
+
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +15,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
+
 import static junit.framework.TestCase.assertTrue;
 
 
@@ -24,6 +28,20 @@ public class UserControllerTest {
 	@Autowired
     private MockMvc mockMvc;
 
+	@Test
+	public void getUserById() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/id/1000009"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void getUserByEmail() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/email/moe@husky.neu.edu"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
     @Test
     public void registerAndInfo() throws Exception {
         JSONObject request = new JSONObject();
@@ -56,5 +74,29 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test
+    public void loginInvalid() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "somethingRandom");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
+    }
+    
+    @Test
+    public void loginUserDisabled() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "kate@neu.edu");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.USER_DISABLED, response.getString(JsonStrings.MESSAGE));
     }
 }
