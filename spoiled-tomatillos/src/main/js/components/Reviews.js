@@ -31,22 +31,11 @@ class AddReview extends Component {
 		super();
 		this.state = {
 				open:false,
-				cookies: ''
 		};
 		
 		this.open = this.open.bind(this);
 	    this.close = this.close.bind(this);
 	  }
-	componentWillMount() {
-		  {
-			  /* Load cookie from login page
-			   * user:  user_token,	id, email, username
-			   * */
-		  }
-		  this.state =  { cookies: cookie.load('user') }
-		  console.log("Reviews ");
-		  console.log(this.state.cookies);
-	}
 	
 	  open() {
 		  this.setState({ open: true })
@@ -296,10 +285,22 @@ class Reviews extends Component {
 	constructor() {
 		super();
 		this.state = {
+			cookies: ''
 				
 		};
 		
 	}
+	componentWillMount() {
+		  {
+			  /* Load cookie from login page
+			   * user:  user_token,	id, email, username
+			   * */
+		  }
+		  this.state =  { cookies: cookie.load('user') }
+		  console.log("Reviews ");
+		  console.log(this.state.cookies);
+	}
+	
 	render() {
 		return (
 			<div>

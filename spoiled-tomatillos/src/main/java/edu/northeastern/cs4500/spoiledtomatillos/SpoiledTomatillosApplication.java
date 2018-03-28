@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class spoiledtomatillosApplication {
+public class SpoiledTomatillosApplication {
 	
 	public static void main(String[] args) {
-		SpringApplication.run(spoiledtomatillosApplication.class, args);
+		SpringApplication.run(SpoiledTomatillosApplication.class, args);
 	}
 }

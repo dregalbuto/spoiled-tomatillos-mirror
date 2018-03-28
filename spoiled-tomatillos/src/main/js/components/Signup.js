@@ -104,8 +104,10 @@ class SignupForm extends Component {
 	    })
 	    .then(response => response.json())
 		.then(data => {   	
+			{/*
 			// redirect to user home page with /user/ as path name TODO
 			//sessionStorage.setItem('userEmail', data.email);
+			*/}
 		
 			console.log(data);
 
