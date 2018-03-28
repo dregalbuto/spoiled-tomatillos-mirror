@@ -139,6 +139,15 @@ public class ReviewControllerTest {
 	}
 	
 	@Test
+	public void deleteReviewBadId2() throws Exception {
+		String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		postReview(EMAIL1, token, MOVIE_ID, true);
+		JSONObject response2 = deleteReview(EMAIL1, token, "-1", false);
+		assertEquals(JsonStrings.REVIEW_NOT_FOUND
+				, response2.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
 	public void deleteReviewNotAuthor() throws Exception {
 		String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
 		String token2 = Helper.signupLoginDefaults(EMAIL2, mockMvc);
@@ -155,6 +164,21 @@ public class ReviewControllerTest {
 		postReview(EMAIL1, token, MOVIE_ID, true);
 		JSONObject viewReq = new JSONObject();
 		viewReq.put(JsonStrings.REVIEW_ID, "BAD_ID");
+		JSONObject response = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/reviews/get")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(viewReq.toString()))
+		.andExpect(MockMvcResultMatchers.status().isBadRequest())
+		.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.REVIEW_NOT_FOUND
+				, response.getString(JsonStrings.MESSAGE));
+	}
+	@Test
+	public void getReviewBadId2() throws Exception {
+		String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		postReview(EMAIL1, token, MOVIE_ID, true);
+		JSONObject viewReq = new JSONObject();
+		viewReq.put(JsonStrings.REVIEW_ID, "-1");
 		JSONObject response = new JSONObject(this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/api/reviews/get")
 				.contentType(MediaType.APPLICATION_JSON)
