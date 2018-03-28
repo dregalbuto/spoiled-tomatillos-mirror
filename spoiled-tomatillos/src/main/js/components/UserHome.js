@@ -20,16 +20,16 @@ class Features extends Component {
     return (
       <div id="features" className="Features" style={{backgroundImage: 'url(https://therealsasha.wordpress.com/2015/03/01/interstellar-review/)'}}>
       <div className="content">
-     
+
       <Embed
       id='2LqzF5WauAw'
       placeholder='https://ia.media-imdb.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SY1000_SX675_AL_.jpg'
       source='youtube'
-    />
-      
-    	  <a href="http://www.imdb.com/title/tt0816692/?ref_=tt_mv_close"> <h2>Watch interstellar now</h2> </a>
-     
-      
+      />
+
+      <a href="http://www.imdb.com/title/tt0816692/?ref_=tt_mv_close"> <h2>Watch interstellar now</h2> </a>
+
+
       <div className="button-wrapper">
 
       <FeaturesButton primary={true} text="Watch now">
@@ -61,39 +61,42 @@ class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-		cookies: ''
-	};
+      cookies: ''
+    };
     console.log(this.props.match.params.id);
     fetch("/api/user/id/" + props.match.params.id)
-        .then(response => response.json()).then(response=>{console.log(response)});
+    .then(response => response.json()).then(response=>{console.log(response)});
 
   }
 
- 
+
   componentWillMount() {
-	  {
-		  /* Load cookie from login page
-		   * user:  user_token,	id, email, username
-		   * */
-	  }
-	  this.state =  { cookies: cookie.load('user') }
-	  console.log("UserHome: ");
-	  console.log(this.state.cookies);
-	}
-  
+    {
+      /* Load cookie from login page
+      * user:  user_token,	id, email, username
+      * */
+    }
+    this.state =  { cookies: cookie.load('user') }
+    console.log("UserHome: ");
+    console.log(this.state.cookies);
+  }
+
   render() {
-    return (    
+    return (
       <div>
-      
+
       <header>
       <NavigationBar />
       <SearchBar />
       <Header as='h4' inverted color='blue' size='huge'>Hi, {this.state.cookies.username}</Header>
-      
+
       </header>
-      
+
       <Features />
 
+      <div>
+      <h1>My review, {this.state.cookies.review}</h1>
+      </div>
       <div className="TitleList">
       <div className="Title">
       <h1>Top Picks </h1>

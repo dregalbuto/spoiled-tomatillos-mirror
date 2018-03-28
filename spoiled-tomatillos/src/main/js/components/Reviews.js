@@ -31,23 +31,24 @@ class AddReview extends Component {
 		super();
 		this.state = {
 				open:false,
+				review:''
 		};
-		
+
 		this.open = this.open.bind(this);
 	    this.close = this.close.bind(this);
 	  }
-	
+
 	  open() {
 		  this.setState({ open: true })
 	  }
 	  close() {
 		  this.setState({ open: false })
 	  }
-	  
+
 	render() {
 		  const { open } = this.state
 		return (
-				<Modal 
+				<Modal
 					dimmer={false}
 				 	open={open}
 					onOpen={this.open}
@@ -64,7 +65,7 @@ class AddReview extends Component {
 
 		      <Modal.Description>
 		        <Header>Add a review</Header>
-		        
+
 		      </Modal.Description>
 		    </Modal.Content>
 		    <Modal.Actions>
@@ -75,9 +76,9 @@ class AddReview extends Component {
 		        Add <Icon name='right chevron' />
 		      </Button>
 		    </Modal.Actions>
-		  </Modal>	  
+		  </Modal>
 		)
-	}	
+	}
 
 }
 
@@ -90,32 +91,36 @@ class DeleteReview extends Component {
 	this.open = this.open.bind(this);
     this.close = this.close.bind(this);
 	}
-	
+
 	 open() {
 		  this.setState({ open: true })
 	  }
 	  close() {
 		  this.setState({ open: false })
 	  }
-	  
-	  
-	
+
+		handleDelete(event){
+
+		}
+
+
+
 	render() {
 		const { open } = this.state
 		return (
-				<Modal 
+				<Modal
 		 	 	open={open}
 		 		onOpen={this.open}
 		 		onClose={this.close}
-		 		style={{height: 300}} 
-		 		trigger={  
+		 		style={{height: 300}}
+		 		trigger={
 		 	 	<Button icon>
 		 	 		<Icon floated='right' link name='delete' />
 		 	 			</Button>
-		 		} 
-		 		basic 
+		 		}
+		 		basic
 		 		size='small'>
-		    
+
 		 		<Header icon='archive' content='Are you sure to delete this group?' />
 		 			<Modal.Content>
 		 				<p>Once you confirm, you will lose the members and reviews in this group.</p>
@@ -124,16 +129,16 @@ class DeleteReview extends Component {
 		 				<Button basic color='red' inverted onClick={this.close}>
 		 					<Icon name='remove' /> No
 		 				</Button>
-		 					
-		 				<Button color='green' inverted onClick={this.close}>
+
+		 				<Button color='green' inverted onClick={this.handleDelete.bind(this)}>
 		 					<Icon name='checkmark' /> Yes
 		 				</Button>
 		 			</Modal.Actions>
 		 		</Modal>
-		 			
+
 		)
 	}
-	
+
 }
 
 
@@ -152,12 +157,12 @@ class ManageReview extends Component {
 	  close() {
 		  this.setState({ open: false })
 	  }
-	  
-	
+
+
 	render() {
 		const { open } = this.state
 		return (
-				<Modal 
+				<Modal
 				dimmer={false}
 			 	open={open}
 				onOpen={this.open}
@@ -178,10 +183,10 @@ class ManageReview extends Component {
 
 	      <Modal.Description>
 	        <Header>Edit Review</Header>
-	        
+
 	        This will be added later to manage review settings.
 
-	        
+
 	      </Modal.Description>
 	    </Modal.Content>
 	    <Modal.Actions>
@@ -193,10 +198,10 @@ class ManageReview extends Component {
 	      </Button>
 	    </Modal.Actions>
 	  </Modal>
-			
+
 		)
 	}
-	
+
 }
 
 
@@ -204,9 +209,9 @@ class ReviewList extends Component {
 	constructor() {
 		super();
 		this.state = {
-			
+
 		};
-		
+
 	}
 	render() {
 		return(
@@ -242,11 +247,11 @@ class ReviewList extends Component {
 
 				        </Table.Cell>
 				        <Table.Cell>
-				        
+
 				        <ManageReview />
 				        <DeleteReview />
-				        
-				        
+
+
 				        </Table.Cell>
 				      </Table.Row>
 				      <Table.Row>
@@ -262,34 +267,37 @@ class ReviewList extends Component {
 				          <a href='#'>243 reviews</a>
 				        </Table.Cell>
 				        <Table.Cell>
-				        X-Men Apocalypse may not be the best X-Men movie made but it is still enjoyable if you are an X-Men fan!
+				        X-Men Apocalypse may not be the best X-Men movie made but it is still enjoyable if you re an X-Men fan!
 				        </Table.Cell>
 				        <Table.Cell>
-				        
+
 				        		<ManageReview />
 				        		<DeleteReview />
-	        
+
 				        </Table.Cell>
 				      </Table.Row>
 				    </Table.Body>
 				  </Table>
-				  
+
 				  <AddReview />
 				  </div>
 		)
 	}
 }
-	
+
 
 class Reviews extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
-			cookies: ''
-				
+			cookies: '',
 		};
-		
+
+
+
 	}
+
+
 	componentWillMount() {
 		  {
 			  /* Load cookie from login page
@@ -300,15 +308,15 @@ class Reviews extends Component {
 		  console.log("Reviews ");
 		  console.log(this.state.cookies);
 	}
-	
+
 	render() {
 		return (
 			<div>
-			<NavigationBar />	
+			<NavigationBar />
 			<ReviewList />
 			</div>
 		)
-		
+
 	}
 }
 
