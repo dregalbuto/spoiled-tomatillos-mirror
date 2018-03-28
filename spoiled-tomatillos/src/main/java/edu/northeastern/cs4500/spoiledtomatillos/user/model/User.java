@@ -1,14 +1,20 @@
 package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +37,7 @@ import lombok.Setter;
  */
 @Data
 @Entity(name = "users")
+@JsonSerialize(using = UserSeralizer.class)
 public class User {
 
     @Id
@@ -49,17 +56,17 @@ public class User {
     //Can add @JsonProperty(value = "password")
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    @JsonIgnore
+    //@JsonIgnore
     private String password;
     @JsonProperty(value = "enabled")
     private boolean enabled;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    @JsonIgnore
+    //@JsonIgnore
     private String token;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    @JsonIgnore
+    //@JsonIgnore
     private long tokenExpiration;
 
     /**
@@ -222,5 +229,48 @@ public class User {
             return false;
         }
         return user.validToken(token);
+    }
+}
+
+class UserSeralizer extends StdSerializer<User> {
+
+    public UserSeralizer() {
+        this(null);
+    }
+
+    protected UserSeralizer(Class<User> t) {
+        super(t);
+    }
+
+    @Override
+    public void serialize(User user, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeNumberField("id", user.getId());
+        jsonGenerator.writeStringField("first_name", user.getFirst_name());
+        jsonGenerator.writeStringField("last_name", user.getLast_name());
+        jsonGenerator.writeStringField("email", user.getEmail());
+        jsonGenerator.writeStringField("username", user.getUsername());
+        jsonGenerator.writeBooleanField("enabled", user.isEnabled());
+        jsonGenerator.writeArrayFieldStart("roles");
+        for (Role role : user.getRoles()) {
+            jsonGenerator.writeObject(role);
+        }
+        jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeArrayFieldStart("reviews");
+        for (Review review : user.getReviews()) {
+            jsonGenerator.writeNumber(review.getId());
+        }
+        jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeFieldName("friends");
+        jsonGenerator.writeObject(user.getFriends());
+
+        jsonGenerator.writeArrayFieldStart("groups");
+        for (Group group : user.getGroups()) {
+            jsonGenerator.writeNumber(group.getId());
+        }
+        jsonGenerator.writeEndArray();
+        jsonGenerator.writeEndObject();
     }
 }
