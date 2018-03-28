@@ -11,12 +11,9 @@ import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import lombok.Data;
 import javax.persistence.*;
-<<<<<<< HEAD
-
 import java.io.IOException;
 import java.util.Collection;
-=======
->>>>>>> front-end-groups
+
 
 
 /**
@@ -118,4 +115,3 @@ class ReviewSeralizer extends StdSerializer<Review> {
         jsonGenerator.writeEndObject();
     }
 }
-
