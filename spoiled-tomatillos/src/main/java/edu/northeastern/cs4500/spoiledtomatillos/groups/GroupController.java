@@ -137,7 +137,7 @@ public class GroupController {
 		if (!group.removeUser(u)) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.CANNOT_JOIN).toString());
+							, JsonStrings.CANNOT_LEAVE).toString());
 		}
 		this.groupRepository.save(group);
 		return ResponseEntity.ok().body(
