@@ -262,7 +262,7 @@ class ReviewList extends Component {
 				          <a href='#'>243 reviews</a>
 				        </Table.Cell>
 				        <Table.Cell>
-				        X-Men Apocalypse may not be the best X-Men movie made but it is still enjoyable if you're an X-Men fan!
+				        X-Men Apocalypse may not be the best X-Men movie made but it is still enjoyable if you are an X-Men fan!
 				        </Table.Cell>
 				        <Table.Cell>
 				        
