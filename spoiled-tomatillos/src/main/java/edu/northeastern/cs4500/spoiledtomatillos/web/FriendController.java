@@ -31,11 +31,17 @@ public class FriendController {
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
 		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.INVALID_LOGIN).toString());
-		}
+		User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.USER_NOT_FOUND).toString());
+        }
+        if (!user.validToken(token)) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        }
 		User u = this.userService.findByEmail(email);
 		User target = this.userService.findByEmail(targetEmail);
 		if (target == null) {
@@ -62,10 +68,17 @@ public class FriendController {
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
 		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.INVALID_LOGIN).toString());
-		}
+		User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.USER_NOT_FOUND).toString());
+        }
+        if (!user.validToken(token)) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        }
 		User u = this.userService.findByEmail(email);
 		User targetUser = this.userService.findByEmail(targetEmail);
 		if(targetUser == null) {
@@ -91,10 +104,17 @@ public class FriendController {
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
 		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.INVALID_LOGIN).toString());
-		}
+		User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.USER_NOT_FOUND).toString());
+        }
+        if (!user.validToken(token)) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        }
 		User u = this.userService.findByEmail(email);
 		boolean success = u.getFriends().rejectRequest(this.userService.findByEmail(targetEmail));
 		if (!success) {
@@ -114,11 +134,17 @@ public class FriendController {
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
 		String targetEmail = request.getString("targetEmail");
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.INVALID_LOGIN).toString());
-		}
+		User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.USER_NOT_FOUND).toString());
+        }
+        if (!user.validToken(token)) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        }
 		User u = this.userService.findByEmail(email);
 		User targetUser = this.userService.findByEmail(targetEmail);
 		if(targetUser == null) {
@@ -146,11 +172,17 @@ public class FriendController {
 		JSONObject request = new JSONObject(strRequest);
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.INVALID_LOGIN).toString());
-		}
+		User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.USER_NOT_FOUND).toString());
+        }
+        if (!user.validToken(token)) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        }
 		try {
 			return ResponseEntity.ok().body(
 					new ObjectMapper().writeValueAsString(
@@ -168,10 +200,17 @@ public class FriendController {
 		JSONObject request = new JSONObject(strRequest);
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.INVALID_LOGIN).toString());
-		}
+		User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.USER_NOT_FOUND).toString());
+        }
+        if (!user.validToken(token)) {
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE
+                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        }
 		try {
 			return ResponseEntity.ok().body(
 					new ObjectMapper().writeValueAsString(

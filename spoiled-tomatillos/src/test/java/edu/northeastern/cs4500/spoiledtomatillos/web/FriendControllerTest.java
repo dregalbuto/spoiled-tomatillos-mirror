@@ -47,7 +47,24 @@ public class FriendControllerTest {
 				.contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andReturn().getResponse().getContentAsString());
-		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+		assertEquals(JsonStrings.TOKEN_EXPIRED, response.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void sendBadLogin2() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+		JSONObject friendlist1 = new JSONObject();
+		friendlist1.put("email", "BAD_EMAIL");
+		friendlist1.put("token", token1);
+		friendlist1.put(JsonStrings.TARGET_EMAIL, EMAIL2);
+
+		// Sending request
+		JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/send")
+				.contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
 	}
 
 	@Test
@@ -104,7 +121,24 @@ public class FriendControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andReturn().getResponse().getContentAsString());
 
-		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+		assertEquals(JsonStrings.TOKEN_EXPIRED, response.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void rejectInvalidUser2() throws Exception {
+		String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+		JSONObject friendlist1 = new JSONObject();
+		friendlist1.put("email", "BAD_EMAIL");
+		friendlist1.put("token", token);
+		friendlist1.put(JsonStrings.TARGET_EMAIL, EMAIL2);
+
+		JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/reject")
+				.contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+
+		assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
 	}
 
 	@Test
@@ -138,7 +172,24 @@ public class FriendControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andReturn().getResponse().getContentAsString());
 
-		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+		assertEquals(JsonStrings.TOKEN_EXPIRED, response.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void unfriendInvalidLogin2() throws Exception {
+		String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+		JSONObject friendlist1 = new JSONObject();
+		friendlist1.put("email", "BAD_EMAIL");
+		friendlist1.put("token", token);
+		friendlist1.put(JsonStrings.TARGET_EMAIL, EMAIL2);
+
+		JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/unfriend")
+				.contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+
+		assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
 	}
 
 	@Test
@@ -172,7 +223,23 @@ public class FriendControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andReturn().getResponse().getContentAsString());
 
-		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+		assertEquals(JsonStrings.TOKEN_EXPIRED, response.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void getFriendsInvalidUser2() throws Exception {
+		String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+		JSONObject friendlist1 = new JSONObject();
+		friendlist1.put("email", "BAD_EMAIL");
+		friendlist1.put("token", token);
+
+		JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/friends")
+				.contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+
+		assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
 	}
 
 	@Test
@@ -188,7 +255,23 @@ public class FriendControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andReturn().getResponse().getContentAsString());
 
-		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+		assertEquals(JsonStrings.TOKEN_EXPIRED, response.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void getRequestsInvalidUser2() throws Exception {
+		String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+		JSONObject friendlist1 = new JSONObject();
+		friendlist1.put("email", "BAD_EMAIL");
+		friendlist1.put("token", token);
+
+		JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/requests")
+				.contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+
+		assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
 	}
 
 	@Test
