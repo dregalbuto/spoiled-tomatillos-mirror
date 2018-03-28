@@ -32,7 +32,7 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 public class UserController {
 	private final UserService userService;
 	private final FriendListRepository friendListRepository;
-	
+
 	@Autowired
 	UserController(UserService userService, FriendListRepository friendListRepository) {
 		this.userService = userService;
@@ -65,6 +65,16 @@ public class UserController {
 	@RequestMapping(value = "/id/{id:.+}")
 	User getUserByID(@PathVariable(required = true) String id) {
 		return this.userService.findById(Integer.valueOf(id));
+	}
+
+	/**
+	 * Get the user with given email address.
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/email/{email:.+}")
+	User getUserByEmail(@PathVariable(required = true) String email) {
+		return this.userService.findByEmail(email);
 	}
 
     @RequestMapping(value = "/login", method=RequestMethod.POST)
