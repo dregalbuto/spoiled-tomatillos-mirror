@@ -23,7 +23,7 @@ public class FriendController {
 
 	@Autowired
 	private UserServiceImpl userService;
-
+	
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public ResponseEntity<String> sendFriendRequest(@RequestBody String strRequest) 
 			throws JSONException {
@@ -31,32 +31,27 @@ public class FriendController {
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
 		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.USER_NOT_FOUND).toString());
+		
+		Status sourceStatus = new UserStatus(userService, email, token);
+        if (sourceStatus.getResponse() != null) {
+        		return sourceStatus.getResponse();
         }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        
+        Status targetStatus = new TargetStatus(userService, targetEmail);
+        if (targetStatus.getResponse() != null) {
+    			return targetStatus.getResponse();
         }
-		User u = this.userService.findByEmail(email);
-		User target = this.userService.findByEmail(targetEmail);
-		if (target == null) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.TARGET_USER_NOT_FOUND).toString());
-		}
-		boolean success = target.getFriends().addRequest(u);
+        
+        User source = sourceStatus.getUser();
+        User target = targetStatus.getUser();
+		boolean success = target.getFriends().addRequest(source);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.ERROR).toString());
 		}
 		this.userService.save(target);
-		this.userService.save(u);
+		this.userService.save(source);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 	}
@@ -68,31 +63,26 @@ public class FriendController {
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
 		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.USER_NOT_FOUND).toString());
+		
+		Status sourceStatus = new UserStatus(userService, email, token);
+        if (sourceStatus.getResponse() != null) {
+        		return sourceStatus.getResponse();
         }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        
+        Status targetStatus = new TargetStatus(userService, targetEmail);
+        if (targetStatus.getResponse() != null) {
+    			return targetStatus.getResponse();
         }
-		User u = this.userService.findByEmail(email);
-		User targetUser = this.userService.findByEmail(targetEmail);
-		if(targetUser == null) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.TARGET_USER_NOT_FOUND).toString());
-		}
-		boolean success = u.getFriends().acceptRequest(targetUser);
+        
+        User source = sourceStatus.getUser();
+        User target = targetStatus.getUser();
+		boolean success = source.getFriends().acceptRequest(target);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());
 		}
-		this.userService.save(u);
-		this.userService.save(targetUser);
+		this.userService.save(source);
+		this.userService.save(target);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 	}
@@ -104,24 +94,25 @@ public class FriendController {
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
 		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.USER_NOT_FOUND).toString());
+		
+		Status sourceStatus = new UserStatus(userService, email, token);
+        if (sourceStatus.getResponse() != null) {
+        		return sourceStatus.getResponse();
         }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        
+        Status targetStatus = new TargetStatus(userService, targetEmail);
+        if (targetStatus.getResponse() != null) {
+    			return targetStatus.getResponse();
         }
-		User u = this.userService.findByEmail(email);
-		boolean success = u.getFriends().rejectRequest(this.userService.findByEmail(targetEmail));
+        
+        User source = sourceStatus.getUser();
+        User target = targetStatus.getUser();
+		boolean success = source.getFriends().rejectRequest(target);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());
 		}
-		this.userService.save(u);
+		this.userService.save(source);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 
@@ -133,33 +124,28 @@ public class FriendController {
 		JSONObject request = new JSONObject(strRequest);
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
-		String targetEmail = request.getString("targetEmail");
-		User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.USER_NOT_FOUND).toString());
+		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
+		
+		Status sourceStatus = new UserStatus(userService, email, token);
+        if (sourceStatus.getResponse() != null) {
+        		return sourceStatus.getResponse();
         }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.TOKEN_EXPIRED).toString());
+        
+        TargetStatus targetStatus = new TargetStatus(userService, targetEmail);
+        if (targetStatus.getResponse() != null) {
+    			return targetStatus.getResponse();
         }
-		User u = this.userService.findByEmail(email);
-		User targetUser = this.userService.findByEmail(targetEmail);
-		if(targetUser == null) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.TARGET_USER_NOT_FOUND).toString());
-		}
-		boolean success = u.getFriends().removeFriend(targetUser);
+        
+        User source = sourceStatus.getUser();
+        User target = targetStatus.getUser();
+		boolean success = source.getFriends().removeFriend(target);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.ERROR).toString());
 		}
-		this.userService.save(u);
-		this.userService.save(targetUser);
+		this.userService.save(source);
+		this.userService.save(target);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE
 						, JsonStrings.SUCCESS).toString());
@@ -172,21 +158,17 @@ public class FriendController {
 		JSONObject request = new JSONObject(strRequest);
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
-		User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.USER_NOT_FOUND).toString());
+		
+		Status sourceStatus = new UserStatus(userService, email, token);
+        if (sourceStatus.getResponse() != null) {
+        		return sourceStatus.getResponse();
         }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.TOKEN_EXPIRED).toString());
-        }
+        
+        User source = sourceStatus.getUser();
 		try {
 			return ResponseEntity.ok().body(
 					new ObjectMapper().writeValueAsString(
-							this.userService.findByEmail(email).getFriends().getFriends()));
+							source.getFriends().getFriends()));
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
@@ -200,21 +182,17 @@ public class FriendController {
 		JSONObject request = new JSONObject(strRequest);
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
-		User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.USER_NOT_FOUND).toString());
+		
+		Status sourceStatus = new UserStatus(userService, email, token);
+        if (sourceStatus.getResponse() != null) {
+        		return sourceStatus.getResponse();
         }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put(JsonStrings.MESSAGE
-                    		, JsonStrings.TOKEN_EXPIRED).toString());
-        }
+        
+        User source = sourceStatus.getUser();
 		try {
 			return ResponseEntity.ok().body(
 					new ObjectMapper().writeValueAsString(
-							this.userService.findByEmail(email).getFriends().getRequests()));
+							source.getFriends().getRequests()));
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());

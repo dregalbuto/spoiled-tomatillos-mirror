@@ -1,9 +1,11 @@
-package edu.northeastern.cs4500.spoiledtomatillos.groups;
+package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
+import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
+import edu.northeastern.cs4500.spoiledtomatillos.groups.GroupRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieCachedRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
