@@ -91,15 +91,13 @@ public class Group {
     return false;
   }
 
-//  public boolean removeUser(User user) {
-//    if (user == null) {
-//      return false;
-//    }
-//    return this.getUsers().remove(user);
-//  }
-  public void removeUser(User user) {
-    this.users.remove(user);
+  public boolean removeUser(User user) {
+    if (user == null) {
+      return false;
+    }
+    return this.getUsers().remove(user);
   }
+
 
   public boolean contains(User user) {
     if (user == null) {
