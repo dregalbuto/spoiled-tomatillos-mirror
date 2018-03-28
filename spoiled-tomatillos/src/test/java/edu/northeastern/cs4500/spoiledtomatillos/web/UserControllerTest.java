@@ -88,15 +88,4 @@ public class UserControllerTest {
         assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
     }
     
-    @Test
-    public void loginUserDisabled() throws Exception {
-        JSONObject request = new JSONObject();
-        request.put(JsonStrings.EMAIL, "kate@neu.edu");
-        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
-                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn().getResponse().getContentAsString());
-        assertEquals(JsonStrings.USER_DISABLED, response.getString(JsonStrings.MESSAGE));
-    }
 }
