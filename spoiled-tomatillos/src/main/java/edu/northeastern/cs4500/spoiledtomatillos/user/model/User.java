@@ -44,6 +44,7 @@ public class User {
     @JsonProperty(value = "email")
     private String email;
     @JsonProperty(value = "username")
+    //@Column(unique = true)
     private String username;
     //Can add @JsonProperty(value = "password")
     @Getter(AccessLevel.NONE)

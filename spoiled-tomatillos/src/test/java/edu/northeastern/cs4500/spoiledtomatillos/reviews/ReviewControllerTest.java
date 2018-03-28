@@ -77,7 +77,7 @@ public class ReviewControllerTest {
                 .andExpect(MockMvcResultMatchers.content()
                         .string("{\"id\":" +
                                 postId +
-                                ",\"text\":\"Test review for a thingy\",\"rating\":2," +
+                                ",\"text\":\"Test review for a thingy\",\"rating\":\"2\"," +
                                 "\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"}}"));
 
         // Delete

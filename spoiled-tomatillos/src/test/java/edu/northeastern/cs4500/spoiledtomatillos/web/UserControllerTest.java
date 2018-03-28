@@ -145,7 +145,7 @@ public class UserControllerTest {
         nobody.put("email", "nobody@nobody.neu.edu");
         nobody.put("first_name", "erin");
         nobody.put("last_name", "zhang");
-        nobody.put("username", "erin.z");
+        nobody.put("username", "nobody");
         nobody.put("password", "passw0rd");
         this.signupLogin(nobody);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/forget")
