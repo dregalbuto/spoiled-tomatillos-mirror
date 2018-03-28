@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import edu.northeastern.cs4500.spoiledtomatillos.Helper;
+import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 
 import static org.junit.Assert.*;
 
@@ -23,155 +24,418 @@ import static org.junit.Assert.*;
 @AutoConfigureMockMvc
 public class GroupControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    
-    private int count(String name) throws Exception {
-        JSONObject search = new JSONObject();
-        search.put("s", name);
-        String ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/search")
-                .contentType(MediaType.APPLICATION_JSON).content(search.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        return new JSONArray(ret).length();
-    }
+	// Constants for testing
+	private static final String EMAIL1 = "test_ge@a.co";
+	private static final String EMAIL2 = "test_ge2@a.co";
+	private static final String MOVIE_ID = "tt0000001";
+	
+	// Helper functions
+	private int count(String name) throws Exception {
+		JSONObject search = new JSONObject();
+		search.put("s", name);
+		String ret = this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/groups/search")
+						.contentType(MediaType.APPLICATION_JSON).content(search.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		return new JSONArray(ret).length();
+	}
 
-    @Test
-    public void createAndDeleteGroup() throws Exception {
-        JSONObject request = new JSONObject();
-        request.put("first_name", "test_gf");
-        request.put("last_name", "test_gl");
-        request.put("email", "test_ge@a.co");
-        request.put("username", "test_gu");
-        request.put("password", "passw0rd");
-        String token1 = Helper.signupLogin(request, mockMvc);
-        JSONObject request2 = new JSONObject();
-        request2.put("first_name", "test_gf2");
-        request2.put("last_name", "test_gl2");
-        request2.put("email", "test_ge2@a.co");
-        request2.put("username", "test_gu2");
-        request2.put("password", "passw0rd");
-        String token2 = Helper.signupLogin(request2, mockMvc);
-        int count = count("TestingGroupName");
+	private String createGroup(String email, String token, String movieId, boolean expectOk) 
+			throws Exception {
+		//Create group
+		JSONObject create = new JSONObject();
+		create.put("email",email);
+		create.put("token", token);
+		create.put("blacklist","test_ge@a.co");
+		create.put("groupName", "TestingGroupName");
+		create.put("blacklist", "true");
+		create.put("movieId", movieId);
+		if (expectOk) {
+			return  this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/create")
+					.contentType(MediaType.APPLICATION_JSON).content(create.toString()))
+					.andExpect(MockMvcResultMatchers.status().isOk())
+					.andReturn().getResponse().getContentAsString();
 
-        //Create group
-        JSONObject create = new JSONObject();
-        create.put("email","test_ge@a.co");
-        create.put("token", token1);
-        create.put("blacklist","test_ge@a.co");
-        create.put("groupName", "TestingGroupName");
-        create.put("blacklist", "true");
-        create.put("movieId", "tt0000001");
-        String ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/create")
-                .contentType(MediaType.APPLICATION_JSON).content(create.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        String groupId = new JSONObject(ret).getString("groupId");
-        JSONObject group1 = new JSONObject();
-        group1.put("email", "test_ge@a.co");
-        group1.put("token", token1);
-        group1.put("groupId", groupId);
-        JSONObject group2 = new JSONObject();
-        group2.put("email", "test_ge2@a.co");
-        group2.put("token", token2);
-        group2.put("groupId", groupId);
+		} else {
+			return this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/create")
+					.contentType(MediaType.APPLICATION_JSON).content(create.toString()))
+					.andExpect(MockMvcResultMatchers.status().isBadRequest())
+					.andReturn().getResponse().getContentAsString();
+		}
 
-        //Get it
-        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
-                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
-                "\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
-                "\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+	}
+	
+	private JSONObject createGroupJson(String email, String token, String movieId, boolean expectOk) 
+			throws Exception {
+		return new JSONObject(createGroup(email, token, movieId, expectOk));
 
-        //Search
-        assertEquals(count + 1, count("TestingGroupName"));
+	}
 
-        //Add blacklist
-        JSONObject bl = new JSONObject();
-        bl.put("email", "test_ge@a.co");
-        bl.put("token", token1);
-        bl.put("groupId", groupId);
-        bl.put("userEmail", "test_ge2@a.co");
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
-                .contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+	// Tests
+	@Test
+	public void createGroupBadLogin() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		JSONObject response = createGroupJson("badEmail", token1, MOVIE_ID, false);
+		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+	}
 
-        //Join blacklisted
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
-                .contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+	@Test
+	public void createGroupInvalidMovieId() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		JSONObject response = createGroupJson(EMAIL1, token1, "BADID", false);
+		assertEquals(JsonStrings.MOVIE_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
+	}
 
-        //Get it
-        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
-                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
-                "\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[[0-9]+\\]," +
-                "\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+	@Test
+	public void deleteGroupBadLogin() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
 
-        //Remove from blacklist
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
-                .contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+		//Create group
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString("groupId");
 
-        //Join
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
-                .contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+		// Valid group, but invalid login email
+		JSONObject group1 = new JSONObject();
+		group1.put("email", "BAD_EMAIL");
+		group1.put("token", token1);
+		group1.put("groupId", groupId);
 
-        //Post
-        JSONObject post = new JSONObject();
-        post.put("email", "test_ge@a.co");
-        post.put("token", token1);
-        post.put("groupId", groupId);
-        post.put("rating", "2");
-        post.put("text", "Wat");
-        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/post")
-                .contentType(MediaType.APPLICATION_JSON).content(post.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
+		//Attempt to delete it
+		response = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/groups/delete")
+						.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+	}
 
-        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
-                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        JSONArray reviews = new JSONArray(new JSONObject(ret).get("reviews").toString());
-        for (int i = 0; i < reviews.length(); i++) {
-            // Delete
-            JSONObject delReq = new JSONObject();
-            delReq.put("email", "test_ge@a.co");
-            delReq.put("token", token1);
-            delReq.put("postId", reviews.getInt(i));
-            this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/delete")
-                    .contentType(MediaType.APPLICATION_JSON).content(delReq.toString()))
-                    .andExpect(MockMvcResultMatchers.status().isOk());
-        }
+	@Test
+	public void deleteGroupNotCreator() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		String token2 = Helper.signupLoginDefaults(EMAIL2, mockMvc);
 
-        //Leave
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/leave")
-                .contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+		//Create group as first user
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString("groupId");
 
-        //Get it
-        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
-                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
-                "\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
-                "\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+		// Valid group, but wrong user
+		JSONObject group1 = new JSONObject();
+		group1.put("email", EMAIL2);
+		group1.put("token", token2);
+		group1.put("groupId", groupId);
 
-        //Delete it
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/delete")
-                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+		//Attempt to delete it
+		response = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/groups/delete")
+						.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.NO_PERMISSION, response.getString(JsonStrings.MESSAGE));
+	}
 
-        //Search
-        assertEquals(count, count("TestingGroupName"));
-    }
+	@Test
+	public void joinGroupBadLogin() throws Exception {
+		// Create and login 
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+		//Create group
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString("groupId");
+
+		// Valid group
+		JSONObject group2 = new JSONObject();
+		group2.put("email", "test_ge@a.co");
+		group2.put("token", "INVALID_TOKEN");
+		group2.put("groupId", groupId);
+
+		//Join
+		response = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/groups/join")
+						.contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+	}
+
+	@Test
+	public void joinGroupAlreadyMember() throws Exception {
+		// Create and login 
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+		//Create group
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString("groupId");
+
+		// Valid group
+		JSONObject group2 = new JSONObject();
+		group2.put("email", "test_ge@a.co");
+		group2.put("token", token1);
+		group2.put("groupId", groupId);
+
+		//Join
+		response = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/groups/join")
+						.contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.CANNOT_JOIN, response.getString(JsonStrings.MESSAGE));
+	}
+
+	@Test
+	public void leaveGroupBadLogin() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		String token2 = Helper.signupLoginDefaults(EMAIL2, mockMvc);
+
+		//Create group
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString("groupId");
+
+		// Valid group, other user
+		JSONObject group1 = new JSONObject();
+		group1.put("email", "test_ge2@a.co");
+		group1.put("token", token2);
+		group1.put("groupId", groupId);
+
+		// Same group, other user but invalid login
+		JSONObject group2 = new JSONObject();
+		group2.put("email", "test_ge2@a.co");
+		group2.put("token", "BAD_TOKEN");
+		group2.put("groupId", groupId);
+
+		//Join
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+		.andExpect(MockMvcResultMatchers.status().isOk());
+
+		//Leave
+		response = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/groups/leave")
+						.contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.INVALID_LOGIN, response.getString(JsonStrings.MESSAGE));
+	}
+
+	public void leaveGroupNotMember() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		String token2 = Helper.signupLoginDefaults(EMAIL2, mockMvc);
+
+		//Create group
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString("groupId");
+
+		// Valid group, other user
+		JSONObject group1 = new JSONObject();
+		group1.put("email", "test_ge2@a.co");
+		group1.put("token", token2);
+		group1.put("groupId", groupId);
+
+		//Leave
+		response = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/groups/leave")
+						.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.CANNOT_LEAVE, response.getString(JsonStrings.MESSAGE));
+	}
+
+	@Test
+	public void postBadLogin() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString(JsonStrings.GROUP_ID);
+		
+		JSONObject post = new JSONObject();
+		post.put("email", EMAIL1);
+		post.put("token", "BAD_TOKEN");
+		post.put("groupId", groupId);
+		post.put("rating", "2");
+		post.put("text", "Wat");
+		JSONObject postResponse = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/post")
+				.contentType(MediaType.APPLICATION_JSON).content(post.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.INVALID_LOGIN, postResponse.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void postNotInGroup() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		String token2 = Helper.signupLoginDefaults(EMAIL2, mockMvc);
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString(JsonStrings.GROUP_ID);
+		
+		JSONObject post = new JSONObject();
+		post.put("email", EMAIL2);
+		post.put("token", token2);
+		post.put("groupId", groupId);
+		post.put("rating", "2");
+		post.put("text", "Wat");
+		JSONObject postResponse = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/post")
+				.contentType(MediaType.APPLICATION_JSON).content(post.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.NO_PERMISSION, postResponse.getString(JsonStrings.MESSAGE));
+	}
+
+	@Test
+	public void getBadLogin() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString(JsonStrings.GROUP_ID);
+		
+		JSONObject group1 = new JSONObject();
+		group1.put("email", EMAIL1);
+		group1.put("token", "BAD_TOKEN");
+		group1.put("groupId", groupId);
+		
+		JSONObject resp = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.INVALID_LOGIN, resp.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void getNotInGroup() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		String token2 = Helper.signupLoginDefaults(EMAIL2, mockMvc);
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString(JsonStrings.GROUP_ID);
+		
+		JSONObject group1 = new JSONObject();
+		group1.put("email", EMAIL2);
+		group1.put("token", token2);
+		group1.put("groupId", groupId);
+		
+		JSONObject resp = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.NO_PERMISSION, resp.getString(JsonStrings.MESSAGE));
+	}
+	
+	@Test
+	public void createAndDeleteGroup() throws Exception {
+		String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+		String token2 = Helper.signupLoginDefaults(EMAIL2, mockMvc);
+		int count = count("TestingGroupName");
+
+		//Create group
+		JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+		String groupId = response.getString(JsonStrings.GROUP_ID);
+
+		// Valid group
+		JSONObject group1 = new JSONObject();
+		group1.put("email", EMAIL1);
+		group1.put("token", token1);
+		group1.put("groupId", groupId);
+
+		// Blacklisted group
+		JSONObject group2 = new JSONObject();
+		group2.put("email", EMAIL2);
+		group2.put("token", token2);
+		group2.put("groupId", groupId);
+
+		//Get it
+		String ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
+				"\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
+				"\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+
+		//Search
+		assertEquals(count + 1, count("TestingGroupName"));
+
+		//Add to blacklist
+		JSONObject bl = new JSONObject();
+		bl.put("email", "test_ge@a.co");
+		bl.put("token", token1);
+		bl.put("groupId", groupId);
+		bl.put("userEmail", "test_ge2@a.co");
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
+				.contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
+		.andExpect(MockMvcResultMatchers.status().isOk());
+
+		//Join blacklisted
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
+				.contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+		.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+		//Get it
+		ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
+				"\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[[0-9]+\\]," +
+				"\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+
+		//Remove from blacklist
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
+				.contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
+		.andExpect(MockMvcResultMatchers.status().isOk());
+
+		//Join
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
+				.contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+		.andExpect(MockMvcResultMatchers.status().isOk());
+
+		//Post
+		JSONObject post = new JSONObject();
+		post.put("email", "test_ge@a.co");
+		post.put("token", token1);
+		post.put("groupId", groupId);
+		post.put("rating", "2");
+		post.put("text", "Wat");
+		ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/post")
+				.contentType(MediaType.APPLICATION_JSON).content(post.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+
+		ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		JSONArray reviews = new JSONArray(new JSONObject(ret).get("reviews").toString());
+		for (int i = 0; i < reviews.length(); i++) {
+			// Delete
+			JSONObject delReq = new JSONObject();
+			delReq.put("email", "test_ge@a.co");
+			delReq.put("token", token1);
+			delReq.put("postId", reviews.getInt(i));
+			this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/delete")
+					.contentType(MediaType.APPLICATION_JSON).content(delReq.toString()))
+			.andExpect(MockMvcResultMatchers.status().isOk());
+		}
+
+		//Leave
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/leave")
+				.contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+		.andExpect(MockMvcResultMatchers.status().isOk());
+
+		//Get it
+		ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
+				"\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
+				"\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+
+		//Delete it
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/delete")
+				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+		.andExpect(MockMvcResultMatchers.status().isOk());
+
+		//Search
+		assertEquals(count, count("TestingGroupName"));
+	}
 
 }
