@@ -18,12 +18,14 @@ import cookie from 'react-cookies'
 
 
 class AddReview extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			open:false,
 			review:''
 		};
+
+		console.log(this.props.data);
 
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
@@ -38,48 +40,86 @@ class AddReview extends Component {
 
 	handleClick(event){
 		event.preventDefault;
+		var token = this.props.data.cookies.user_token;
+		var email = this.props.data.cookies.email;
+		var movieId = this.props.data.movieID;
 		var rev = this.review.value;
-
+		var rating = 0;
+		var fetchedData = {};
 		if(rev.length <= 0) {
 			alert("empty field");
 			return;
 		}
+
+		var data = {
+			"token":token,
+			"rating":rating,
+			"email":email,
+			"text":rev,
+			"movieId":movieId
+		}
+
+		fetch('/api/reviews/post', {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data)
+		}).then(response=>response.json()).then(data =>{
+      if(data.hasOwnProperty("reviewId")){
+				var reviewId = data.reviewId;
+        alert("add successfully");
+        fetch("/api/movies/info?id=" + movieId)
+            .then(res=>res.json())
+            .then(res=>{
+              fetchedData = res;
+              this.props.data.cookies.reviews = fetchedData.reviews;
+							this.close();
+            });
+
+      } else {
+        var error = data.message;
+        alert(error);
+      }
+    })
 
 	}
 
 	render() {
 		const { open } = this.state
 		return (
-			<Modal
+		<Modal
 			dimmer={false}
 			open={open}
 			onOpen={this.open}
 			onClose={this.close}
 			trigger={<Button floated='right' basic color='blue'>Add</Button>}
 			style={{height: 500}} >
-			<Modal.Header>Add a Review</Modal.Header>
-			<Modal.Content>
-			<Modal.Description>
-			<Header>Add a review</Header>
-			<label>Add a review</label>
-			<textarea
-			rows="5"
-			className="review"
-			ref= {(input) => {this.review = input;}}
-			style={divStyle}
-			placeholder="Write your review here"></textarea>
-
-			</Modal.Description>
+				<Modal.Header>
+					Add a Review
+				</Modal.Header>
+				<Modal.Content>
+					<Modal.Description>
+						<Header>Add a review</Header>
+						<label>Add a review</label>
+						<textarea
+						rows="5"
+						className="review"
+						ref= {(input) => {this.review = input;}}
+						style={divStyle}
+						placeholder="Write your review here"></textarea>
+					</Modal.Description>
 			</Modal.Content>
 			<Modal.Actions>
-			<Button basic color='red' onClick={this.close}>
-			<Icon name='remove' /> Cancel
-			</Button>
-			<Button primary onClick={this.handleClick.bind(this)}>
-			Add <Icon name='right chevron' />
-			</Button>
+				<Button basic color='red' onClick={this.close}>
+					<Icon name='remove' /> Cancel
+				</Button>
+				<Button primary onClick={this.handleClick.bind(this)}>
+					Add <Icon name='right chevron' />
+				</Button>
 			</Modal.Actions>
-			</Modal>
+		</Modal>
 		)
 	}
 
@@ -174,7 +214,7 @@ class Movie extends Component {
 
 			<div>
 				<Rating icon='star' size='massive' defaultRating={3} maxRating={5} />
-				
+				<AddReview data={this.state}/>
 			</div>
 
 			<div>
