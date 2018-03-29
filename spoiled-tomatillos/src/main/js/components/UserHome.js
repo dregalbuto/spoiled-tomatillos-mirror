@@ -26,16 +26,9 @@ class Features extends Component {
       id='2LqzF5WauAw'
       placeholder='https://ia.media-imdb.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SY1000_SX675_AL_.jpg'
       source='youtube'
-<<<<<<< HEAD
-    />
 
-    	  <a href="http://www.imdb.com/title/tt0816692/?ref_=tt_mv_close"> <h2>Watch interstellar now</h2> </a>
-=======
       />
-
       <a href="http://www.imdb.com/title/tt0816692/?ref_=tt_mv_close"> <h2>Watch interstellar now</h2> </a>
->>>>>>> front-end-review
-
 
       <div className="button-wrapper">
 
