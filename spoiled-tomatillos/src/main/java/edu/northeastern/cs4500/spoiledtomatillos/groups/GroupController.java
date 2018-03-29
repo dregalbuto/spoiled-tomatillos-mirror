@@ -259,6 +259,37 @@ public class GroupController {
 //                    .put("groupId", group.getId()).toString());
 //  }
 
+  @RequestMapping("/remove")
+  public ResponseEntity<String> remove(@RequestBody(required = true)String strRequest) throws JSONException {
+    JSONObject request = new JSONObject(strRequest);
+    String email = request.getString("email");
+    String token = request.getString("token");
+    String groupId = request.getString("groupId");
+    String reviewId = request.getString("reviewId");
+    if (!User.validLogin(email, token, this.userService)) {
+      return ResponseEntity.badRequest().body(
+              new JSONObject().put("message", "Not a valid login").toString());
+    }
+    User u = this.userService.findByEmail(email);
+
+    Group group = groupRepository.findOne(Integer.valueOf(groupId));
+
+    if (!group.contains(u)) {
+      //TODO replace with perm
+      return ResponseEntity.badRequest().body(
+              new JSONObject().put("message", "No not have permission").toString());
+    }
+    if (u == null) {
+      return ResponseEntity.badRequest().body(
+              new JSONObject().put("message", "Review not found").toString());
+    }
+
+    this.groupRepository.save(group);
+    return ResponseEntity.ok().body(
+            new JSONObject().put("message", "Success")
+                    .put("groupId", group.getId()).toString());
+  }
+
   @RequestMapping("/get")
   public ResponseEntity<String> get(@RequestBody(required = true)String strRequest) throws JSONException {
     JSONObject request = new JSONObject(strRequest);

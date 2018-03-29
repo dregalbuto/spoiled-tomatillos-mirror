@@ -95,6 +95,9 @@ public class Group {
     if (user == null) {
       return false;
     }
+    if (!this.contains(user)) {
+      return false;
+    }
     return this.getUsers().remove(user);
   }
 
