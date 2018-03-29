@@ -30,7 +30,6 @@ class MovieCard extends Component {
           overview: "",
           runtime: -1,
           poster: null,
-          reviews: [],
     };
     if (props.id !== undefined) {
       fetch("/api/movies/info?id=" + props.id)
@@ -53,7 +52,6 @@ class MovieCard extends Component {
                   overview: data.description,
                   runtime: data.runtimeMinuets,
                   poster: data.imgURL,
-                  reviews: [],
                 });
               });
     } else if (props.data === undefined) {
@@ -104,7 +102,6 @@ class MovieCard extends Component {
          </div>
          <div className="poster-container nopadding col-xs-12 col-md-4 pull-md-8 col-lg-5 pull-lg-7 ">
            <img id="postertest" className='poster' src={posterIMG}/>
-           <div> {data.reviews}</div>
          </div>
        </div>
     );
