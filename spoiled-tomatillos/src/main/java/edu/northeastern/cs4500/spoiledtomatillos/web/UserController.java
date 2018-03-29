@@ -37,7 +37,7 @@ public class UserController {
 	private final FriendListRepository friendListRepository;
 	@Autowired
 	private GroupRepository groupRepository;
-	
+
 	@Autowired
 	UserController(UserService userService, FriendListRepository friendListRepository) {
 		this.userService = userService;
@@ -86,6 +86,16 @@ public class UserController {
 			}
 		}
 		return groups;
+	}
+
+	/**
+	 * Get the user with given email address.
+	 * @param email
+	 * @return
+	 */
+	@RequestMapping(value = "/email/{email:.+}")
+	User getUserByEmail(@PathVariable(required = true) String email) {
+		return this.userService.findByEmail(email);
 	}
 
     @RequestMapping(value = "/login", method=RequestMethod.POST)
