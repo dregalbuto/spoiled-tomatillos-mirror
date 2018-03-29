@@ -345,20 +345,25 @@ class Groups extends Component {
 		super();
 		this.state = {
 				open: false,
-				cookies: '',
+				// fetch user cookies info
+				cookies: cookie.load('user'),
 				groups: []
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
 
-		// fetch user cookies info
-		this.state =  { cookies: cookie.load('user') }
 
-		console.log("Before: ");
+		console.log("cookies: ");
+		console.log(this.state.cookies);
+
+		console.log("Find grups from cookies");
+		console.log(this.state.cookies.groups);
+
+		console.log("Before: find groups in state");
 		console.log(this.state.groups);
 		this.state.groups = this.state.cookies.groups;
 
-		console.log("After: ");
+		console.log("After: find groups in state");
 		console.log(this.state.groups);
 
 		// fetch groups data
@@ -369,9 +374,8 @@ class Groups extends Component {
 		.then((data) => {
 			try {
 				data = JSON.parse(data);
-			} catch (e) {
-				this.setState({});
-				return;
+			} catch (err) {
+				 console.log('An error occurred (fetch data in Groups)', err);
 			}
 
 			// update state with API data

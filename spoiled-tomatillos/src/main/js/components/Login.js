@@ -18,7 +18,8 @@ class Login extends Component{
       mounted:false,
       token:0,
       reviews: [],
-      friends: []
+      friends: [],
+      groups: []
     };
   }
 
@@ -58,18 +59,20 @@ class Login extends Component{
             this.state.first_name = fetchedData.first_name;
             this.state.reviews = fetchedData.reviews;
             this.state.friends = fetchedData.friends;
+            this.state.groups = fetchedData.groups;
             {/*
             Save user information in a cookie
             */}
-            cookie.save('user',  
+            cookie.save('user',
             	{
             		user_token: token,
             		id: this.state.id,
             		email: name,
             		username: this.state.first_name,
             		reviews: this.state.reviews,
-            		friends: this.state.friends
-            		
+            		friends: this.state.friends,
+                groups: this.state.groups
+
             } );
             this.setState({ fireRedirect: true});
             });

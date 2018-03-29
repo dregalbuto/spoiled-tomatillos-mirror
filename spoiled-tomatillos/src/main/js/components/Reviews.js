@@ -7,7 +7,7 @@ import Homepage from './Homepage.js';
 import Profile from './UserProfile.js';
 import Groups from './Groups.js';
 import NavigationBar from './NavigationBar.js';
-import {Navbar, NavItem, NavDropdown, Nav, MenuItem, Pagination} from 'react-bootstrap';
+import {Navbar, NavItem, NavDropdown, Nav, MenuItem} from 'react-bootstrap';
 import cookie from 'react-cookies'
 import {
 	  Button,
@@ -22,7 +22,8 @@ import {
 	  Modal,
 	  Form,
 	  Table,
-	  Rating
+	  Rating,
+		Pagination
 	} from 'semantic-ui-react'
 
 
