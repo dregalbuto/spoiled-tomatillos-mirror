@@ -82,6 +82,8 @@ class Login extends Component{
                 		friends: this.state.friends,
                     groups: this.state.groups
                 } );
+
+                console.log(this.state.cookies)
               });
     }
     else {
