@@ -30,13 +30,13 @@ class UserProfile extends Component {
 		super(props);
 		this.state = {};
 	}
-	
+
 	render() {
 		return(
 			<div>
-			
+
 			<NavigationBar />
-			
+
 			<Container text>
 		    <Header
 		      as='h2'
@@ -54,7 +54,7 @@ class UserProfile extends Component {
 		    {' '}Patrick
 		    </Grid.Column>
 		    <Grid.Column width={9}>
-		    
+
 		    <Segment inverted>
 		    <Statistic.Group inverted>
 		      <Statistic color='blue' size='small'>
@@ -71,26 +71,26 @@ class UserProfile extends Component {
 		      </Statistic>
 		    </Statistic.Group>
 		    </Segment>
-		    
-		    
+
+
 		    </Grid.Column>
 		    <Grid.Column width={3}>
-		     
+
 
 		    <Header as='h3' icon inverted>
 		    <Icon name='settings' />
 		    Account Settings
-		    
+
 		  </Header>
-		  
+
 		    </Grid.Column>
 		  </Grid>
-		  
-		    
+
+
 		</Header>
-		    
+
 		   </Container>
-		   
+
 		    <Segment style={{ padding: '8em 0em' }} vertical>
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Favourite Movies</Header>
 		    <Grid container columns={3} doubling stackable>
@@ -114,11 +114,11 @@ class UserProfile extends Component {
 	    		          	rounded
 	    		          	size='large'
 	    		          		src='https://ia.media-imdb.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_SY1000_CR0,0,674,1000_AL_.jpg'/>
-	    		          </Grid.Column>   
+	    		          </Grid.Column>
 	    		   </Grid>
 	    		<Button floated='right' basic inverted color='grey'>More</Button>
 		    </Segment>
-		  
+
 		    <Segment inverted>
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>My Reviews</Header>
 		    <List divided inverted relaxed>
@@ -130,7 +130,7 @@ class UserProfile extends Component {
 		      </List.Item>
 		      <List.Item>
 		        <List.Content>
-		          <List.Header>	
+		          <List.Header>
 		          Pacific Rim: Uprising</List.Header>
 		          A well done sequel
 		        </List.Content>
@@ -144,9 +144,9 @@ class UserProfile extends Component {
 		    </List>
 		    <Link to="/Reviews"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 		  </Segment>
-		  
+
 		    <Segment style={{ padding: '8em 0em' }} vertical>
-		 
+
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Groups</Header>
 		    <Container>
 		      <Item.Group divided>
@@ -217,7 +217,7 @@ class UserProfile extends Component {
 
 		    <Link to="/Groups"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 		    </Segment>
-		    
+
 		    <Segment style={{ padding: '8em 0em' }} vertical>
 		    <div>
 		    <Header as='h3' inverted style={{fontSize:'2em'}} icon>
@@ -225,9 +225,9 @@ class UserProfile extends Component {
 		      <Header.Content>
 		        Friends
 		      </Header.Content>
-		        
+
 		    </Header>
-		    
+
 		    <List relaxed>
 		    <List.Item>
 		      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/daniel.jpg' />
@@ -251,11 +251,11 @@ class UserProfile extends Component {
 		      </List.Content>
 		    </List.Item>
 		  </List>
-		   
+
 		  </div>
-		  <Button floated='right' basic inverted color='grey'>More</Button>
+		   <Link to="/FriendList"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 		    </Segment>
-		    
+
 			</div>
 		)
 	}
@@ -266,7 +266,7 @@ const style = {
 		    marginTop: '2em',
 		    	padding: '2em 0em',
 		}
-		    		  
+
 }
 
 

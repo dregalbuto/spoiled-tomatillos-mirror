@@ -12,6 +12,7 @@ import Movie from './components/Movie.js';
 import Profile from './components/UserProfile.js';
 import Groups from './components/Groups.js';
 import Reviews from './components/Reviews.js';
+import FriendList from './components/FriendList.js'
 
 ReactDOM.render(
   <BrowserRouter>
@@ -26,6 +27,7 @@ ReactDOM.render(
       <Route path = "/Profile" component = {Profile}/>
       <Route path = "/Groups" component={Groups}/>
       <Route path = "/Reviews" component={Reviews}/>
+      <Route path = "/FriendList" component={FriendList}/>
       </div>
     </BrowserRouter>
     , document.getElementById('react'));

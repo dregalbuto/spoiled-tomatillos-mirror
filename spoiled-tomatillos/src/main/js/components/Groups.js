@@ -8,7 +8,7 @@ import { Button, Container, Header, Icon, Image, List, Table,
 	Item,
 	Label,
 	Modal,
-	Form, 
+	Form,
 	Radio,
 	Grid,
 	Dropdown
@@ -39,7 +39,7 @@ class ManageGroup extends Component {
 	render() {
 		const { open } = this.state
 		return (
-				<Modal 
+				<Modal
 				dimmer={false}
 				open={open}
 				onOpen={this.open}
@@ -112,7 +112,7 @@ class GroupPrivacy extends Component {
 					selection
 					value={value}
 				/>
-				</Grid.Column>		
+				</Grid.Column>
 		)
 	}
 }
@@ -154,7 +154,7 @@ class GroupForm extends Component {
 				groupName: this.state.groupName,
 				blacklist: this.state.privacy,
 				movieId: this.state.movieId
-		};		
+		};
 		this.setState({ fireRedirect: true })
 
 		fetch(url, {
@@ -174,38 +174,38 @@ class GroupForm extends Component {
 		return (
 				<Form onSubmit={this.onSubmit}>
 
-				<Form.Field>				
+				<Form.Field>
 				<label>Group Name</label>
 				<input name="groupName"  placeholder='group name' ref="groupName" type="text"
-					value={this.state.groupName} 
-				onChange={this.handleChange} 
+					value={this.state.groupName}
+				onChange={this.handleChange}
 				/>
 				</Form.Field>
-				<Form.Field>                  {/*TODO convert this movie name to movieID*/}	
+				<Form.Field>                  {/*TODO convert this movie name to movieID*/}
 				<label>Movie Name</label>
 				<input name="movieID" type="text" placeholder='movie name' ref="movieID"
-					value={this.state.movieID} 
+					value={this.state.movieID}
 				onChange={this.handleChange}
 				/>
 				</Form.Field>
 
 
-				<GroupPrivacy privacy={this.state.privacy} />	
+				<GroupPrivacy privacy={this.state.privacy} />
 
 
 				{/*
 		        <Form.Group inline>
 		          <label>Who can see this group?</label>
 		          <Form.Field>
-		          <Radio 
+		          <Radio
 		          	value='true'
 		          	checked={this.state.privacy === true}
 		            onChange={this.radioChange}
-		          	label='Public' 
+		          	label='Public'
 		          	defaultChecked />
 		        	  </Form.Field>
 		          <Form.Field>
-		        	  <Radio 
+		        	  <Radio
 		        	  	value='false'
 		        	  	checked={this.state.privacy === false}
 		        	    onChange={this.radioChange}
@@ -249,7 +249,7 @@ class NestedModal extends Component {
 	render() {
 		const { open } = this.state
 		return (
-				<Modal 
+				<Modal
 				dimmer={false}
 				open={open}
 				onOpen={this.open}
@@ -294,7 +294,7 @@ class Group extends Component {
 				open: false
 		};
 		this.open = this.open.bind(this);
-		this.close = this.close.bind(this);  
+		this.close = this.close.bind(this);
 	}
 	open(e) { this.setState({ open: true }) }
 	close(e){ this.setState({ open: false }) }
@@ -308,12 +308,12 @@ class Group extends Component {
 				<Table.Cell>{this.props.group.creator}</Table.Cell>
 				<Table.Cell>{this.props.group.topic}</Table.Cell>
 				<Table.Cell>
-				<ManageGroup />		     
-				<Modal 
+				<ManageGroup />
+				<Modal
 				open={open} basic size='small'
 					onOpen={this.open}
 				onClose={this.close}
-				style={{height: 300}} 
+				style={{height: 300}}
 				trigger={<Button icon><Icon link name='delete' /></Button>}>
 
 				<Header icon='archive' content='Are you sure to delete this group?' />
@@ -334,7 +334,7 @@ class Group extends Component {
 				</Table.Cell>
 				</Table.Row>
 		)
-	}	
+	}
 
 }
 
@@ -349,18 +349,21 @@ class Groups extends Component {
 				groups: []
 		};
 		this.open = this.open.bind(this);
-		this.close = this.close.bind(this); 
+		this.close = this.close.bind(this);
 
 		// fetch user cookies info
 		this.state =  { cookies: cookie.load('user') }
-		console.log("Reviews ");
-		console.log(this.state.cookies);
-		
+
+		console.log("Before: ");
+		console.log(this.state.groups);
+		this.state.groups = this.state.cookies.groups;
+
+		console.log("After: ");
+		console.log(this.state.groups);
+
 		// fetch groups data
 		var userId = this.state.cookies.id;
-		console.log("TEST userId in groups page ");
-		console.log(userId);
-		
+
 		fetch("/api/users/" + userId + "/groups")
 		.then((response) => response.json())
 		.then((data) => {
@@ -382,7 +385,7 @@ class Groups extends Component {
 
 	open(e) { this.setState({ open: true }) }
 	close(e){ this.setState({ open: false }) }
-	
+
 //	componentWillMount() {
 //		this.state =  { cookies: cookie.load('user') }
 //		console.log("Reviews ");
@@ -397,7 +400,7 @@ class Groups extends Component {
 		);
 
 		return(
-				<div>	
+				<div>
 				<NavigationBar />
 				<Link to="/Profile"><Button basic inverted color='blue'>Back</Button></Link>
 				<Header as='h2' content='My Groups' inverted style={{ fontSize: '1.7em', fontWeight: 'normal', marginTop: '1.5em',}} />
