@@ -32,6 +32,7 @@ class AddReview extends Component {
 		super();
 		this.state = {
 				open:false,
+				review:''
 		};
 
 		this.open = this.open.bind(this);
@@ -99,6 +100,10 @@ class DeleteReview extends Component {
 		  this.setState({ open: false })
 	  }
 
+		handleDelete(event){
+
+		}
+
 
 
 	render() {
@@ -126,7 +131,7 @@ class DeleteReview extends Component {
 		 					<Icon name='remove' /> No
 		 				</Button>
 
-		 				<Button color='green' inverted onClick={this.close}>
+		 				<Button color='green' inverted onClick={this.handleDelete.bind(this)}>
 		 					<Icon name='checkmark' /> Yes
 		 				</Button>
 		 			</Modal.Actions>
@@ -263,7 +268,7 @@ class ReviewList extends Component {
 				          <a href='#'>243 reviews</a>
 				        </Table.Cell>
 				        <Table.Cell>
-				        X-Men Apocalypse may not be the best X-Men movie made but it is still enjoyable if you're an X-Men fan!
+				        X-Men Apocalypse may not be the best X-Men movie made but it is still enjoyable if you re an X-Men fan!
 				        </Table.Cell>
 				        <Table.Cell>
 
@@ -284,14 +289,17 @@ class ReviewList extends Component {
 
 
 class Reviews extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
-			cookies: ''
-
+			cookies: '',
 		};
 
+
+
 	}
+
+
 	componentWillMount() {
 		  {
 			  /* Load cookie from login page
