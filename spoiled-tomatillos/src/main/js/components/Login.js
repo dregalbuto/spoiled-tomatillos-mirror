@@ -19,7 +19,8 @@ class Login extends Component{
       token:0,
       reviews: [],
       friends: [],
-      groups: []
+      groups: [],
+      cookies: ''
     };
   }
 
@@ -55,9 +56,6 @@ class Login extends Component{
           .then(res=>res.json())
           .then(res=>{
             fetchedData = res;
-
-            console.log("LOGIN Cookies (without groups) ");
-            console.log(fetchedData);
             this.state.id = fetchedData.id;
             this.state.first_name = fetchedData.first_name;
             this.state.reviews = fetchedData.reviews;
@@ -73,6 +71,8 @@ class Login extends Component{
               .then(res=>{
                 fetchedGroups = res;
 
+                console.log("IN SECOND FETCH ");
+                console.log(fetchedData);
                 console.log("LOGIN cookies groups) ");
                 console.log(fetchedGroups);
                 this.state.groups = fetchedGroups;
@@ -89,6 +89,11 @@ class Login extends Component{
                 		friends: this.state.friends,
                     groups: this.state.groups
                 } );
+                console.log("Login cookies ready to be passed ");
+                console.log(cookie.load('user'));
+                this.setState({cookies: cookie.load('user')});
+                console.log("STATE COOKIE: ");
+            	  console.log(this.state.cookies);
               });
     }
     else {
