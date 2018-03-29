@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 
 import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
-import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 
 public class UserStatus extends Status {

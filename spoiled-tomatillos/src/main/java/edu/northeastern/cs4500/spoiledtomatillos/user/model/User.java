@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.Collection;
@@ -17,7 +15,6 @@ import javax.persistence.*;
 
 import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
-import edu.northeastern.cs4500.spoiledtomatillos.user.repository.UserRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.Data;

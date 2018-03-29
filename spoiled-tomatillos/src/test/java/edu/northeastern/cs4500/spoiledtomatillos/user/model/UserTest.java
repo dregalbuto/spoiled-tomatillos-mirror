@@ -63,7 +63,6 @@ public class UserTest {
 	
 	@Test
 	public void testToken() throws IllegalAccessException {
-	    Date d = new Date();
         u = new User("test_first", "test_last", "test@test",
                 "test_name", "superSecret");
         boolean err = false;
@@ -88,6 +87,13 @@ public class UserTest {
         String token = u.getToken("superSecret");
         assertTrue(!token.equals(""));
         assertTrue(u.validToken(token));
+        u.setEnabled(false);
+        try {
+            u.getToken("superSecret");
+        } catch (IllegalAccessException ex) {
+		    err = true;
+        }
+        assertTrue(err);
         u.setTokenExpired();
         assertFalse(u.validToken(token));
 	}

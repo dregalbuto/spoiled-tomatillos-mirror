@@ -102,7 +102,12 @@ public class Group {
 }
 class GroupSeralizer extends StdSerializer<Group> {
 
-  public GroupSeralizer() {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+public GroupSeralizer() {
     this(null);
   }
 
