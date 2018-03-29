@@ -90,7 +90,7 @@ public class ReviewController {
         }
 
         this.reviewRepository.delete(review);
-
+        this.reviewRepository.flush();
         return ResponseEntity.ok().body(
                 new JSONObject().put("message", "ok").toString());
     }

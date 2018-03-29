@@ -3,6 +3,9 @@ package edu.northeastern.cs4500.spoiledtomatillos.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+
+import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
+import edu.northeastern.cs4500.spoiledtomatillos.groups.GroupRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.FriendList;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.Role;
 import edu.northeastern.cs4500.spoiledtomatillos.user.repository.FriendListRepository;
@@ -32,6 +35,8 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 public class UserController {
 	private final UserService userService;
 	private final FriendListRepository friendListRepository;
+	@Autowired
+	private GroupRepository groupRepository;
 
 	@Autowired
 	UserController(UserService userService, FriendListRepository friendListRepository) {
@@ -67,9 +72,25 @@ public class UserController {
 		return this.userService.findById(Integer.valueOf(id));
 	}
 
+	@RequestMapping(value = "/id/{id:.+}/groups")
+	List<Group> getGroupsOfUser(@PathVariable(required = true) String id) {
+		List<Group> groups = new ArrayList<>();
+		for (Group group : this.groupRepository.findAll()) {
+			if (String.valueOf(group.getCreator().getId()).equals(id)) {
+				groups.add(group);
+			}
+			for (User user : group.getUsers()) {
+				if (String.valueOf(user.getId()).equals(id)) {
+					groups.add(group);
+				}
+			}
+		}
+		return groups;
+	}
+
 	/**
 	 * Get the user with given email address.
-	 * @param id
+	 * @param email
 	 * @return
 	 */
 	@RequestMapping(value = "/email/{email:.+}")

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 
-
 /**
  * Class for a review written by a user
  */

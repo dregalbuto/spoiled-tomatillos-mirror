@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
@@ -86,7 +87,7 @@ public class User {
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonProperty(value = "reviews")
-    private Collection<Review> reviews;
+    private Collection<Review> reviews = new ArrayList<>();
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
@@ -98,7 +99,7 @@ public class User {
 
     @JsonBackReference
     @ManyToMany
-    private Collection<Group> groups;
+    private Collection<Group> groups = new ArrayList<>();
 
     public User() {
         // Empty constructor fo
