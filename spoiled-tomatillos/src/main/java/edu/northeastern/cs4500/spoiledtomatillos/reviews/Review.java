@@ -40,7 +40,7 @@ public class Review {
      * A user has many reviews.
      */
     @JsonBackReference
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     //@JoinColumn(name="users")
     private User user;
 
@@ -109,6 +109,10 @@ class ReviewSeralizer extends StdSerializer<Review> {
         jsonGenerator.writeStringField("id", review.getMovie().getId());
         jsonGenerator.writeStringField("title", review.getMovie().getTitle());
         jsonGenerator.writeEndObject();
+        jsonGenerator.writeBooleanField("critic", review.getUser() == null);
+        if (review.getUser() != null) {
+            jsonGenerator.writeNumberField("userId", review.getUser().getId());
+        }
         jsonGenerator.writeEndObject();
     }
 }

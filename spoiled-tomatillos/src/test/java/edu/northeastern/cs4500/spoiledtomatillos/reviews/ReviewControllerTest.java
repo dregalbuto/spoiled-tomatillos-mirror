@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.spoiledtomatillos.reviews;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.json.JSONObject;
 import org.junit.Test;
@@ -71,20 +72,18 @@ public class ReviewControllerTest {
 				.contentType(MediaType.APPLICATION_JSON).content(postReq.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
-		System.out.println("PostId:|||||||\n" + cont);
-		postId = new JSONObject(cont).getString("reviewId");
 
 		// View
 		JSONObject viewReq = new JSONObject();
 		viewReq.put("reviewId", postId);
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/get")
+		String str = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/get")
 				.contentType(MediaType.APPLICATION_JSON).content(viewReq.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content()
-						.string("{\"id\":" +
-								postId +
-								",\"text\":\"Test review for a thingy\",\"rating\":2," +
-								"\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"}}"));
+                .andReturn().getResponse().getContentAsString();
+		assertTrue(str.startsWith("{\"id\":" +
+                postId +
+                ",\"text\":\"Test review for a thingy\",\"rating\":2," +
+                "\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"},\"critic\":false,\"userId\":"));
 
 		// Delete
 		JSONObject delReq = new JSONObject();
@@ -279,15 +278,15 @@ public class ReviewControllerTest {
 		// View
 		JSONObject viewReq = new JSONObject();
 		viewReq.put(JsonStrings.REVIEW_ID, reviewId);
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/get")
+		String str = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/get")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(viewReq.toString()))
-		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.content()
-				.string("{\"id\":" +
-						reviewId +
-						",\"text\":\"Test review for a thingy\",\"rating\":2" +
-						",\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"}}"));
+		.andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+		assertTrue(str.startsWith("{\"id\":" +
+                reviewId +
+                ",\"text\":\"Test review for a thingy\",\"rating\":2" +
+                ",\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"}," +
+                "\"critic\":false,\"userId\":"));
 
 		// Delete
 		JSONObject delReq = new JSONObject();
