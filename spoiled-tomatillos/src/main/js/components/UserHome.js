@@ -61,11 +61,16 @@ class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-		cookies: ''
-	};
+		cookies: cookie.load('user')};
+    console.log("UserHome: ");
+	  console.log(this.state.cookies);
+
+
     console.log(this.props.match.params.id);
     fetch("/api/user/id/" + props.match.params.id)
         .then(response => response.json()).then(response=>{console.log(response)});
+
+
 
   }
 

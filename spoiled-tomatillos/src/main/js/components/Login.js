@@ -19,7 +19,8 @@ class Login extends Component{
       token:0,
       reviews: [],
       friends: [],
-      groups: []
+      groups: [],
+      cookies: ''
     };
   }
 
