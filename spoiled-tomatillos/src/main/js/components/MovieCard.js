@@ -53,7 +53,7 @@ class MovieCard extends Component {
                   overview: data.description,
                   runtime: data.runtimeMinuets,
                   poster: data.imgURL,
-                  reviews: []
+                  reviews: [],
                 });
               });
     } else if (props.data === undefined) {
@@ -104,12 +104,7 @@ class MovieCard extends Component {
          </div>
          <div className="poster-container nopadding col-xs-12 col-md-4 pull-md-8 col-lg-5 pull-lg-7 ">
            <img id="postertest" className='poster' src={posterIMG}/>
-         </div>
-
-         <div className="reviews">
-         {this.data.reviews}
-         </div>
-
+           <div> {data.reviews}</div>
          </div>
        </div>
     );

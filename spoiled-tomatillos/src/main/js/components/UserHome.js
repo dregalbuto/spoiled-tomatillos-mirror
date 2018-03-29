@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import NavigationBar from './NavigationBar.js';
 import SearchBar from './SearchBar.js';
 import { Embed, Header } from 'semantic-ui-react'
+import {Button} from 'react-bootstrap';
 
 class FeaturesButton extends Component {
   render() {
@@ -58,14 +59,25 @@ class TitleList extends Component {
 ///////////////// Home /////////////////////
 class Home extends Component {
 
+
   constructor(props){
     super(props);
     this.state = {
-      cookies: ''
+      cookies: '',
+      reviews:[],
     };
-    console.log(this.props.match.params.id);
+    //console.log(this.props.match.params.id);
     fetch("/api/user/id/" + props.match.params.id)
-    .then(response => response.json()).then(response=>{console.log(response)});
+    .then(response => response.json()).then(response=>{
+      //console.log(response.reviews)
+      for(var i = 0; i<response.reviews.length;i++){
+        //console.log(response.reviews[i]);
+      }
+
+      this.state.reviews = response.reviews;
+      console.log(this.state.reviews);
+
+    });
 
   }
 
@@ -76,37 +88,86 @@ class Home extends Component {
       * user:  user_token,	id, email, username
       * */
     }
-    this.state =  { cookies: cookie.load('user') }
-    console.log("UserHome: ");
-    console.log(this.state.cookies);
+    this.setState( {cookies: cookie.load('user')} );
+    //console.log("UserHome: ");
   }
 
+  deleteHandler(event,id){
+    event.preventDefault;
+    var usertoken = this.state.cookies.user_token.value;
+    var useremail = this.state.cookies.email;
+
+    var data = {
+      "token":usertoken,
+      "postId":id,
+      "email":useremail
+    }
+
+    fetch('/api/reviews/delete', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then(response=>response.json()).then(data =>{
+      if(data.message = "ok"){
+        //update component
+      } else {
+        var error = data.message;
+        alert(error);
+      }
+    });
+
+
+  }
+
+
   render() {
-    return (
-      <div>
+    console.log(this.state.cookies);
+    console.log(this.state.cookies.reviews);
 
+
+    const listItem = this.state.cookies.reviews.map((review) =>
+
+    <ul>
+      <li>
+        <div>{review.movie.title}
+          <div>{review.text}
+              <Button onClick={this.deleteHandler.bind(this,review.id)}>
+                delete
+              </Button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  );
+
+
+
+
+  return (
+    <div>
       <header>
-      <NavigationBar />
-      <SearchBar />
-      <Header as='h4' inverted color='blue' size='huge'>Hi, {this.state.cookies.username}</Header>
-
+        <NavigationBar />
+          <SearchBar />
+            <Header as='h4' inverted color='blue' size='huge'>Hi, {this.state.cookies.username}</Header>
+            <h1>My review</h1>
+            <div>{listItem}</div>
       </header>
 
       <Features />
 
-      <div>
-      <h1>My review, {this.state.cookies.review}</h1>
-      </div>
       <div className="TitleList">
-      <div className="Title">
-      <h1>Top Picks </h1>
+        <div className="Title">
+          <h1>Top Picks </h1>
+        </div>
+        <div className="Title">
+          <h1>Recommended For Me</h1>
+        </div>
       </div>
-      <div className="Title">
-      <h1>Recommended For Me</h1>
-      </div>
-      </div>
-      </div>
-    );
-  }
+    </div>
+  );
+}
 }
 export default Home;
