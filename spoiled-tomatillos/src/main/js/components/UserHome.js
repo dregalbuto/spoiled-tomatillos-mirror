@@ -20,16 +20,16 @@ class Features extends Component {
     return (
       <div id="features" className="Features" style={{backgroundImage: 'url(https://therealsasha.wordpress.com/2015/03/01/interstellar-review/)'}}>
       <div className="content">
-     
+
       <Embed
       id='2LqzF5WauAw'
       placeholder='https://ia.media-imdb.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SY1000_SX675_AL_.jpg'
       source='youtube'
     />
-      
+
     	  <a href="http://www.imdb.com/title/tt0816692/?ref_=tt_mv_close"> <h2>Watch interstellar now</h2> </a>
-     
-      
+
+
       <div className="button-wrapper">
 
       <FeaturesButton primary={true} text="Watch now">
@@ -69,29 +69,29 @@ class Home extends Component {
 
   }
 
- 
+
   componentWillMount() {
 	  {
 		  /* Load cookie from login page
 		   * user:  user_token,	id, email, username
 		   * */
 	  }
-	  this.state =  { cookies: cookie.load('user') }
+    this.state =  { cookies: cookie.load('user') };
 	  console.log("UserHome: ");
 	  console.log(this.state.cookies);
 	}
-  
+
   render() {
-    return (    
+    return (
       <div>
-      
+
       <header>
       <NavigationBar />
       <SearchBar />
       <Header as='h4' inverted color='blue' size='huge'>Hi, {this.state.cookies.username}</Header>
-      
+
       </header>
-      
+
       <Features />
 
       <div className="TitleList">

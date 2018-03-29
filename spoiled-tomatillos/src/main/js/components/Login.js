@@ -55,6 +55,9 @@ class Login extends Component{
           .then(res=>res.json())
           .then(res=>{
             fetchedData = res;
+
+            console.log("LOGIN Cookies (without groups) ");
+            console.log(fetchedData);
             this.state.id = fetchedData.id;
             this.state.first_name = fetchedData.first_name;
             this.state.reviews = fetchedData.reviews;
@@ -65,9 +68,13 @@ class Login extends Component{
 
           // fetch user groups using user email
           fetch("/api/user/email/" + name + "/groups")
+
               .then(res=>res.json())
               .then(res=>{
                 fetchedGroups = res;
+
+                console.log("LOGIN cookies groups) ");
+                console.log(fetchedGroups);
                 this.state.groups = fetchedGroups;
                 {/*
                 Save user information in a cookie
