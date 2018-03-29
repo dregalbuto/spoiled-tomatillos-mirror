@@ -79,6 +79,9 @@ class Home extends Component {
 
     });
 
+     this.handleDelete = this.handleDelete.bind(this);
+
+
   }
 
 
@@ -92,16 +95,23 @@ class Home extends Component {
     //console.log("UserHome: ");
   }
 
-  deleteHandler(event,id){
-    event.preventDefault;
-    var usertoken = this.state.cookies.user_token.value;
+  handleDelete(id){
+    console.log(this.state.cookies);
+    console.log(this.state.cookies.user_token)
+    var usertoken = this.state.cookies.user_token;
     var useremail = this.state.cookies.email;
+    var reviewid = id;
+
+    console.log(id);
+    console.log(usertoken);
 
     var data = {
       "token":usertoken,
-      "postId":id,
+      "postId":reviewid,
       "email":useremail
     }
+
+    var body = JSON.stringify(data);
 
     fetch('/api/reviews/delete', {
         method: 'POST',
@@ -109,10 +119,11 @@ class Home extends Component {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: body
     }).then(response=>response.json()).then(data =>{
-      if(data.message = "ok"){
-        //update component
+      if(data.hasOwnProperty("deleted")){
+        alert("delete successfully");
+        
       } else {
         var error = data.message;
         alert(error);
@@ -134,7 +145,8 @@ class Home extends Component {
       <li>
         <div>{review.movie.title}
           <div>{review.text}
-              <Button onClick={this.deleteHandler.bind(this,review.id)}>
+          {review.id}
+              <Button onClick={this.handleDelete(review.id)}>
                 delete
               </Button>
           </div>

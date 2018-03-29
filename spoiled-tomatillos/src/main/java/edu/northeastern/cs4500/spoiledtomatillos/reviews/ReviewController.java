@@ -92,7 +92,7 @@ public class ReviewController {
         this.reviewRepository.delete(review);
 
         return ResponseEntity.ok().body(
-                new JSONObject().put("message", "ok").toString());
+                new JSONObject().put("message", "ok").put("deleted", "deleted").toString());
     }
 
     @RequestMapping("/get")
