@@ -122,7 +122,7 @@ class FriendList extends Component {
       </List.Content>
       </List.Item>
       </List>
-       <Pagination defaultActivePage={5} totalPages={10} />
+      <footer> <Pagination defaultActivePage={5} totalPages={10} /></footer>
       </div>
     )
   }

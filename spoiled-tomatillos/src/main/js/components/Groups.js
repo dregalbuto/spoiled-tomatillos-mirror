@@ -426,7 +426,7 @@ class Groups extends Component {
 				<NestedModal cookies={this.state.cookies}/>
 
 				</Segment>
-				<Pagination defaultActivePage={5} totalPages={10} />
+				<footer><Pagination defaultActivePage={5} totalPages={10} /></footer>
 				</div>
 		)
 	}
