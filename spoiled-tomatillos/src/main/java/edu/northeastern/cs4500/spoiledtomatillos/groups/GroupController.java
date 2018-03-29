@@ -337,4 +337,10 @@ public class GroupController {
               new JSONObject().put("message", "Error processing request").toString());
     }
   }
+
+  @RequestMapping("/edit")
+  public ResponseEntity<String> edit(@RequestBody(required = true) String strRequest) throws JSONException {
+    JSONObject request = new JSONObject(strRequest);
+    return null;
+  }
 }
