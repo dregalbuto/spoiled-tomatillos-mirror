@@ -56,6 +56,8 @@ class TitleList extends Component {
   }
 }
 
+
+
 ///////////////// Home /////////////////////
 class Home extends Component {
 
@@ -81,7 +83,6 @@ class Home extends Component {
 
      this.handleDelete = this.handleDelete.bind(this);
 
-
   }
 
 
@@ -95,12 +96,17 @@ class Home extends Component {
     //console.log("UserHome: ");
   }
 
-  handleDelete(id){
+
+
+  handleDelete(id,e){
+    e.preventDefault;
     console.log(this.state.cookies);
     console.log(this.state.cookies.user_token)
     var usertoken = this.state.cookies.user_token;
     var useremail = this.state.cookies.email;
     var reviewid = id;
+    var userId = this.state.cookies.id;
+    var fetchedData = {};
 
     console.log(id);
     console.log(usertoken);
@@ -123,7 +129,16 @@ class Home extends Component {
     }).then(response=>response.json()).then(data =>{
       if(data.hasOwnProperty("deleted")){
         alert("delete successfully");
-        
+        fetch("/api/user/email/" + useremail)
+            .then(res=>res.json())
+            .then(res=>{
+              fetchedData = res;
+              this.state.cookies.reviews = fetchedData.reviews;
+              this.setState(this.state);
+            });
+
+
+
       } else {
         var error = data.message;
         alert(error);
@@ -146,7 +161,7 @@ class Home extends Component {
         <div>{review.movie.title}
           <div>{review.text}
           {review.id}
-              <Button onClick={this.handleDelete(review.id)}>
+              <Button onClick={(e)=>this.handleDelete(review.id,e)}>
                 delete
               </Button>
           </div>
