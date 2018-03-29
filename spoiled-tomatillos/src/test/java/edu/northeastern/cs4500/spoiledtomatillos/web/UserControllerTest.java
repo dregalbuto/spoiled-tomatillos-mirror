@@ -1,5 +1,9 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
+import static org.junit.Assert.assertEquals;
+
+import edu.northeastern.cs4500.spoiledtomatillos.user.repository.FriendListRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -8,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -20,11 +27,26 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
 	
 	@Autowired
     private MockMvc mockMvc;
 
+	@Test
+	public void getUserById() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/id/1000009"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void getUserByEmail() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/email/moe@husky.neu.edu"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
     @Test
     public void registerAndInfoAndLogin() throws Exception {
         JSONObject request = new JSONObject();
@@ -42,7 +64,7 @@ public class UserControllerTest {
         assertTrue(str.matches("\\{\"id\"\\:[0-9]+,\"first_name\"\\:\"erin\",\"last_name\"\\:\"zhang\"," +
                 "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\],\"reviews\"\\:\\[\\]," +
-                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"request\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
+                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"requests\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
                 "\"groups\"\\:\\[\\]\\}"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/someRandomUser"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
@@ -100,7 +122,7 @@ public class UserControllerTest {
         assertTrue(str.matches("\\{\"id\"\\:[0-9]+,\"first_name\"\\:\"erin\",\"last_name\"\\:\"zhang\"," +
                 "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\],\"reviews\"\\:\\[\\]," +
-                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"request\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
+                "\"friends\"\\:\\{\"id\"\\:[0-9]+,\"requests\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
                 "\"groups\"\\:\\[\\]\\}"));
 
         JSONObject promotion = new JSONObject();
@@ -111,6 +133,13 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(promotion.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+        str = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/promote")
+                .contentType(MediaType.APPLICATION_JSON).content(promotion.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        assertEquals(JsonStrings.ADMIN_EXISTS,
+                new JSONObject(str).getString(JsonStrings.MESSAGE));
+
         str = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/erin.z"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -118,8 +147,16 @@ public class UserControllerTest {
                 "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\{\"id\"\\:[0-9]+,\"name\"\\:\"ROLE_ADMIN\"," +
                 "\"privileges\"\\:\\[\\]\\}\\],\"reviews\"\\:\\[\\]," +
-                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"request\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
+                "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"requests\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
                 "\"groups\"\\:\\[\\]\\}"));
+
+        promotion.put("targetEmail", "somethingrandomrandom@husky.neu.edu");
+        str = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/promote")
+                .contentType(MediaType.APPLICATION_JSON).content(promotion.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        assertEquals(JsonStrings.TARGET_USER_NOT_FOUND,
+                new JSONObject(str).getString(JsonStrings.MESSAGE));
     }
 
     @Test
@@ -162,4 +199,117 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
     }
+
+    @Test
+    public void forgetInvalid() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "somethingRandom");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/forget")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
+    }
+
+    @Test
+    public void changeInvalidUser() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "somethingRandom");
+        request.put("password", "somethingRandom");
+        request.put("newPassword", "somethingRandom");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/change")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
+    }
+
+    @Test
+    public void changeInvalidPass() throws Exception {
+        JSONObject nobody = new JSONObject();
+        nobody.put("email", "nobody@nobody.neu.edu");
+        nobody.put("first_name", "erin");
+        nobody.put("last_name", "zhang");
+        nobody.put("username", "nobody");
+        nobody.put("password", "passw0rd");
+        signup(nobody);
+        nobody.put("password", "somethingRandom");
+        nobody.put("newPassword", "somethingRandom");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/change")
+                .contentType(MediaType.APPLICATION_JSON).content(nobody.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.BAD_SECRET, response.getString(JsonStrings.MESSAGE));
+    }
+    
+    @Test
+    public void loginInvalid() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "somethingRandom");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
+    }
+    
+    @Test
+    public void loginBadPassword() throws Exception {
+        JSONObject erin = new JSONObject();
+        erin.put("first_name", "erin");
+        erin.put("last_name", "zhang");
+        erin.put("email", "erinzhang@husky.neu.edu");
+        erin.put("username", "erin.z");
+        erin.put("password", "passw0rd");
+        this.signupLogin(erin);
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "erinzhang@husky.neu.edu");
+        request.put(JsonStrings.SECRET, "SECRET");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.BAD_SECRET, response.getString(JsonStrings.MESSAGE));
+    }
+
+    @Test
+    public void promoteInvalidUser() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "somethingRandom");
+        request.put(JsonStrings.TOKEN, "somethingRandom");
+        request.put(JsonStrings.TARGET_EMAIL, "somethingRandom");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/promote")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.BAD_SECRET, response.getString(JsonStrings.MESSAGE));
+    }
+
+    @Test
+    public void promoteInvalidPerm() throws Exception {
+        JSONObject erin = new JSONObject();
+        erin.put("first_name", "erin");
+        erin.put("last_name", "zhang");
+        erin.put("email", "erinzhang@husky.neu.edu");
+        erin.put("username", "erin.z");
+        erin.put("password", "passw0rd");
+        String token = this.signupLogin(erin);
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "erinzhang@husky.neu.edu");
+        request.put(JsonStrings.TARGET_EMAIL, "erinzhang@husky.neu.edu");
+        request.put(JsonStrings.TOKEN, token);
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/promote")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.NO_PERMISSION, response.getString(JsonStrings.MESSAGE));
+    }
+
 }

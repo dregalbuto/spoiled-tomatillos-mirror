@@ -18,9 +18,13 @@ class Login extends Component{
       mounted:false,
       token:0,
       reviews: [],
+<<<<<<< HEAD
       friends: [],
       groups: [],
       cookies: ''
+=======
+      friends: []
+>>>>>>> 85fe113d385bde8327fd98a885829522dbc4d755
     };
   }
 
@@ -29,7 +33,10 @@ class Login extends Component{
     var name = this.username.value;
     var pass = this.password.value;
     var fetchedData = {};
+<<<<<<< HEAD
     var fetchedGroups ={};
+=======
+>>>>>>> 85fe113d385bde8327fd98a885829522dbc4d755
 
     if(name.length <= 0 || pass.length <= 0) {
       alert("empty fields");
@@ -50,6 +57,7 @@ class Login extends Component{
     })
     .then(response => response.json())
   .then(data => {
+    console.log(data);
     if(data.hasOwnProperty("token")) {
       var token = data.token;
       fetch("/api/user/email/" + name)
@@ -60,6 +68,7 @@ class Login extends Component{
             this.state.first_name = fetchedData.first_name;
             this.state.reviews = fetchedData.reviews;
             this.state.friends = fetchedData.friends;
+<<<<<<< HEAD
 
             fetch("api/user/email/"+name+"/groups").then(res=>res.json()).
             then(res=>{
@@ -82,6 +91,23 @@ class Login extends Component{
                 this.setState({ fireRedirect: true});
                 console.log(cookie.load('user'));
               });
+=======
+            {/*
+            Save user information in a cookie
+            */}
+            cookie.save('user',
+            	{
+            		user_token: token,
+            		id: this.state.id,
+            		email: name,
+            		username: this.state.first_name,
+            		reviews: this.state.reviews,
+            		friends: this.state.friends
+
+            } );
+            this.setState({ fireRedirect: true});
+            });
+>>>>>>> 85fe113d385bde8327fd98a885829522dbc4d755
     }
     else {
       var error = data.message;

@@ -12,8 +12,11 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.util.Collection;
 
+=======
+>>>>>>> 85fe113d385bde8327fd98a885829522dbc4d755
 
 /**
  * Class for a review written by a user
@@ -42,7 +45,7 @@ public class Review {
      * A user has many reviews.
      */
     @JsonBackReference
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     //@JoinColumn(name="users")
     private User user;
 
@@ -103,7 +106,7 @@ class ReviewSeralizer extends StdSerializer<Review> {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", review.getId());
         jsonGenerator.writeStringField("text", review.getText());
-        jsonGenerator.writeStringField("rating", String.valueOf(review.getRating()));
+        jsonGenerator.writeNumberField("rating", review.getRating());
         if (review.getGroup() != null) {
             jsonGenerator.writeStringField("group", String.valueOf(review.getGroup().getId()));
         }
@@ -111,6 +114,10 @@ class ReviewSeralizer extends StdSerializer<Review> {
         jsonGenerator.writeStringField("id", review.getMovie().getId());
         jsonGenerator.writeStringField("title", review.getMovie().getTitle());
         jsonGenerator.writeEndObject();
+        jsonGenerator.writeBooleanField("critic", review.getUser() == null);
+        if (review.getUser() != null) {
+            jsonGenerator.writeNumberField("userId", review.getUser().getId());
+        }
         jsonGenerator.writeEndObject();
     }
 }
