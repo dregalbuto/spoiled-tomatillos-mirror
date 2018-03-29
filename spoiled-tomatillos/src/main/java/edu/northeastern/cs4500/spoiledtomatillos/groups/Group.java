@@ -36,15 +36,15 @@ public class Group {
   private String name;
 
   @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-          CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+          CascadeType.PERSIST, CascadeType.REFRESH})//, fetch = FetchType.LAZY)
   @JoinColumn//(name = "id")
   private User creator;
 
   @JsonManagedReference
   @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-          CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+          CascadeType.PERSIST, CascadeType.REFRESH})//, fetch = FetchType.LAZY)
   @JoinColumn//(name = "id")
-  private Collection<User> users;
+  private Collection<User> users = new ArrayList<>();
 
   private boolean isBlackList = true;
 

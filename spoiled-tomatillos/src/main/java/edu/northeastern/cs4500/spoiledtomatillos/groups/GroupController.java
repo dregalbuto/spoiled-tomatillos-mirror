@@ -58,7 +58,9 @@ public class GroupController {
     }
 
     Group group = new Group(u, movie, groupName, "true".equalsIgnoreCase(privacy));
+    u.getGroups().add(group);
     group = this.groupRepository.save(group);
+    this.userService.save(u);
     return ResponseEntity.ok().body(
             new JSONObject().put("message", "Success")
                     .put("groupId", group.getId()).toString());
@@ -79,6 +81,7 @@ public class GroupController {
     Group group = groupRepository.findOne(Integer.valueOf(groupId));
     if (group.getCreator().getId() == u.getId()) {
       //TODO replace with permission
+      u.getGroups().remove(group);
       this.groupRepository.delete(group);
       return ResponseEntity.ok().body(
               new JSONObject().put("message", "Group deleted").toString());
