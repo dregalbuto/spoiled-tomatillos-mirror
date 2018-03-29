@@ -18,7 +18,8 @@ class Login extends Component{
       mounted:false,
       token:0,
       reviews: [],
-      friends: []
+      friends: [],
+      groups: []
     };
   }
 
@@ -27,6 +28,7 @@ class Login extends Component{
     var name = this.username.value;
     var pass = this.password.value;
     var fetchedData = {};
+    var fetchedGroups= {};
 
     if(name.length <= 0 || pass.length <= 0) {
       alert("empty fields");
@@ -47,7 +49,6 @@ class Login extends Component{
     })
     .then(response => response.json())
   .then(data => {
-    console.log(data);
     if(data.hasOwnProperty("token")) {
       var token = data.token;
       fetch("/api/user/email/" + name)
@@ -72,7 +73,28 @@ class Login extends Component{
 
             } );
             this.setState({ fireRedirect: true});
-            });
+          });
+
+          // fetch user groups using user email
+          fetch("/api/user/email/" + name + "/groups")
+              .then(res=>res.json())
+              .then(res=>{
+                fetchedGroups = res;
+                this.state.groups = fetchedGroups;
+                {/*
+                Save user information in a cookie
+                */}
+                cookie.save('user',
+                	{
+                		user_token: token,
+                		id: this.state.id,
+                		email: name,
+                		username: this.state.first_name,
+                		reviews: this.state.reviews,
+                		friends: this.state.friends,
+                    groups: this.state.groups
+                } );
+              });
     }
     else {
       var error = data.message;

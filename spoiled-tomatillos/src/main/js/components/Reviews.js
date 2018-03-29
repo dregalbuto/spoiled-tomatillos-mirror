@@ -22,7 +22,8 @@ import {
 	  Modal,
 	  Form,
 	  Table,
-	  Rating
+	  Rating,
+		Pagination
 	} from 'semantic-ui-react'
 
 
@@ -102,7 +103,6 @@ class DeleteReview extends Component {
 		handleDelete(event){
 
 		}
-
 
 
 	render() {
@@ -280,6 +280,7 @@ class ReviewList extends Component {
 				  </Table>
 
 				  <AddReview />
+					 <footer><Pagination defaultActivePage={5} totalPages={10} /></footer>
 				  </div>
 		)
 	}
@@ -290,11 +291,9 @@ class Reviews extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			cookies: '',
+			cookies: ''
+
 		};
-
-
-
 	}
 
 
