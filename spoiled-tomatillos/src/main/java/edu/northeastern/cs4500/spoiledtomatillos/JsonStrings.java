@@ -33,6 +33,8 @@ public class JsonStrings {
 	public static final String BAD_SECRET = "Incorrect password";
 	public static final String ILLEGAL_ACCESS = "Illegal access!";
 	public static final String USER_EXISTS = "Account with this email already exists";
+	public static final String ADMIN_EXISTS = "Account already admin";
+	public static final String EMAIL_SENT = "Email sent";
 
 	private JsonStrings() {
 		throw new IllegalStateException("Utility class");

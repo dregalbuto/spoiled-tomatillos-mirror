@@ -2,18 +2,15 @@ package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.groups.GroupRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieCachedRepository;
-import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserServiceImpl;
-import net.minidev.json.reader.JsonWriter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,7 +177,8 @@ public class GroupController {
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
-		if (!h.group.getIdList().add(h.otherUser.getId())) {
+		if (h.group.getIdList().contains(h.otherUser.getId()) ||
+				!h.group.getIdList().add(h.otherUser.getId())) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
@@ -245,8 +243,8 @@ public class GroupController {
 	}
 
 	@RequestMapping("/get")
-	public ResponseEntity<String> get(@RequestBody(required = true)String strRequest) 
-			throws JSONException {
+	public ResponseEntity<String> get(@RequestBody(required = true)String strRequest)
+            throws JSONException, JsonProcessingException {
 		JSONObject request = new JSONObject(strRequest);
 		String email = request.getString(JsonStrings.EMAIL);
 		String token = request.getString(JsonStrings.TOKEN);
@@ -266,19 +264,13 @@ public class GroupController {
 							, JsonStrings.NO_PERMISSION).toString());
 		}
 		this.groupRepository.save(group);
-		try {
-			return ResponseEntity.ok().body(
-					new ObjectMapper().writeValueAsString(group));
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.ERROR).toString());
-		}
+        return ResponseEntity.ok().body(
+                new ObjectMapper().writeValueAsString(group));
 	}
 
 	@RequestMapping("/search")
-	public ResponseEntity<String> search(@RequestBody(required = true)String strRequest) 
-			throws JSONException {
+	public ResponseEntity<String> search(@RequestBody(required = true)String strRequest)
+			throws JSONException, JsonProcessingException {
 		JSONObject request = new JSONObject(strRequest);
 		String query = request.getString("s");
 		List<Integer> groups = new ArrayList<>();
@@ -287,13 +279,7 @@ public class GroupController {
 				groups.add(g.getId());
 			}
 		}
-		try {
-			return ResponseEntity.ok().body(
-					new ObjectMapper().writeValueAsString(groups));
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.ERROR).toString());
-		}
+		return ResponseEntity.ok().body(
+				new ObjectMapper().writeValueAsString(groups));
 	}
 }

@@ -72,7 +72,7 @@ public class ReviewControllerTest {
 				.contentType(MediaType.APPLICATION_JSON).content(postReq.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
-
+		postId = new JSONObject(cont).getString(JsonStrings.REVIEW_ID);
 		// View
 		JSONObject viewReq = new JSONObject();
 		viewReq.put("reviewId", postId);
@@ -84,6 +84,17 @@ public class ReviewControllerTest {
                 postId +
                 ",\"text\":\"Test review for a thingy\",\"rating\":2," +
                 "\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"},\"critic\":false,\"userId\":"));
+		// View postId
+		JSONObject viewReqP = new JSONObject();
+		viewReqP.put("postId", postId);
+		str = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/get")
+				.contentType(MediaType.APPLICATION_JSON).content(viewReqP.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertTrue(str.startsWith("{\"id\":" +
+				postId +
+				",\"text\":\"Test review for a thingy\",\"rating\":2," +
+				"\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"},\"critic\":false,\"userId\":"));
 
 		// Delete
 		JSONObject delReq = new JSONObject();

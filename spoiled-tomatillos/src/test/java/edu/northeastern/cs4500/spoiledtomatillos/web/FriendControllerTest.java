@@ -109,6 +109,59 @@ public class FriendControllerTest {
 		assertEquals(JsonStrings.ERROR, response.getString(JsonStrings.MESSAGE));
 	}
 
+
+    @Test
+    public void acceptInvalidLogin() throws Exception {
+        Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+        JSONObject friendlist1 = new JSONObject();
+        friendlist1.put("email", EMAIL1);
+        friendlist1.put("token", "BAD_TOKEN");
+        friendlist1.put(JsonStrings.TARGET_EMAIL, EMAIL2);
+
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/accept")
+                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+
+        assertEquals(JsonStrings.TOKEN_EXPIRED, response.getString(JsonStrings.MESSAGE));
+    }
+
+    @Test
+    public void acceptInvalidLogin2() throws Exception {
+        String token = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+        JSONObject friendlist1 = new JSONObject();
+        friendlist1.put("email", "BAD_EMAIL");
+        friendlist1.put("token", token);
+        friendlist1.put(JsonStrings.TARGET_EMAIL, EMAIL2);
+
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/accept")
+                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+
+        assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
+    }
+
+    @Test
+    public void acceptTargetNotFound() throws Exception {
+        String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+
+        JSONObject friendlist1 = new JSONObject();
+        friendlist1.put(JsonStrings.EMAIL, EMAIL1);
+        friendlist1.put(JsonStrings.TOKEN, token1);
+        friendlist1.put(JsonStrings.TARGET_EMAIL, EMAIL2);
+
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/accept")
+                .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+
+        assertEquals(JsonStrings.TARGET_USER_NOT_FOUND
+                , response.getString(JsonStrings.MESSAGE));
+    }
+
 	@Test
 	public void rejectInvalidUser() throws Exception {
 		Helper.signupLoginDefaults(EMAIL1, mockMvc);
@@ -352,6 +405,12 @@ public class FriendControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().string("[]"));
 
+
+    // Rejecting request again
+	 this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/reject")
+		    .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
+			.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
     // Sending request
     this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/send")
             .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
@@ -399,6 +458,11 @@ public class FriendControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().string("[]"));
 
+	  // Accepting request again
+	  this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/accept")
+			  .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
+			  .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
     // Unfriend request
     this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/unfriend")
             .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
@@ -421,5 +485,10 @@ public class FriendControllerTest {
             .contentType(MediaType.APPLICATION_JSON).content(friendlist2.toString()))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().string("[]"));
+
+    // Unfriend request again
+	 this.mockMvc.perform(MockMvcRequestBuilders.post("/api/friend/unfriend")
+			 .contentType(MediaType.APPLICATION_JSON).content(friendlist1.toString()))
+			 .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 }

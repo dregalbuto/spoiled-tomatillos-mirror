@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -22,6 +23,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GroupControllerTest {
 
 	@Autowired
@@ -272,6 +274,7 @@ public class GroupControllerTest {
 		JSONObject post = new JSONObject();
 		post.put("email", EMAIL2);
 		post.put("token", token2);
+		post.put("token", token2);
 		post.put("groupId", groupId);
 		post.put("rating", "2");
 		post.put("text", "Wat");
@@ -299,6 +302,24 @@ public class GroupControllerTest {
 				.andReturn().getResponse().getContentAsString());
 		assertEquals(JsonStrings.INVALID_LOGIN, resp.getString(JsonStrings.MESSAGE));
 	}
+
+    @Test
+    public void addBadLogin() throws Exception {
+        String token1 = Helper.signupLoginDefaults(EMAIL1, mockMvc);
+        JSONObject response = createGroupJson(EMAIL1, token1, MOVIE_ID, true);
+        String groupId = response.getString(JsonStrings.GROUP_ID);
+
+        JSONObject group1 = new JSONObject();
+        group1.put("email", EMAIL1);
+        group1.put("token", "BAD_TOKEN");
+        group1.put("groupId", groupId);
+
+        JSONObject resp = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
+                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.INVALID_LOGIN, resp.getString(JsonStrings.MESSAGE));
+    }
 	
 	@Test
 	public void getNotInGroup() throws Exception {
@@ -353,6 +374,34 @@ public class GroupControllerTest {
 		//Search
 		assertEquals(count + 1, count("TestingGroupName"));
 
+		//Add to blacklist bad login
+		JSONObject blnbl = new JSONObject();
+		blnbl.put("email", "test_ge2@a.co");
+		blnbl.put("token", token1);
+		blnbl.put("groupId", groupId);
+		blnbl.put("userEmail", "test_ge2@a.co");
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
+				.contentType(MediaType.APPLICATION_JSON).content(blnbl.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+		//Remove from bad login
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
+				.contentType(MediaType.APPLICATION_JSON).content(blnbl.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        //Add to blacklist no perm
+        JSONObject blnp = new JSONObject();
+        blnp.put("email", "test_ge2@a.co");
+        blnp.put("token", token2);
+        blnp.put("groupId", groupId);
+        blnp.put("userEmail", "test_ge2@a.co");
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
+                .contentType(MediaType.APPLICATION_JSON).content(blnp.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        //Remove from no perm
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
+				.contentType(MediaType.APPLICATION_JSON).content(blnp.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
 		//Add to blacklist
 		JSONObject bl = new JSONObject();
 		bl.put("email", "test_ge@a.co");
@@ -362,6 +411,11 @@ public class GroupControllerTest {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
 				.contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
 		.andExpect(MockMvcResultMatchers.status().isOk());
+
+		//Add again
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
+                .contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
 		//Join blacklisted
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
@@ -382,6 +436,17 @@ public class GroupControllerTest {
 				.contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
 		.andExpect(MockMvcResultMatchers.status().isOk());
 
+		ret = this.mockMvc.perform(MockMvcRequestBuilders
+				.post("/api/user/email/test_ge2@a.co/groups"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertEquals(ret, "[]");
+
+		//Remove again
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
+				.contentType(MediaType.APPLICATION_JSON).content(bl.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
 		//Join
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/join")
 				.contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
@@ -398,6 +463,22 @@ public class GroupControllerTest {
 				.contentType(MediaType.APPLICATION_JSON).content(post.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
+
+		ret = this.mockMvc.perform(MockMvcRequestBuilders
+				.post("/api/user/email/test_ge@a.co/groups"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertTrue(ret.matches("\\[\\{\"id\"\\:[0-9]+,\"name\"\\:\"TestingGroupName\"," +
+				"\"creator\"\\:\\{\"id\"\\:[0-9]+\\},\"users\"\\:\\[[0-9]+\\],\"idList\"\\:\\[\\]," +
+				"\"topic\"\\:\\{\"id\"\\:\"tt0000001\"\\},\"reviews\"\\:\\[\\],\"blacklist\"\\:true\\}\\]"));
+
+		ret = this.mockMvc.perform(MockMvcRequestBuilders
+				.post("/api/user/email/test_ge2@a.co/groups"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertTrue(ret.matches("\\[\\{\"id\"\\:[0-9]+,\"name\"\\:\"TestingGroupName\"," +
+				"\"creator\"\\:\\{\"id\"\\:[0-9]+\\},\"users\"\\:\\[[0-9]+\\],\"idList\"\\:\\[\\]," +
+				"\"topic\"\\:\\{\"id\"\\:\"tt0000001\"\\},\"reviews\"\\:\\[\\],\"blacklist\"\\:true\\}\\]"));
 
 		ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
 				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
@@ -429,6 +510,11 @@ public class GroupControllerTest {
 				"\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
 				"\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
 
+        //Leave
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/leave")
+                .contentType(MediaType.APPLICATION_JSON).content(group2.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
 		//Delete it
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/delete")
 				.contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
@@ -436,6 +522,9 @@ public class GroupControllerTest {
 
 		//Search
 		assertEquals(count, count("TestingGroupName"));
+
+		//Search
+		assertEquals(0, count("RandomRadomlongasfthing"));
 	}
 
 }
