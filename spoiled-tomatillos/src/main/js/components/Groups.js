@@ -288,10 +288,11 @@ class NestedModal extends Component {
 
 {/* Render a group element in a row */}
 class Group extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state={
-				open: false
+				open: false,
+				group: props.group
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
@@ -299,14 +300,13 @@ class Group extends Component {
 	open(e) { this.setState({ open: true }) }
 	close(e){ this.setState({ open: false }) }
 
-
 	render() {
 		const { open } = this.state
 		return (
 				<Table.Row>
-				<Table.Cell>{this.props.group.name}</Table.Cell>
-				<Table.Cell>{this.props.group.creator}</Table.Cell>
-				<Table.Cell>{this.props.group.topic}</Table.Cell>
+				<Table.Cell><div>{this.state.group.name}</div></Table.Cell>
+				<Table.Cell><div>{this.state.group.creator.id}</div></Table.Cell>
+				<Table.Cell><div>{this.state.group.topic.id}</div></Table.Cell>
 				<Table.Cell>
 				<ManageGroup />
 				<Modal
@@ -335,9 +335,7 @@ class Group extends Component {
 				</Table.Row>
 		)
 	}
-
 }
-
 
 {/* Render List of Groups in a Table*/}
 class Groups extends Component {
@@ -351,56 +349,18 @@ class Groups extends Component {
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
-
-
-		console.log("cookies: ");
-		console.log(this.state.cookies);
-
-		console.log("Find grups from cookies");
-		console.log(this.state.cookies.groups);
-
-		console.log("Before: find groups in state");
-		console.log(this.state.groups);
 		this.state.groups = this.state.cookies.groups;
 
-		console.log("After: find groups in state");
+		console.log("TEST: Groups.js - this.state.groups");
 		console.log(this.state.groups);
-
-		// fetch groups data
-		var userId = this.state.cookies.id;
-
-		fetch("/api/users/" + userId + "/groups")
-		.then((response) => response.json())
-		.then((data) => {
-			try {
-				data = JSON.parse(data);
-			} catch (err) {
-				 console.log('An error occurred (fetch data in Groups)', err);
-			}
-
-			// update state with API data
-			this.setState({
-				groups:data,
-			});
-		});
-		console.log("11111GROUPS TESTING")
-		console.log(this.state.groups)
 	}
 
 	open(e) { this.setState({ open: true }) }
 	close(e){ this.setState({ open: false }) }
 
-//	componentWillMount() {
-//		this.state =  { cookies: cookie.load('user') }
-//		console.log("Reviews ");
-//		console.log(this.state.cookies);
-//	}
-
 	render() {
-		console.log("22222GROUPS TESTING")
-		console.log(this.state.groups)
 		const groups = this.state.groups.map((group) =>
-		<Group key={group._links.self.href} group={group}/>
+			<Group key={group.id} group={group} />
 		);
 
 		return(
