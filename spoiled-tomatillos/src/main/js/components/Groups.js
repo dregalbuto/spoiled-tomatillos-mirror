@@ -120,16 +120,16 @@ class GroupForm extends Component {
 				token: props.cookies.user_token,
 				groupName: '',
 				blacklist: 'true',  // save as 'blacklist' in JSON msg; default to be public (true)
-				movieId: '',
+				movieId: ''
 		};
 
 		console.log("GroupForm cookies :");
 		console.log(props.cookies);
+
 		this.handleChange = this.handleChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.handlePrivacyChange = this.handlePrivacyChange.bind(this);
 	}
-
 	handleChange(e) {
 		const name = e.target.name;
 		const value = e.target.value;
@@ -149,6 +149,7 @@ class GroupForm extends Component {
 		e.preventDefault();
 		console.log(this.state);
 
+		var fetchedData = {};
 		var url = '/api/groups/create';
 		var newGroup = {
 				email: this.state.email,
@@ -165,15 +166,31 @@ class GroupForm extends Component {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(newGroup)
-		}).then(res => {
-			return res;
-		}).catch(err => err);
+			body: JSON.stringify(newGroup)})
+				.then(response=>response.json())
+				.then(data =>{
+      		if(data.hasOwnProperty("groupId")){
+				var gruopId = data.groupId;
+        alert("add successfully");
+        fetch("/api/user/email/" + this.state.email + "/groups")
+            .then(res=>res.json())
+            .then(res=>{
+              fetchedData = res;
+              this.props.cookies.groups = fetchedData.groups;
+							this.props.onClose;
+            });
+
+      } else {
+        var error = data.message;
+        alert(error);
+      }
+    })
 	}
+
 
 	render() {
 		return (
-				<Form onSubmit={this.onSubmit}>
+				<Form>
 
 				<Form.Field>
 				<label>Group Name (Must be a movie ID for current production)</label>
@@ -196,7 +213,7 @@ class GroupForm extends Component {
 				<Form.TextArea label='Group Description' placeholder='Tell your members more about this group...' />
 					<Form.Button>Add friends</Form.Button>
 
-					<Button basic color='red' onClick={this.close}>
+					<Button basic color='red' onClick={this.props.onClose}>
 					<Icon name='remove' /> Cancel
 					</Button>
 
@@ -249,7 +266,8 @@ class NestedModal extends Component {
 				<Modal.Description>
 				<Header>Group Description</Header>
 				</Modal.Description>
-				<GroupForm cookies={this.state.cookies} groups={this.state.groups}/>
+				<GroupForm cookies={this.state.cookies} groups={this.state.groups}
+						onClose={this.state.close}/>
 
 				</Modal.Content>
 				</Modal>
