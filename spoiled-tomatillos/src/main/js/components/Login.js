@@ -25,7 +25,7 @@ class Login extends Component{
   }
 
   handleClick(event){
-    event.preventDefault;
+    event.preventDefault();
     var name = this.username.value;
     var pass = this.password.value;
     var fetchedData = {};
@@ -58,8 +58,10 @@ class Login extends Component{
 
         // receive user token from response msg: two fetches from here
         fetch("/api/user/email/" + name)
-
+        .then(res => { res.text();
         .then(data=> {
+            console.log("@!!!!!!!!!!!!!!!!!!!!");
+          console.log(data);
           console.log("first fetch ");
           console.log(data);
           fetchedData = data;
@@ -144,6 +146,7 @@ render() {
     bsStyle="primary"
     onClick={this.handleClick.bind(this)}
     bsSize="large">Login</Button>
+
 
     {this.state.fireRedirect && (
       <Redirect to={"/user/"+this.state.id}/>
