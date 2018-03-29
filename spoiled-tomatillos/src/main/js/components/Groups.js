@@ -86,19 +86,13 @@ const options = [
 	{ key: 2, text: 'Private', value: 2 }
 	]
 
-
+// Dropdown menu to select group privacy settings
+// true: Public
+// false: Private
 class GroupPrivacy extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-
-		}
-
-		this.handleChange=this.handleChange.bind(this);
-
-	}
-	handleChange(e) {
-		this.setState({ value: e.target.value })
+		this.state = {}
 	}
 
 	render() {
@@ -106,7 +100,7 @@ class GroupPrivacy extends Component {
 		return (
 				<Grid.Column>
 				<Dropdown
-				onChange={this.handleChange}
+				onChange={this.props.onChangeValue}
 				options={options}
 				placeholder='Group Privacy'
 					selection
@@ -117,6 +111,7 @@ class GroupPrivacy extends Component {
 	}
 }
 
+// Add Group Form; user fill in inputs here
 class GroupForm extends Component {
 	constructor(props) {
 		super(props);
@@ -124,23 +119,27 @@ class GroupForm extends Component {
 				email: props.cookies.email,
 				token: props.cookies.token,
 				groupName: '',
-				privacy: true,
+				privacy: true,  // save as 'blacklist' in JSON msg; default to be public (true)
 				movieID: '',
-				cookies: props.cookies
 		};
 		this.handleChange = this.handleChange.bind(this);
-		this.radioChange = this.radioChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+		this.handlePrivacyChange = this.handlePrivacyChange.bind(this);
 	}
+
 	handleChange(e) {
 		const name = e.target.name;
 		const value = e.target.value;
 		this.setState({ [name]:value })
-
 	}
-	radioChange(e, {value}) {
-		console.log("Privacy: ")
-		this.setState({ privacy: {value} })
+
+	handlePrivacyChange(e) {
+		if (e.target.value === 1) {
+			this.setState( {privacy: true});
+		}
+		else if (e.target.value === 2) {
+			this.setState( {privacy: false});
+		}
 	}
 
 	onSubmit(e){
@@ -170,81 +169,58 @@ class GroupForm extends Component {
 	}
 
 	render() {
-
 		return (
 				<Form onSubmit={this.onSubmit}>
 
 				<Form.Field>
-				<label>Group Name</label>
+				<label>Group Name (Must be a movie ID for current production)</label>
 				<input name="groupName"  placeholder='group name' ref="groupName" type="text"
 					value={this.state.groupName}
-				onChange={this.handleChange}
+					onChange={this.handleChange}
 				/>
 				</Form.Field>
-				<Form.Field>                  {/*TODO convert this movie name to movieID*/}
+				<Form.Field>
 				<label>Movie Name</label>
 				<input name="movieID" type="text" placeholder='movie name' ref="movieID"
 					value={this.state.movieID}
-				onChange={this.handleChange}
+					onChange={this.handleChange}
 				/>
 				</Form.Field>
 
-
-				<GroupPrivacy privacy={this.state.privacy} />
-
-
-				{/*
-		        <Form.Group inline>
-		          <label>Who can see this group?</label>
-		          <Form.Field>
-		          <Radio
-		          	value='true'
-		          	checked={this.state.privacy === true}
-		            onChange={this.radioChange}
-		          	label='Public'
-		          	defaultChecked />
-		        	  </Form.Field>
-		          <Form.Field>
-		        	  <Radio
-		        	  	value='false'
-		        	  	checked={this.state.privacy === false}
-		        	    onChange={this.radioChange}
-		        	  	label='Private' />
-		        	  </Form.Field>
-
-		        	  </Form.Group>
-
-
-				 */}
-
+				<GroupPrivacy
+					privacy={this.state.privacy} onChangeValue={this.handlePrivacyChange} />
 
 				<Form.TextArea label='Group Description' placeholder='Tell your members more about this group...' />
 					<Form.Button>Add friends</Form.Button>
+
+					<Button basic color='red' onClick={this.close}>
+					<Icon name='remove' /> Cancel
+					</Button>
+
+					<Button primary onClick={this.handleAddGroup}>
+					Add <Icon name='right chevron' />
+						</Button>
+
 					</Form>
 		)
 	}
 }
 
-
+// modal for adding a group
 class NestedModal extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 				open:false,
-				cookies: props.cookies
+				cookies: props.cookies,
+				groups: props.groups
 		};
-
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
 	}
 
-
-	open() {
-		this.setState({ open: true })
-	}
-	close() {
-		this.setState({ open: false })
-	}
+	open() { this.setState({ open: true }) }
+	close() { this.setState({ open: false }) }
 
 	render() {
 		const { open } = this.state
@@ -264,23 +240,13 @@ class NestedModal extends Component {
 						wrapped
 						/>
 
-						<Modal.Description>
+				<Modal.Description>
 				<Header>Group Description</Header>
-				<GroupForm cookies={this.state.cookies}/>
-
-
 				</Modal.Description>
-				</Modal.Content>
-				<Modal.Actions>
-				<Button basic color='red' onClick={this.close}>
-				<Icon name='remove' /> Cancel
-				</Button>
-				<Button primary onClick={this.close}>
-				Add <Icon name='right chevron' />
-					</Button>
-				</Modal.Actions>
-				</Modal>
+				<GroupForm cookies={this.state.cookies} groups={this.state.groups}/>
 
+				</Modal.Content>
+				</Modal>
 		)
 	}
 }
@@ -387,7 +353,7 @@ class Groups extends Component {
 				<Segment inverted>
 
 				{/*Add button to add a group*/}
-				<NestedModal cookies={this.state.cookies}/>
+				<NestedModal cookies={this.state.cookies} groups={this.state.groups}/>
 
 				</Segment>
 				<footer><Pagination defaultActivePage={5} totalPages={10} /></footer>
