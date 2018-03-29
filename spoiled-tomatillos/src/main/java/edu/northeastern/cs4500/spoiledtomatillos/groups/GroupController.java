@@ -287,7 +287,7 @@ public class GroupController {
     this.groupRepository.save(group);
     return ResponseEntity.ok().body(
             new JSONObject().put("message", "Success")
-                    .put("groupId", group.getId()).toString());
+                    .put("user removed: ", u.getId()).toString());
   }
 
   @RequestMapping("/get")
