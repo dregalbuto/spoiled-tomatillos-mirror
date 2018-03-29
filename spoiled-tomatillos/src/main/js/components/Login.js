@@ -28,7 +28,6 @@ class Login extends Component{
     var name = this.username.value;
     var pass = this.password.value;
     var fetchedData = {};
-    var fetchedGroups= {};
 
     if(name.length <= 0 || pass.length <= 0) {
       alert("empty fields");
@@ -59,19 +58,8 @@ class Login extends Component{
             this.state.first_name = fetchedData.first_name;
             this.state.reviews = fetchedData.reviews;
             this.state.friends = fetchedData.friends;
+            this.state.groups = fetchedData.groups;
 
-            this.setState({ fireRedirect: true});
-          });
-
-          // fetch user groups using user email
-          fetch("/api/user/email/" + name + "/groups")
-              .then(res=>res.json())
-              .then(res=>{
-                fetchedGroups = res;
-                this.state.groups = fetchedGroups;
-                {/*
-                Save user information in a cookie
-                */}
                 cookie.save('user',
                 	{
                 		user_token: token,
@@ -82,8 +70,7 @@ class Login extends Component{
                 		friends: this.state.friends,
                     groups: this.state.groups
                 } );
-
-                console.log(this.state.cookies)
+                this.setState({ fireRedirect: true});
               });
     }
     else {
