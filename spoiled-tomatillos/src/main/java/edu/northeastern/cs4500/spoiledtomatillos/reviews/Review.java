@@ -12,11 +12,7 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import lombok.Data;
 import javax.persistence.*;
 import java.io.IOException;
-<<<<<<< HEAD
 import java.util.Collection;
-
-=======
->>>>>>> 85fe113d385bde8327fd98a885829522dbc4d755
 
 /**
  * Class for a review written by a user

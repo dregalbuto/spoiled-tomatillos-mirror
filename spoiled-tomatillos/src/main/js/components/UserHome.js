@@ -137,16 +137,11 @@ class Home extends Component {
               this.state.cookies.reviews = fetchedData.reviews;
               this.setState(this.state);
             });
-
-
-
       } else {
         var error = data.message;
         alert(error);
       }
     });
-
-
   }
 
 
