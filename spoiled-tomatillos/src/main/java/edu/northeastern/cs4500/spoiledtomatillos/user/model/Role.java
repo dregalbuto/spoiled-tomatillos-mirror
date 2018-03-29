@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 /**
@@ -28,8 +29,8 @@ public class Role {
 	/**
 	 *  collection of all users who have this role
 	 */
-	
-    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+	@JsonBackReference
+	@ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
 	private Collection<User> users;
     
     /**

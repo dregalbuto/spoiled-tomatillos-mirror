@@ -10,6 +10,7 @@ public class JsonStrings {
 	public static final String GROUP_NAME = "groupName";
 	public static final String BLACKLIST = "blacklist";
 	public static final String MOVIE_ID = "movieId";
+	public static final String DELETED = "deleted";
 	public static final String RATING = "rating";
 	public static final String TEXT = "text";
 	public static final String REVIEW_ID = "reviewId";
@@ -32,6 +33,8 @@ public class JsonStrings {
 	public static final String BAD_SECRET = "Incorrect password";
 	public static final String ILLEGAL_ACCESS = "Illegal access!";
 	public static final String USER_EXISTS = "Account with this email already exists";
+	public static final String ADMIN_EXISTS = "Account already admin";
+	public static final String EMAIL_SENT = "Email sent";
 
 	private JsonStrings() {
 		throw new IllegalStateException("Utility class");

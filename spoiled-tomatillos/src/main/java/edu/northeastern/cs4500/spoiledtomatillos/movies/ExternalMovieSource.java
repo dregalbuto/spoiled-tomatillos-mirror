@@ -2,6 +2,8 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies;
 
 import java.util.List;
 
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+
 /**
  * Represent an external source to get movies from.
  */
@@ -19,4 +21,11 @@ public interface ExternalMovieSource {
      * @return A list of relevant movie ids.
      */
     List<String> searchMovie(MovieSearchQuery q);
+
+    /**
+     * Import the critic review for a certain id.
+     * @param movie the movie to import.
+     * @return All the reviews we have for a given movie.
+     */
+    List<Review> importCriticReview(Movie movie);
 }

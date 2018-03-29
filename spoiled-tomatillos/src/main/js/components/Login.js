@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cookie from 'react-cookies'
 import './Login.css';
 import axios from 'axios';
 import {Button} from 'react-bootstrap';
@@ -6,17 +7,19 @@ import { Redirect } from 'react-router';
 
 class Login extends Component{
 
-
-
   constructor(props) {
     super(props);
     this.state={
       username:'',
       password:'',
+      first_name:'',
       fireRedirect: false,
       id:0,
       mounted:false,
-      token:0
+      token:0,
+      reviews: [],
+      friends: [],
+      groups: []
     };
   }
 
@@ -25,6 +28,7 @@ class Login extends Component{
     var name = this.username.value;
     var pass = this.password.value;
     var fetchedData = {};
+    var fetchedGroups= {};
 
     if(name.length <= 0 || pass.length <= 0) {
       alert("empty fields");
@@ -45,7 +49,6 @@ class Login extends Component{
     })
     .then(response => response.json())
   .then(data => {
-    console.log(data);
     if(data.hasOwnProperty("token")) {
       var token = data.token;
       fetch("/api/user/email/" + name)
@@ -53,8 +56,45 @@ class Login extends Component{
           .then(res=>{
             fetchedData = res;
             this.state.id = fetchedData.id;
+            this.state.first_name = fetchedData.first_name;
+            this.state.reviews = fetchedData.reviews;
+            this.state.friends = fetchedData.friends;
+            {/*
+            Save user information in a cookie
+            */}
+            cookie.save('user',
+            	{
+            		user_token: token,
+            		id: this.state.id,
+            		email: name,
+            		username: this.state.first_name,
+            		reviews: this.state.reviews,
+            		friends: this.state.friends
+
+            } );
             this.setState({ fireRedirect: true});
-            });
+          });
+
+          // fetch user groups using user email
+          fetch("/api/user/email/" + name + "/groups")
+              .then(res=>res.json())
+              .then(res=>{
+                fetchedGroups = res;
+                this.state.groups = fetchedGroups;
+                {/*
+                Save user information in a cookie
+                */}
+                cookie.save('user',
+                	{
+                		user_token: token,
+                		id: this.state.id,
+                		email: name,
+                		username: this.state.first_name,
+                		reviews: this.state.reviews,
+                		friends: this.state.friends,
+                    groups: this.state.groups
+                } );
+              });
     }
     else {
       var error = data.message;

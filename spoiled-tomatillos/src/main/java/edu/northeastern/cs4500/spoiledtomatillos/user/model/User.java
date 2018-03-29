@@ -1,12 +1,20 @@
 package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
@@ -27,6 +35,7 @@ import lombok.Setter;
  */
 @Data
 @Entity(name = "users")
+@JsonSerialize(using = UserSeralizer.class)
 public class User {
 
     @Id
@@ -42,26 +51,28 @@ public class User {
     @JsonProperty(value = "email")
     private String email;
     @JsonProperty(value = "username")
+    //@Column(unique = true)
     private String username;
     @JsonProperty(value = "password")
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    @JsonIgnore
+    //@JsonIgnore
     private String password;
     @JsonProperty(value = "enabled")
     private boolean enabled;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    @JsonIgnore
+    //@JsonIgnore
     private String token;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    @JsonIgnore
+    //@JsonIgnore
     private long tokenExpiration;
 
     /**
      * All of the roles this user has
      */
+    @JsonManagedReference
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -75,7 +86,7 @@ public class User {
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonProperty(value = "reviews")
-    private Collection<Review> reviews;
+    private Collection<Review> reviews = new ArrayList<>();
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
@@ -87,7 +98,7 @@ public class User {
 
     @JsonBackReference
     @ManyToMany
-    private Collection<Group> groups;
+    private Collection<Group> groups = new ArrayList<>();
 
     public User() {
         // Empty constructor fo
@@ -122,8 +133,26 @@ public class User {
      *
      * @param password user password in plain text.
      */
-    private void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static SecureRandom rnd = new SecureRandom();
+
+    private static String randomString(int len){
+        StringBuilder sb = new StringBuilder(len);
+        for ( int i = 0; i < len; i++ ) {
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        return sb.toString();
+    }
+
+    public String randomPassword() {
+        String randomStr = randomString(12);
+        this.setTokenExpired();
+        this.setPassword(randomStr);
+        return randomStr;
     }
 
     public boolean checkPassword(String plainPassword) {
@@ -200,5 +229,48 @@ public class User {
             return false;
         }
         return user.validToken(token);
+    }
+}
+
+class UserSeralizer extends StdSerializer<User> {
+
+    public UserSeralizer() {
+        this(null);
+    }
+
+    protected UserSeralizer(Class<User> t) {
+        super(t);
+    }
+
+    @Override
+    public void serialize(User user, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeNumberField("id", user.getId());
+        jsonGenerator.writeStringField("first_name", user.getFirstName());
+        jsonGenerator.writeStringField("last_name", user.getLastName());
+        jsonGenerator.writeStringField("email", user.getEmail());
+        jsonGenerator.writeStringField("username", user.getUsername());
+        jsonGenerator.writeBooleanField("enabled", user.isEnabled());
+        jsonGenerator.writeArrayFieldStart("roles");
+        for (Role role : user.getRoles()) {
+            jsonGenerator.writeObject(role);
+        }
+        jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeArrayFieldStart("reviews");
+        for (Review review : user.getReviews()) {
+            jsonGenerator.writeNumber(review.getId());
+        }
+        jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeFieldName("friends");
+        jsonGenerator.writeObject(user.getFriends());
+
+        jsonGenerator.writeArrayFieldStart("groups");
+        for (Group group : user.getGroups()) {
+            jsonGenerator.writeNumber(group.getId());
+        }
+        jsonGenerator.writeEndArray();
+        jsonGenerator.writeEndObject();
     }
 }

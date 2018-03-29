@@ -128,32 +128,21 @@ public class FriendController {
 
 	@RequestMapping(value = "/friends", method = RequestMethod.POST)
 	public ResponseEntity<String> list(@RequestBody String strRequest)
-			throws JSONException {
+			throws JSONException, JsonProcessingException {
 		Helper h = new Helper(strRequest);
 		if (h.sourceResponse != null) return h.sourceResponse;
-		try {
-			return ResponseEntity.ok().body(
-					new ObjectMapper().writeValueAsString(
-							h.source.getFriends().getFriends()));
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.ERROR).toString());
-		}
+		return ResponseEntity.ok().body(
+				new ObjectMapper().writeValueAsString(
+						h.source.getFriends().getFriends()));
 	}
 
 	@RequestMapping(value = "/requests", method = RequestMethod.POST)
 	public ResponseEntity<String> request(@RequestBody String strRequest)
-			throws JSONException {
+			throws JSONException, JsonProcessingException {
 		Helper h = new Helper(strRequest);
 		if (h.sourceResponse != null) return h.sourceResponse;
-		try {
-			return ResponseEntity.ok().body(
-					new ObjectMapper().writeValueAsString(
-							h.source.getFriends().getRequests()));
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());
-		}
+		return ResponseEntity.ok().body(
+				new ObjectMapper().writeValueAsString(
+						h.source.getFriends().getRequests()));
 	}
 }
