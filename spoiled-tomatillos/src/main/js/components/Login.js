@@ -10,16 +10,16 @@ class Login extends Component{
   constructor(props) {
     super(props);
     this.state={
-      username:'',
-      password:'',
-      first_name:'',
+      // username:'',
+      // password:'',
+      // first_name:'',
       fireRedirect: false,
       id:0,
       mounted:false,
       token:0,
-      reviews: [],
-      friends: [],
-      groups: [],
+      // reviews: [],
+      // friends: [],
+      // groups: [],
       cookies: ''
     };
   }
@@ -58,37 +58,38 @@ class Login extends Component{
 
         // receive user token from response msg: two fetches from here
         fetch("/api/user/email/" + name)
-        .then(res => { res.text();
         .then(data=> {
-            console.log("@!!!!!!!!!!!!!!!!!!!!");
-          console.log(data);
-          console.log("first fetch ");
           console.log(data);
           fetchedData = data;
-          this.state.id = fetchedData.id;
-          this.state.first_name = fetchedData.first_name;
-          this.state.reviews = fetchedData.reviews;
-          this.state.friends = fetchedData.friends;
+
+          // this.setState({
+          //   id: fetchedData.id,
+          //   first_name: fetchedData.first_name,
+          //   reviews: fetchedData.reviews,
+          //   friends: fetchedData.friends
+          // });
+          cookie.save('user',
+          {
+            id: fetchedData.id,
+            email: name,
+            username: fetchedData.first_name,
+            reviews: fetchedData.reviews,
+            friends: fetchedData.friends
+          } );
 
           fetch("api/user/email/"+name+"/groups")
           .then(data=>{
             console.log("SECOND fetch ");
             console.log(data);
             fetchedGroups = data;
-            this.state.groups = fetchedGroups;
+
+            cookie.save('user',
+            {
+              groups: fetchedGroups.groups
+            });
           }
         );
 
-        cookie.save('user',
-        {
-          user_token: token,
-          id: this.state.id,
-          email: name,
-          username: this.state.first_name,
-          reviews: this.state.reviews,
-          friends: this.state.friends,
-          groups: this.state.groups
-        } );
         this.setState({ fireRedirect: true});
         console.log(cookie.load('user'));
       });
