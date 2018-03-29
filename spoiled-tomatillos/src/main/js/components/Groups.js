@@ -327,28 +327,39 @@ class Group extends Component {
 	}
 }
 
+
 {/* Render List of Groups in a Table*/}
 class Groups extends Component {
 	constructor() {
 		super();
 		this.state = {
 				open: false,
-				// fetch user cookies info
 				cookies: cookie.load('user'),
-				groups: []
+				groups:[]
 		};
+
+		console.log(this.state.cookies);
+		/*
+		Groups data fetched from API
+		*/
+		fetch("api/user/email/"+this.state.cookies.email+"/groups").then(res=>res.json()).
+		then((res)=>{
+			console.log(res);
+				this.setState({ groups: res })
+				console.log(this.state.groups);
+		}
+	);
+
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
-		this.state.groups = this.state.cookies.groups;
 
 	console.log("Groups cookies :");
 	console.log(this.state.cookies);
-		console.log("TEST: Groups.js - this.state.groups");
-		console.log(this.state.groups);
 	}
 
 	open(e) { this.setState({ open: true }) }
 	close(e){ this.setState({ open: false }) }
+
 
 	render() {
 		const groups = this.state.groups.map((group) =>
