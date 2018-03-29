@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { Component }  from 'react'
 import { Button, Image, List, Container, Divider,
-Grid, Header,Icon, Image, Menu, Segment, Item, Label, Table, Statistic} from 'semantic-ui-react'
+Grid, Header,Icon, Menu, Segment, Item, Label, Table, Statistic} from 'semantic-ui-react'
+import NavigationBar from './NavigationBar.js';
+import Profile from './UserProfile.js';
 
 
 class UserHeading extends Component {
@@ -75,10 +77,13 @@ class FriendList extends Component {
 
   render() {
     return (
+      <div>
+      <NavigationBar />
+      <Link to="/Profile"><Button basic inverted color='blue'>Back</Button></Link>
       <UserHeading />
 
       <h3>Friend List</h3>
-      <List divided verticalAlign='middle'>
+      <List divided verticalAlign='middle' size='massive'>
       <List.Item>
       <List.Content floated='right'>
       <Button>Remove</Button>
@@ -116,7 +121,7 @@ class FriendList extends Component {
       </List.Content>
       </List.Item>
       </List>
-
+      </div>
     )
   }
 
@@ -130,3 +135,5 @@ const style = {
 		}
 
 }
+
+export default FriendList;
