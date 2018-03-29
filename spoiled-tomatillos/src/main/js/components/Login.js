@@ -61,7 +61,7 @@ class Login extends Component{
             {/*
             Save user information in a cookie
             */}
-            cookie.save('user',  
+            cookie.save('user',
             	{
             		user_token: token,
             		id: this.state.id,
@@ -69,7 +69,7 @@ class Login extends Component{
             		username: this.state.first_name,
             		reviews: this.state.reviews,
             		friends: this.state.friends
-            		
+
             } );
             this.setState({ fireRedirect: true});
             });

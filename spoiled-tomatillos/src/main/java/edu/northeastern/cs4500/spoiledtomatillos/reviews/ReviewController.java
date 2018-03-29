@@ -104,7 +104,8 @@ public class ReviewController {
 
 			return ResponseEntity.ok().body(
 					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.SUCCESS).toString());
+							, JsonStrings.SUCCESS)
+                            .put(JsonStrings.DELETED,JsonStrings.DELETED).toString());
 		}
 		catch (NumberFormatException e) {
 			return ResponseEntity.badRequest().body(
@@ -141,6 +142,5 @@ public class ReviewController {
 					.put(JsonStrings.MESSAGE, JsonStrings.REVIEW_NOT_FOUND)
 					.toString());
 		}
-
-	}
+    }
 }

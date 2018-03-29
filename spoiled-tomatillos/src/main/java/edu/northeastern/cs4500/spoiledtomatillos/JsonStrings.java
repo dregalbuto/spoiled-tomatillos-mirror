@@ -10,6 +10,7 @@ public class JsonStrings {
 	public static final String GROUP_NAME = "groupName";
 	public static final String BLACKLIST = "blacklist";
 	public static final String MOVIE_ID = "movieId";
+	public static final String DELETED = "deleted";
 	public static final String RATING = "rating";
 	public static final String TEXT = "text";
 	public static final String REVIEW_ID = "reviewId";
