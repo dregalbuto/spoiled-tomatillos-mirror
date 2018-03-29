@@ -2,16 +2,18 @@ package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.groups.GroupRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieCachedRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserServiceImpl;
+import net.minidev.json.reader.JsonWriter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +93,9 @@ public class GroupController {
 		}
 
 		Group group = new Group(u, movie, groupName, "true".equalsIgnoreCase(privacy));
+		u.getGroups().add(group);
 		group = this.groupRepository.save(group);
+		this.userService.save(u);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
 				.put(JsonStrings.GROUP_ID, group.getId()).toString());
@@ -113,6 +117,7 @@ public class GroupController {
 
 		Group group = groupRepository.findOne(Integer.valueOf(groupId));
 		if (group.getCreator().getId() == u.getId()) {
+			u.getGroups().remove(group);
 			this.groupRepository.delete(group);
 			return ResponseEntity.ok().body(
 					new JSONObject().put(JsonStrings.MESSAGE

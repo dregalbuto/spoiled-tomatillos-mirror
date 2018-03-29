@@ -30,9 +30,76 @@ public class ReviewControllerTest {
 	private static final String EMAIL1 = "test_ge@a.co";
 	private static final String EMAIL2 = "test_ge2@a.co";
 	private static final String MOVIE_ID = "tt0000001";
-	
-	@Autowired
-	MockMvc mockMvc;
+
+    @Autowired
+    MockMvc mockMvc;
+
+    private String signupLogin(JSONObject per) throws Exception {
+        // Signup
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/signup")
+                .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
+                .andDo(MockMvcResultHandlers.print());
+
+        // Login
+        String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        return new JSONObject(cont).getString("token");
+    }
+
+    @Test
+    public void postViewDeleteReviewAdditional() throws Exception {
+		// Login
+		JSONObject loginJson = new JSONObject();
+		loginJson.put("first_name", "erin");
+		loginJson.put("last_name", "zhang");
+		loginJson.put("email", "erinzhang@husky.neu.edu");
+		loginJson.put("username", "erin.z");
+		loginJson.put("password", "passw0rd");
+		String token = signupLogin(loginJson);
+
+		// Post
+		JSONObject postReq = new JSONObject();
+		postReq.put("token", token);
+		postReq.put("rating", "2");
+		postReq.put("email", "erinzhang@husky.neu.edu");
+		postReq.put("text", "Test review for a thingy");
+		postReq.put("movieId", "tt0000001");
+		String postId;
+		String cont = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/post")
+				.contentType(MediaType.APPLICATION_JSON).content(postReq.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		System.out.println("PostId:|||||||\n" + cont);
+		postId = new JSONObject(cont).getString("reviewId");
+
+		// View
+		JSONObject viewReq = new JSONObject();
+		viewReq.put("reviewId", postId);
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/get")
+				.contentType(MediaType.APPLICATION_JSON).content(viewReq.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content()
+						.string("{\"id\":" +
+								postId +
+								",\"text\":\"Test review for a thingy\",\"rating\":2," +
+								"\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"}}"));
+
+		// Delete
+		JSONObject delReq = new JSONObject();
+		delReq.put("token", token);
+		delReq.put("email", "erinzhang@husky.neu.edu");
+		delReq.put("reviewId", postId);
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/delete")
+				.contentType(MediaType.APPLICATION_JSON).content(delReq.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+		// View none existent post
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/reviews/get")
+				.contentType(MediaType.APPLICATION_JSON).content(viewReq.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
 
 	private JSONObject postReview(String email, String token
 			, String movieId, Boolean expectOk) 
@@ -207,7 +274,6 @@ public class ReviewControllerTest {
 				.content(postReq.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
-		System.out.println("PostId:|||||||\n" + cont);
 		String reviewId = new JSONObject(cont).getString("reviewId");
 
 		// View
@@ -220,7 +286,8 @@ public class ReviewControllerTest {
 		.andExpect(MockMvcResultMatchers.content()
 				.string("{\"id\":" +
 						reviewId +
-						",\"text\":\"Test review for a thingy\",\"rating\":2}"));
+						",\"text\":\"Test review for a thingy\",\"rating\":2" +
+						",\"movie\":{\"id\":\"tt0000001\",\"title\":\"Carmencita\"}}"));
 
 		// Delete
 		JSONObject delReq = new JSONObject();

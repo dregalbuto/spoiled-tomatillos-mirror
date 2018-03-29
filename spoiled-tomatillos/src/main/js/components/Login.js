@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cookie from 'react-cookies'
 import './Login.css';
 import axios from 'axios';
 import {Button} from 'react-bootstrap';
@@ -6,17 +7,18 @@ import { Redirect } from 'react-router';
 
 class Login extends Component{
 
-
-
   constructor(props) {
     super(props);
     this.state={
       username:'',
       password:'',
+      first_name:'',
       fireRedirect: false,
       id:0,
       mounted:false,
-      token:0
+      token:0,
+      reviews: [],
+      friends: []
     };
   }
 
@@ -53,6 +55,22 @@ class Login extends Component{
           .then(res=>{
             fetchedData = res;
             this.state.id = fetchedData.id;
+            this.state.first_name = fetchedData.first_name;
+            this.state.reviews = fetchedData.reviews;
+            this.state.friends = fetchedData.friends;
+            {/*
+            Save user information in a cookie
+            */}
+            cookie.save('user',  
+            	{
+            		user_token: token,
+            		id: this.state.id,
+            		email: name,
+            		username: this.state.first_name,
+            		reviews: this.state.reviews,
+            		friends: this.state.friends
+            		
+            } );
             this.setState({ fireRedirect: true});
             });
     }

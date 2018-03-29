@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledtomatillos.groups;
+package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

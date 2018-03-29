@@ -100,6 +100,7 @@ public class ReviewController {
 			}
 
 			this.reviewRepository.delete(review);
+			this.reviewRepository.flush();
 
 			return ResponseEntity.ok().body(
 					new JSONObject().put(JsonStrings.MESSAGE
@@ -117,7 +118,12 @@ public class ReviewController {
 	public ResponseEntity<String> getReview(@RequestBody(required = true)String strRequest)
 			throws JSONException, JsonProcessingException {
 		JSONObject request = new JSONObject(strRequest);
-		String postId = request.getString(JsonStrings.REVIEW_ID);
+		String postId;
+		if (request.has("postId")) {
+			postId = request.getString("postId");
+		} else {
+			postId = request.getString(JsonStrings.REVIEW_ID);
+		}
 		try {
 			Review review = this.reviewRepository.findOne(new Integer(postId));
 			if (review == null) {

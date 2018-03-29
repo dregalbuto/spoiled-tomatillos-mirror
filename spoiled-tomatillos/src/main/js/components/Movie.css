@@ -63,3 +63,27 @@
   font-size: 1.3em;
   font-family: $oswald;
 }
+
+h3.ui.dividing.header {
+	color: white;
+}
+
+.ui.comments .comment .author {
+	color: white !important;
+}
+
+.ui.comments .comment .metadata {
+	color: white !important;
+}
+
+.ui.comments .comment .text {
+	color: white !important;
+}
+
+.ui.comments .comment .actions a {
+	color: white !important;
+}
+
+
+
+	
