@@ -117,11 +117,14 @@ class GroupForm extends Component {
 		super(props);
 		this.state= {
 				email: props.cookies.email,
-				token: props.cookies.token,
+				token: props.cookies.user_token,
 				groupName: '',
-				privacy: true,  // save as 'blacklist' in JSON msg; default to be public (true)
-				movieID: '',
+				blacklist: 'true',  // save as 'blacklist' in JSON msg; default to be public (true)
+				movieId: '',
 		};
+
+		console.log("GroupForm cookies :");
+		console.log(props.cookies);
 		this.handleChange = this.handleChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.handlePrivacyChange = this.handlePrivacyChange.bind(this);
@@ -135,10 +138,10 @@ class GroupForm extends Component {
 
 	handlePrivacyChange(e) {
 		if (e.target.value === 1) {
-			this.setState( {privacy: true});
+			this.setState( {blacklist: 'true'});
 		}
 		else if (e.target.value === 2) {
-			this.setState( {privacy: false});
+			this.setState( {blacklist: 'false'});
 		}
 	}
 
@@ -151,7 +154,7 @@ class GroupForm extends Component {
 				email: this.state.email,
 				token: this.state.token,
 				groupName: this.state.groupName,
-				blacklist: this.state.privacy,
+				blacklist: this.state.blacklist,
 				movieId: this.state.movieId
 		};
 		this.setState({ fireRedirect: true })
@@ -181,14 +184,14 @@ class GroupForm extends Component {
 				</Form.Field>
 				<Form.Field>
 				<label>Movie Name</label>
-				<input name="movieID" type="text" placeholder='movie name' ref="movieID"
-					value={this.state.movieID}
+				<input name="movieId" type="text" placeholder='movie name' ref="movieId"
+					value={this.state.movieId}
 					onChange={this.handleChange}
 				/>
 				</Form.Field>
 
 				<GroupPrivacy
-					privacy={this.state.privacy} onChangeValue={this.handlePrivacyChange} />
+					blacklist={this.state.blacklist} onChangeValue={this.handlePrivacyChange} />
 
 				<Form.TextArea label='Group Description' placeholder='Tell your members more about this group...' />
 					<Form.Button>Add friends</Form.Button>
@@ -197,7 +200,7 @@ class GroupForm extends Component {
 					<Icon name='remove' /> Cancel
 					</Button>
 
-					<Button primary onClick={this.handleAddGroup}>
+					<Button primary onClick={this.onSubmit}>
 					Add <Icon name='right chevron' />
 						</Button>
 
@@ -215,6 +218,9 @@ class NestedModal extends Component {
 				cookies: props.cookies,
 				groups: props.groups
 		};
+
+		console.log("NestedModal cookies :");
+		console.log(this.state.cookies);
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
 	}
@@ -317,6 +323,8 @@ class Groups extends Component {
 		this.close = this.close.bind(this);
 		this.state.groups = this.state.cookies.groups;
 
+	console.log("Groups cookies :");
+	console.log(this.state.cookies);
 		console.log("TEST: Groups.js - this.state.groups");
 		console.log(this.state.groups);
 	}
