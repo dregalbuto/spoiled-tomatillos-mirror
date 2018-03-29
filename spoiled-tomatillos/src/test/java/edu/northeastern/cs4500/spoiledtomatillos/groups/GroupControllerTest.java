@@ -191,4 +191,66 @@ public class GroupControllerTest {
         assertEquals(count, count("TestingGroupName"));
     }
 
+    @Test
+    public void removeGroupMember() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put("first_name", "test_gf");
+        request.put("last_name", "test_gl");
+        request.put("email", "test_ge@a.co");
+        request.put("username", "test_gu");
+        request.put("password", "passw0rd");
+        String token1 = signupLogin(request);
+        JSONObject request2 = new JSONObject();
+        request2.put("first_name", "test_gf2");
+        request2.put("last_name", "test_gl2");
+        request2.put("email", "test_ge2@a.co");
+        request2.put("username", "test_gu2");
+        request2.put("password", "passw0rd");
+        String token2 = signupLogin(request2);
+        int count = count("TestingGroupName");
+
+        //Create group
+        JSONObject create = new JSONObject();
+        create.put("email","test_ge@a.co");
+        create.put("token", token1);
+        create.put("blacklist","test_ge@a.co");
+        create.put("groupName", "TestingGroupName");
+        create.put("blacklist", "true");
+        create.put("movieId", "tt0000001");
+        String ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/create")
+                .contentType(MediaType.APPLICATION_JSON).content(create.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        String groupId = new JSONObject(ret).getString("groupId");
+        JSONObject group1 = new JSONObject();
+        group1.put("email", "test_ge@a.co");
+        group1.put("token", token1);
+        group1.put("groupId", groupId);
+
+        JSONObject group2 = new JSONObject();
+        group1.put("email", "test_ge@a.co");
+        group1.put("token", token1);
+        group1.put("groupId", groupId);
+
+        JSONObject delete = new JSONObject();
+        delete.put("email", "test_ge@a.co");
+        delete.put("token", token1);
+        delete.put("groupId", groupId);
+
+        //remove user
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/remove")
+                .contentType(MediaType.APPLICATION_JSON).content(delete.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        //check
+//        ret = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/get")
+//                .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andReturn().getResponse().getContentAsString();
+//        assertTrue(ret.matches("\\{\"id\":[0-9]+,\"name\":\"TestingGroupName\"," +
+//                "\"creator\":\\{\"id\":[0-9]+\\},\"users\":\\[\\],\"idList\":\\[\\]," +
+//                "\"topic\":\\{\"id\":\"tt0000001\"\\},\"reviews\":\\[\\],\"blacklist\":true\\}"));
+        assertNotEquals(group1, group2);
+    }
+
 }

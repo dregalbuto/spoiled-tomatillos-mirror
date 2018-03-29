@@ -265,7 +265,7 @@ public class GroupController {
     String email = request.getString("email");
     String token = request.getString("token");
     String groupId = request.getString("groupId");
-    String reviewId = request.getString("reviewId");
+    //String reviewId = request.getString("reviewId");
     if (!User.validLogin(email, token, this.userService)) {
       return ResponseEntity.badRequest().body(
               new JSONObject().put("message", "Not a valid login").toString());
@@ -283,7 +283,7 @@ public class GroupController {
       return ResponseEntity.badRequest().body(
               new JSONObject().put("message", "User not found").toString());
     }
-
+    group.removeUser(u);
     this.groupRepository.save(group);
     return ResponseEntity.ok().body(
             new JSONObject().put("message", "Success")
