@@ -277,11 +277,11 @@ public class GroupController {
     if (!group.contains(u)) {
       //TODO replace with perm
       return ResponseEntity.badRequest().body(
-              new JSONObject().put("message", "No not have permission").toString());
+              new JSONObject().put("message", "Do not have permission").toString());
     }
     if (u == null) {
       return ResponseEntity.badRequest().body(
-              new JSONObject().put("message", "Review not found").toString());
+              new JSONObject().put("message", "User not found").toString());
     }
 
     this.groupRepository.save(group);
