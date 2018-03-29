@@ -267,7 +267,7 @@ class NestedModal extends Component {
 				<Header>Group Description</Header>
 				</Modal.Description>
 				<GroupForm cookies={this.state.cookies} groups={this.state.groups}
-						onClose={this.state.close}/>
+						onClose={this.close}/>
 
 				</Modal.Content>
 				</Modal>
