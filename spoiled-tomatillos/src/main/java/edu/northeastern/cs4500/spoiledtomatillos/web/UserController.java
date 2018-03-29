@@ -98,6 +98,11 @@ public class UserController {
 		return this.userService.findByEmail(email);
 	}
 
+	@RequestMapping(value = "/email/{email:.+}/groups")
+	List<Group> getGroupsOfUserByEmail(@PathVariable(required = true) String email) {
+		return this.getGroupsOfUser(String.valueOf(this.userService.findByEmail(email).getId()));
+	}
+
     @RequestMapping(value = "/login", method=RequestMethod.POST)
     public ResponseEntity<String> loginAccount(@RequestBody String strRequest)
 			throws JSONException {
