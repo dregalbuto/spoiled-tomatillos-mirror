@@ -11,7 +11,7 @@ import { Button, Container, Header, Icon, Image, List, Table,
 	Form,
 	Radio,
 	Grid,
-	Dropdown
+	Dropdown, Pagination
 } from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem, ListGroup, ListGroupItem} from 'react-bootstrap';
 import Profile from './UserProfile.js';
@@ -426,7 +426,7 @@ class Groups extends Component {
 				<NestedModal cookies={this.state.cookies}/>
 
 				</Segment>
-
+				<Pagination defaultActivePage={5} totalPages={10} />
 				</div>
 		)
 	}

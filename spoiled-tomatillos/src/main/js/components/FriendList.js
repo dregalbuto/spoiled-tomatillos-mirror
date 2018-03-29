@@ -1,8 +1,9 @@
 import React, { Component }  from 'react'
 import { Button, Image, List, Container, Divider,
-Grid, Header,Icon, Menu, Segment, Item, Label, Table, Statistic} from 'semantic-ui-react'
+Grid, Header,Icon, Menu, Segment, Item, Label, Table, Statistic, Pagination} from 'semantic-ui-react'
 import NavigationBar from './NavigationBar.js';
 import Profile from './UserProfile.js';
+import { Link } from 'react-router-dom';
 
 
 class UserHeading extends Component {
@@ -121,6 +122,7 @@ class FriendList extends Component {
       </List.Content>
       </List.Item>
       </List>
+       <Pagination defaultActivePage={5} totalPages={10} />
       </div>
     )
   }
