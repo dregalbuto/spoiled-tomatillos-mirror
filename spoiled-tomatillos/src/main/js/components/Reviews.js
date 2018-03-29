@@ -275,7 +275,7 @@ class ReviewList extends Component {
 				  </Table>
 
 				  <AddReview />
-					 <footer><Pagination defaultActivePage={5} totalPages={10} /><footer>
+					 <footer><Pagination defaultActivePage={5} totalPages={10} /></footer>
 				  </div>
 		)
 	}
