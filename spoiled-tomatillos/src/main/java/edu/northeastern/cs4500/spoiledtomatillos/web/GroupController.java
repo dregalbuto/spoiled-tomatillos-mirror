@@ -39,6 +39,34 @@ public class GroupController {
 	@Autowired
 	ReviewRepository reviewRepository;
 
+	private class Helper {
+		
+		ResponseEntity<String> response;
+		User u;
+		User otherUser;
+		Group group;
+		
+		Helper(String strRequest) throws JSONException {
+			response = null;
+			otherUser = null;
+			JSONObject request = new JSONObject(strRequest);
+			String email = request.getString(JsonStrings.EMAIL);
+			String token = request.getString(JsonStrings.TOKEN);
+			String groupId = request.getString(JsonStrings.GROUP_ID);
+			if (!User.validLogin(email, token, userService)) {
+				response = ResponseEntity.badRequest().body(
+						new JSONObject().put(JsonStrings.MESSAGE
+								, JsonStrings.INVALID_LOGIN).toString());
+			}
+			u = userService.findByEmail(email);
+			group = groupRepository.findOne(Integer.valueOf(groupId));
+			if (request.has(JsonStrings.USER_EMAIL)) {
+				String userEmail = request.getString(JsonStrings.USER_EMAIL);
+				otherUser = userService.findByEmail(userEmail);
+			}
+		}
+	}
+	
 	@RequestMapping("/create")
 	public ResponseEntity<String> create(@RequestBody(required = true)String strRequest) 
 			throws JSONException {
@@ -124,95 +152,60 @@ public class GroupController {
 	@RequestMapping("/leave")
 	public ResponseEntity<String> leave(@RequestBody(required = true)String strRequest) 
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		String groupId = request.getString(JsonStrings.GROUP_ID);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.INVALID_LOGIN).toString());
-		}
-		User u = this.userService.findByEmail(email);
-
-		Group group = groupRepository.findOne(Integer.valueOf(groupId));
-		if (!group.removeUser(u)) {
+		Helper h = new Helper(strRequest);
+		if (h.response != null) { return h.response; }
+		if (!h.group.removeUser(h.u)) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_LEAVE).toString());
 		}
-		this.groupRepository.save(group);
+		this.groupRepository.save(h.group);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
-				.put(JsonStrings.GROUP_ID, group.getId()).toString());
+				.put(JsonStrings.GROUP_ID, h.group.getId()).toString());
 	}
 
 	@RequestMapping("/addtolist")
 	public ResponseEntity<String> addtoList(@RequestBody(required = true)String strRequest)
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		String groupId = request.getString(JsonStrings.GROUP_ID);
-		String userEmail = request.getString(JsonStrings.USER_EMAIL);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.INVALID_LOGIN).toString());
-		}
-		User u = this.userService.findByEmail(email);
-		User otherUser = this.userService.findByEmail(userEmail);
-
-		Group group = groupRepository.findOne(Integer.valueOf(groupId));
-
-		if (group.getCreator().getId() != u.getId()) {
+		Helper h = new Helper(strRequest);
+		if (h.response != null) { return h.response; }
+		if (h.group.getCreator().getId() != h.u.getId()) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
-		if (!group.getIdList().add(otherUser.getId())) {
+		if (!h.group.getIdList().add(h.otherUser.getId())) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
 		}
-		this.groupRepository.save(group);
+		this.groupRepository.save(h.group);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
-				.put(JsonStrings.GROUP_ID, group.getId()).toString());
+				.put(JsonStrings.GROUP_ID, h.group.getId()).toString());
 	}
 
 	@RequestMapping("/removefromlist")
 	public ResponseEntity<String> removefromList(@RequestBody(required = true)String strRequest) 
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		String groupId = request.getString(JsonStrings.GROUP_ID);
-		String userEmail = request.getString(JsonStrings.USER_EMAIL);
-		if (!User.validLogin(email, token, this.userService)) {
-			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.INVALID_LOGIN).toString());
-		}
-		User u = this.userService.findByEmail(email);
-		User otherUser = this.userService.findByEmail(userEmail);
+		Helper h = new Helper(strRequest);
+		if (h.response != null) { return h.response; }
 
-		Group group = groupRepository.findOne(Integer.valueOf(groupId));
-
-		if (group.getCreator().getId() != u.getId()) {
+		if (h.group.getCreator().getId() != h.u.getId()) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
-		if (!group.getIdList().remove(otherUser.getId())) {
+		if (!h.group.getIdList().remove(h.otherUser.getId())) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
 		}
-		this.groupRepository.save(group);
+		this.groupRepository.save(h.group);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
-				.put(JsonStrings.GROUP_ID, group.getId()).toString());
+				.put(JsonStrings.GROUP_ID, h.group.getId()).toString());
 	}
 
 	@RequestMapping("/post")

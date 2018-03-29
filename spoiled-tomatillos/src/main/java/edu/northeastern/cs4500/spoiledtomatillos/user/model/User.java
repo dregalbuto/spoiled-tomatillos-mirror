@@ -135,7 +135,7 @@ public class User {
 
     /**
      * Get the current token if the password is valid. Token will have at least
-     * 10 minuets before it expires.
+     * 10 minutes before it expires.
      *
      * @param plainPassword Plain text password of this user.
      * @return token to access the user.

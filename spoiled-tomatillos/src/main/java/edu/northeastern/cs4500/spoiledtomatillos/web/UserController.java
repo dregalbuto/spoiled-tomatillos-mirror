@@ -65,7 +65,9 @@ public class UserController {
         String email = request.getString(JsonStrings.EMAIL);
         Status userStatus = new TargetStatus(userService, email);
         if (userStatus.getResponse() != null) {
-        		return userStatus.getResponse();
+        	return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE,
+                           JsonStrings.USER_NOT_FOUND).toString());
         }
         User user = userStatus.getUser();
         String password = request.get(JsonStrings.SECRET).toString();        
@@ -75,7 +77,6 @@ public class UserController {
                     new JSONObject().put(JsonStrings.MESSAGE,
                            JsonStrings.BAD_SECRET).toString());
         }
-
         try {
             String token = user.getToken(password);
             this.userService.save(user);

@@ -20,69 +20,71 @@ import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserServiceImpl;
 @RestController
 @RequestMapping(value = "/api/friend")
 public class FriendController {
-
+	
+	private class Helper {
+		ResponseEntity<String> sourceResponse;
+		ResponseEntity<String> targetResponse;
+		User source;
+		User target;
+		Helper(String strRequest) throws JSONException {
+			sourceResponse = targetResponse = null;
+			JSONObject request = new JSONObject(strRequest);
+			String email = request.getString(JsonStrings.EMAIL);
+			String token = request.getString(JsonStrings.TOKEN);
+			Status sourceStatus = new UserStatus(userService, email, token);
+			if (sourceStatus.getResponse() != null) {
+				sourceResponse = sourceStatus.getResponse();
+			}
+			source = sourceStatus.getUser();
+			if (request.has(JsonStrings.TARGET_EMAIL)) {
+				String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
+				Status targetStatus = new TargetStatus(userService, targetEmail);
+	
+				target = targetStatus.getUser();
+				if (targetStatus.getResponse() != null) {
+					targetResponse = targetStatus.getResponse();
+				}
+			}
+		}
+	}
+	
 	@Autowired
 	private UserServiceImpl userService;
-	
+
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public ResponseEntity<String> sendFriendRequest(@RequestBody String strRequest) 
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		
-		Status sourceStatus = new UserStatus(userService, email, token);
-        if (sourceStatus.getResponse() != null) {
-        		return sourceStatus.getResponse();
-        }
-        
-        Status targetStatus = new TargetStatus(userService, targetEmail);
-        if (targetStatus.getResponse() != null) {
-    			return targetStatus.getResponse();
-        }
-        
-        User source = sourceStatus.getUser();
-        User target = targetStatus.getUser();
-		boolean success = target.getFriends().addRequest(source);
+		Helper h = new Helper(strRequest);
+		if (h.sourceResponse != null) return h.sourceResponse;
+		if (h.targetResponse != null) return h.targetResponse;
+		boolean success = h.target.getFriends().addRequest(h.source);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.ERROR).toString());
+					new JSONObject()
+					.put(JsonStrings.MESSAGE, JsonStrings.ERROR)
+					.toString());
 		}
-		this.userService.save(target);
-		this.userService.save(source);
+		this.userService.save(h.target);
+		this.userService.save(h.source);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
+				new JSONObject()
+				.put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
+				.toString());
 	}
 
 	@RequestMapping(value = "/accept", method = RequestMethod.POST)
 	public ResponseEntity<String> acceptFriendRequest(@RequestBody String strRequest)
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		
-		Status sourceStatus = new UserStatus(userService, email, token);
-        if (sourceStatus.getResponse() != null) {
-        		return sourceStatus.getResponse();
-        }
-        
-        Status targetStatus = new TargetStatus(userService, targetEmail);
-        if (targetStatus.getResponse() != null) {
-    			return targetStatus.getResponse();
-        }
-        
-        User source = sourceStatus.getUser();
-        User target = targetStatus.getUser();
-		boolean success = source.getFriends().acceptRequest(target);
+		Helper h = new Helper(strRequest);
+		if (h.sourceResponse != null) return h.sourceResponse;
+		if (h.targetResponse != null) return h.targetResponse;
+		boolean success = h.source.getFriends().acceptRequest(h.target);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());
 		}
-		this.userService.save(source);
-		this.userService.save(target);
+		this.userService.save(h.source);
+		this.userService.save(h.target);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 	}
@@ -90,29 +92,15 @@ public class FriendController {
 	@RequestMapping(value = "/reject", method = RequestMethod.POST)
 	public ResponseEntity<String> rejectFriendRequest(@RequestBody String strRequest)
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		
-		Status sourceStatus = new UserStatus(userService, email, token);
-        if (sourceStatus.getResponse() != null) {
-        		return sourceStatus.getResponse();
-        }
-        
-        Status targetStatus = new TargetStatus(userService, targetEmail);
-        if (targetStatus.getResponse() != null) {
-    			return targetStatus.getResponse();
-        }
-        
-        User source = sourceStatus.getUser();
-        User target = targetStatus.getUser();
-		boolean success = source.getFriends().rejectRequest(target);
+		Helper h = new Helper(strRequest);
+		if (h.sourceResponse != null) return h.sourceResponse;
+		if (h.targetResponse != null) return h.targetResponse;
+		boolean success = h.source.getFriends().rejectRequest(h.target);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());
 		}
-		this.userService.save(source);
+		this.userService.save(h.source);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 
@@ -121,54 +109,32 @@ public class FriendController {
 	@RequestMapping(value = "/unfriend", method = RequestMethod.POST)
 	public ResponseEntity<String> unfriend(@RequestBody String strRequest)
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-		
-		Status sourceStatus = new UserStatus(userService, email, token);
-        if (sourceStatus.getResponse() != null) {
-        		return sourceStatus.getResponse();
-        }
-        
-        TargetStatus targetStatus = new TargetStatus(userService, targetEmail);
-        if (targetStatus.getResponse() != null) {
-    			return targetStatus.getResponse();
-        }
-        
-        User source = sourceStatus.getUser();
-        User target = targetStatus.getUser();
-		boolean success = source.getFriends().removeFriend(target);
+		Helper h = new Helper(strRequest);
+		if (h.sourceResponse != null) return h.sourceResponse;
+		if (h.targetResponse != null) return h.targetResponse;
+		boolean success = h.source.getFriends().removeFriend(h.target);
 		if (!success) {
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put(JsonStrings.MESSAGE
-							, JsonStrings.ERROR).toString());
+					new JSONObject()
+					.put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());
 		}
-		this.userService.save(source);
-		this.userService.save(target);
+		this.userService.save(h.source);
+		this.userService.save(h.target);
 		return ResponseEntity.ok().body(
-				new JSONObject().put(JsonStrings.MESSAGE
-						, JsonStrings.SUCCESS).toString());
+				new JSONObject()
+				.put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 
 	}
 
 	@RequestMapping(value = "/friends", method = RequestMethod.POST)
 	public ResponseEntity<String> list(@RequestBody String strRequest)
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		
-		Status sourceStatus = new UserStatus(userService, email, token);
-        if (sourceStatus.getResponse() != null) {
-        		return sourceStatus.getResponse();
-        }
-        
-        User source = sourceStatus.getUser();
+		Helper h = new Helper(strRequest);
+		if (h.sourceResponse != null) return h.sourceResponse;
 		try {
 			return ResponseEntity.ok().body(
 					new ObjectMapper().writeValueAsString(
-							source.getFriends().getFriends()));
+							h.source.getFriends().getFriends()));
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
@@ -179,20 +145,12 @@ public class FriendController {
 	@RequestMapping(value = "/requests", method = RequestMethod.POST)
 	public ResponseEntity<String> request(@RequestBody String strRequest)
 			throws JSONException {
-		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString(JsonStrings.EMAIL);
-		String token = request.getString(JsonStrings.TOKEN);
-		
-		Status sourceStatus = new UserStatus(userService, email, token);
-        if (sourceStatus.getResponse() != null) {
-        		return sourceStatus.getResponse();
-        }
-        
-        User source = sourceStatus.getUser();
+		Helper h = new Helper(strRequest);
+		if (h.sourceResponse != null) return h.sourceResponse;
 		try {
 			return ResponseEntity.ok().body(
 					new ObjectMapper().writeValueAsString(
-							source.getFriends().getRequests()));
+							h.source.getFriends().getRequests()));
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.ERROR).toString());

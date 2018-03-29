@@ -88,4 +88,17 @@ public class UserControllerTest {
         assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
     }
     
+    @Test
+    public void loginBadPassword() throws Exception {
+        JSONObject request = new JSONObject();
+        request.put(JsonStrings.EMAIL, "erinzhang@husky.neu.edu");
+        request.put(JsonStrings.SECRET, "SECRET");
+        JSONObject response = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals(JsonStrings.BAD_SECRET, response.getString(JsonStrings.MESSAGE));
+    }
+    
 }
