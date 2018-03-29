@@ -69,7 +69,6 @@ class Login extends Component{
           this.state.friends = fetchedData.friends;
 
           fetch("api/user/email/"+name+"/groups")
-          .then(res=>res.json())
           .then(data=>{
             console.log("SECOND fetch ");
             console.log(data);

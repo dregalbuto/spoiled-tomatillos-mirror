@@ -59,8 +59,6 @@ class TitleList extends Component {
 
 ///////////////// Home /////////////////////
 class Home extends Component {
-
-
   constructor(props){
     super(props);
     this.state = {
@@ -81,9 +79,6 @@ class Home extends Component {
     });
 
      this.handleDelete = this.handleDelete.bind(this);
-
-
-
   }
 
 
@@ -134,7 +129,11 @@ class Home extends Component {
             .then(res=>res.json())
             .then(res=>{
               fetchedData = res;
+              console.log("REVIEWS in USERHOME ");
+              console.log(fetchedData.reviews);
               this.state.cookies.reviews = fetchedData.reviews;
+
+              console.log(this.state.cookies.reviews);
               this.setState(this.state);
             });
       } else {
