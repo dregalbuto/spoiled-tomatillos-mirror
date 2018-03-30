@@ -157,18 +157,19 @@ class Home extends Component {
 
     const listItem = this.state.cookies.reviews.map((review) =>
 
-    <ul>
-      <li>
-        <div>{review.movie.title}
-          <div>{review.text}
-          {review.id}
-              <Button onClick={(e)=>this.handleDelete(review.id,e)}>
-                delete
-              </Button>
-          </div>
-        </div>
-      </li>
-    </ul>
+    // <ul>
+    //   <li>
+    //     <div>{review.movie.title}
+    //       <div>{review.text}
+    //       {review.id}
+    //           <Button onClick={(e)=>this.handleDelete(review.id,e)}>
+    //             delete
+    //           </Button>
+    //       </div>
+    //     </div>
+    //   </li>
+    // </ul>
+    <div>TEST - movie review </div>
   );
 
 
