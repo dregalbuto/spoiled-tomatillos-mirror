@@ -232,7 +232,7 @@ public class GroupControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-       // assertEquals(group1, group2);
+       //assertNotEquals(group1, group2);
     }
 
 }
