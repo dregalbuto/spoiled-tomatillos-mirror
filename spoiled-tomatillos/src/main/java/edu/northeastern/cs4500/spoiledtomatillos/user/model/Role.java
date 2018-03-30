@@ -4,11 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.*;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import lombok.Data;
 
 /**
@@ -55,7 +51,6 @@ public class Role {
 	 * Default constructor
 	 */
 	public Role() {
-		this.setName(new String());
 	}
 	
 	public Role(String name) {

@@ -10,8 +10,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.io.IOException;
@@ -25,7 +23,6 @@ import javax.persistence.*;
 
 import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
-import edu.northeastern.cs4500.spoiledtomatillos.user.repository.UserRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -46,15 +43,17 @@ public class User {
     @JsonProperty(value = "id")
     private int id;
     @JsonProperty(value = "first_name")
-    private String first_name;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
     @JsonProperty(value = "last_name")
-    private String last_name;
+    private String lastName;
     @JsonProperty(value = "email")
     private String email;
     @JsonProperty(value = "username")
     //@Column(unique = true)
     private String username;
-    //Can add @JsonProperty(value = "password")
+    @JsonProperty(value = "password")
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     //@JsonIgnore
@@ -91,7 +90,7 @@ public class User {
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
-    @OneToOne(mappedBy = "user")//, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     //@PrimaryKeyJoinColumn
     @JsonProperty(value = "friends")
     @JsonManagedReference
@@ -118,15 +117,15 @@ public class User {
      */
     public User(String firstName, String lastName, String email,
                 String username, String password) {
-        this.first_name = firstName;
-        this.last_name = lastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.username = username;
         this.setPassword(password);
         this.enabled = true;
         this.token = "";
         this.tokenExpiration = 0;
-        //this.friends = new FriendList(this);
+        this.friends = new FriendList(this);
     }
 
     /**
@@ -162,7 +161,7 @@ public class User {
 
     /**
      * Get the current token if the password is valid. Token will have at least
-     * 10 minuets before it expires.
+     * 10 minutes before it expires.
      *
      * @param plainPassword Plain text password of this user.
      * @return token to access the user.
@@ -210,7 +209,7 @@ public class User {
     }
 
     /**
-     * Check if the given token is valid. Make sure it has at least 10 minuets
+     * Check if the given token is valid. Make sure it has at least 10 minutes
      * before expiring.
      *
      * @param token String to check if it is a valid token.
@@ -247,8 +246,8 @@ class UserSeralizer extends StdSerializer<User> {
     public void serialize(User user, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", user.getId());
-        jsonGenerator.writeStringField("first_name", user.getFirst_name());
-        jsonGenerator.writeStringField("last_name", user.getLast_name());
+        jsonGenerator.writeStringField("first_name", user.getFirstName());
+        jsonGenerator.writeStringField("last_name", user.getLastName());
         jsonGenerator.writeStringField("email", user.getEmail());
         jsonGenerator.writeStringField("username", user.getUsername());
         jsonGenerator.writeBooleanField("enabled", user.isEnabled());

@@ -1,14 +1,13 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
+import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.groups.GroupRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.FriendList;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.Role;
+import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.repository.FriendListRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +16,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.ws.Response;
-
-import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
-import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 
 /**
  * Controller for /api/user supports create and login all taking in a json
@@ -105,41 +98,28 @@ public class UserController {
 
     @RequestMapping(value = "/login", method=RequestMethod.POST)
     public ResponseEntity<String> loginAccount(@RequestBody String strRequest)
-			throws JSONException {
+            throws JSONException, IllegalAccessException {
         JSONObject request = new JSONObject(strRequest);
-        User user = userService.findByEmail(request.get("email").toString());
-        if (user == null){
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-							"user with this email doesn't exist").toString());
+        String email = request.getString(JsonStrings.EMAIL);
+        Status userStatus = new TargetStatus(userService, email);
+        if (userStatus.getResponse() != null) {
+        	return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE,
+                           JsonStrings.USER_NOT_FOUND).toString());
         }
-
-        String email = request.get("email").toString();
-        String password = request.get("password").toString();
-
-        if (!user.isEnabled()) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-							"user with this email is disabled").toString());
-        }
+        User user = userStatus.getUser();
+        String password = request.get(JsonStrings.SECRET).toString();        
 
         if (!user.checkPassword(password)) {
             return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-                            "wrong password").toString());
+                    new JSONObject().put(JsonStrings.MESSAGE,
+                           JsonStrings.BAD_SECRET).toString());
         }
-
-        try {
-            String token = user.getToken(password);
-            this.userService.save(user);
-            return ResponseEntity.ok().body(
-                    new JSONObject().put("message", "logged in").put("token", token).toString());
-        } catch (IllegalAccessException e) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message",
-                            "illegal access").toString());
-        }
-
+        String token = user.getToken(password);
+        this.userService.save(user);
+        return ResponseEntity.ok().body(
+                new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.LOGGED_IN)
+                        .put(JsonStrings.TOKEN, token).toString());
     }
 
 	/**
@@ -153,11 +133,11 @@ public class UserController {
 	public ResponseEntity<String> registerUserAccount(@RequestBody String strRequest)
 			throws JSONException {
 		JSONObject request = new JSONObject(strRequest);
-		User existing = userService.findByEmail(request.get("email").toString());
+		User existing = userService.findByEmail(request.get(JsonStrings.EMAIL).toString());
 		if (existing != null){
 			return ResponseEntity.badRequest().body(
-					new JSONObject().put("message",
-							"user with this email already exists").toString());
+					new JSONObject().put(JsonStrings.MESSAGE,
+							JsonStrings.USER_EXISTS).toString());
 		}
 
 		String firstname = request.get("first_name").toString();
@@ -176,7 +156,7 @@ public class UserController {
 
 
 		return ResponseEntity.ok().body(
-				new JSONObject().put("message", "user created").toString());
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
 
 	}
 
@@ -196,8 +176,8 @@ public class UserController {
 		User user = this.userService.findByEmail(email);
 		if (user == null) {
 			return ResponseEntity.badRequest().body(
-							new JSONObject().put("message",
-											"cannot find user").toString());
+							new JSONObject().put(JsonStrings.MESSAGE,
+											JsonStrings.USER_NOT_FOUND).toString());
 		}
 		String pass = user.randomPassword();
 		this.userService.save(user);
@@ -208,7 +188,8 @@ public class UserController {
 						+ " to change your password");
 		this.emailSender.send(message);
 		return ResponseEntity.ok().body(
-						new JSONObject().put("message", "email sent").toString());
+						new JSONObject().put(JsonStrings.MESSAGE,
+								JsonStrings.EMAIL_SENT).toString());
 	}
 
 	/**
@@ -226,18 +207,19 @@ public class UserController {
 		User user = this.userService.findByEmail(email);
 		if (user == null) {
 			return ResponseEntity.badRequest().body(
-							new JSONObject().put("message",
-											"cannot find user").toString());
+					new JSONObject().put(JsonStrings.MESSAGE,
+							JsonStrings.USER_NOT_FOUND).toString());
 		}
 		if (!user.checkPassword(password)) {
-			return ResponseEntity.badRequest().body(
-							new JSONObject().put("message",
-											"wrong password").toString());
+            return ResponseEntity.badRequest().body(
+                    new JSONObject().put(JsonStrings.MESSAGE,
+                            JsonStrings.BAD_SECRET).toString());
 		}
 		user.setPassword(newPassword);
 		this.userService.save(user);
 		return ResponseEntity.ok().body(
-						new JSONObject().put("message", "email sent").toString());
+						new JSONObject().put(JsonStrings.MESSAGE,
+								JsonStrings.SUCCESS).toString());
 	}
 
 	/**
@@ -254,29 +236,34 @@ public class UserController {
 		String targetEmail = request.getString("targetEmail");
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
-							new JSONObject().put("message", "Not a valid login").toString());
+					new JSONObject().put(JsonStrings.MESSAGE,
+							JsonStrings.BAD_SECRET).toString());
 		}
 		User u = this.userService.findByEmail(email);
 		for (Role role : u.getRoles()) {
 			if (role.getName().equalsIgnoreCase("ROLE_ADMIN")) {
 				User targetUser = this.userService.findByEmail(targetEmail);
-				if (targetEmail == null) {
+				if (targetUser == null) {
 					return ResponseEntity.badRequest().body(
-									new JSONObject().put("message", "Not found").toString());
+							new JSONObject().put(JsonStrings.MESSAGE,
+									JsonStrings.TARGET_USER_NOT_FOUND).toString());
 				}
 				for (Role targetRole : targetUser.getRoles()) {
 					if (targetRole.getName().equalsIgnoreCase("ROLE_ADMIN")) {
 						return ResponseEntity.badRequest().body(
-										new JSONObject().put("message", "Already admin").toString());
+										new JSONObject().put("message",
+												JsonStrings.ADMIN_EXISTS).toString());
 					}
 				}
 				targetUser.getRoles().add(new Role("ROLE_ADMIN"));
 				this.userService.save(targetUser);
 				return ResponseEntity.ok().body(
-								new JSONObject().put("message", "Ok").toString());
+						new JSONObject().put(JsonStrings.MESSAGE,
+								JsonStrings.SUCCESS).toString());
 			}
 		}
 		return ResponseEntity.badRequest().body(
-						new JSONObject().put("message", "Not admin").toString());
+						new JSONObject().put(JsonStrings.MESSAGE,
+								JsonStrings.NO_PERMISSION).toString());
 	}
 }

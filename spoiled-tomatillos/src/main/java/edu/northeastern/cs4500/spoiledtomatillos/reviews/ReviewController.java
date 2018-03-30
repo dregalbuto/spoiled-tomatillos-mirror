@@ -2,6 +2,8 @@ package edu.northeastern.cs4500.spoiledtomatillos.reviews;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieCachedRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
@@ -21,91 +23,124 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/reviews")
 public class ReviewController {
 
-    @Autowired
-    ReviewRepository reviewRepository;
+	@Autowired
+	ReviewRepository reviewRepository;
 
-    @Autowired
-    UserServiceImpl userService;
+	@Autowired
+	UserServiceImpl userService;
 
-    @Autowired
-    MovieCachedRepository movieCachedRepository;
+	@Autowired
+	MovieCachedRepository movieCachedRepository;
 
-    @RequestMapping("/post")
-    public ResponseEntity<String> postReview(@RequestBody(required = true)String strRequest)
-            throws JSONException {
-        JSONObject request = new JSONObject(strRequest);
-        String token = request.getString("token");
-        String rating = request.getString("rating");
-        String email = request.getString("email");
-        String text = request.getString("text");
-        String movieId = request.getString("movieId");
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "user not found").toString());
-        }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "not logged in").toString());
-        }
-        Movie movie = movieCachedRepository.getMovie(movieId);
-        if (movie == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "movie not found").toString());
-        }
+	@RequestMapping("/post")
+	public ResponseEntity<String> postReview(@RequestBody(required = true)String strRequest)
+			throws JSONException {
+		JSONObject request = new JSONObject(strRequest);
+		String token = request.getString(JsonStrings.TOKEN);
+		String rating = request.getString(JsonStrings.RATING);
+		String email = request.getString(JsonStrings.EMAIL);
+		String text = request.getString(JsonStrings.TEXT);
+		String movieId = request.getString(JsonStrings.MOVIE_ID);
+		User user = userService.findByEmail(email);
+		if (user == null) {
+			return ResponseEntity.badRequest().body(
+					new JSONObject().put(JsonStrings.MESSAGE
+							, JsonStrings.USER_NOT_FOUND).toString());
+		}
+		if (!user.validToken(token)) {
+			return ResponseEntity.badRequest().body(
+					new JSONObject().put(JsonStrings.MESSAGE
+							, JsonStrings.TOKEN_EXPIRED).toString());
+		}
+		Movie movie = movieCachedRepository.getMovie(movieId);
+		if (movie == null) {
+			return ResponseEntity.badRequest().body(
+					new JSONObject().put(JsonStrings.MESSAGE
+							, JsonStrings.MOVIE_NOT_FOUND).toString());
+		}
 
-        Review review = new Review(text, new Integer(rating), movie, user);
-        this.reviewRepository.saveAndFlush(review);
+		Review review = new Review(text, new Integer(rating), movie, user);
+		this.reviewRepository.saveAndFlush(review);
 
-        return ResponseEntity.ok().body(
-                new JSONObject().put("message", "ok")
-                        .put("reviewId", review.getId()).toString());
-    }
+		return ResponseEntity.ok().body(
+				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
+				.put(JsonStrings.REVIEW_ID, review.getId())
+				.toString());
+	}
 
-    @RequestMapping("/delete")
-    public ResponseEntity<String> deleteReview(@RequestBody(required = true)String strRequest)
-            throws JSONException {
-        JSONObject request = new JSONObject(strRequest);
-        String token = request.getString("token");
-        String email = request.getString("email");
-        String postId = request.getString("postId");
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "user not found").toString());
-        }
-        if (!user.validToken(token)) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "not logged in").toString());
-        }
-        Review review = this.reviewRepository.findOne(new Integer(postId));
-        if (review == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "review doesn't exist").toString());
-        }
-        if (review.getUser().getId() != user.getId()) {
-            //TODO use role object to determine permission
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "wrong user").toString());
-        }
+	@RequestMapping("/delete")
+	public ResponseEntity<String> deleteReview(@RequestBody(required = true)String strRequest)
+			throws JSONException {
+		JSONObject request = new JSONObject(strRequest);
+		String token = request.getString(JsonStrings.TOKEN);
+		String email = request.getString(JsonStrings.EMAIL);
+		String postId = request.getString(JsonStrings.REVIEW_ID);
+		User user = userService.findByEmail(email);
+		if (user == null) {
+			return ResponseEntity.badRequest().body(
+					new JSONObject().put(JsonStrings.MESSAGE
+							, JsonStrings.USER_NOT_FOUND).toString());
+		}
+		if (!user.validToken(token)) {
+			return ResponseEntity.badRequest().body(
+					new JSONObject().put(JsonStrings.MESSAGE
+							, JsonStrings.TOKEN_EXPIRED).toString());
+		}
+		try {
+			Review review = this.reviewRepository.findOne(new Integer(postId));
+			if (review == null) {
+				return ResponseEntity.badRequest().body(
+						new JSONObject().put(JsonStrings.MESSAGE
+								, JsonStrings.REVIEW_NOT_FOUND).toString());
+			}
+			if (review.getUser().getId() != user.getId()) {
+				return ResponseEntity.badRequest().body(
+						new JSONObject().put(JsonStrings.MESSAGE
+								, JsonStrings.NO_PERMISSION).toString());
+			}
 
-        this.reviewRepository.delete(review);
-        this.reviewRepository.flush();
-        return ResponseEntity.ok().body(
-                new JSONObject().put("message", "ok").put("deleted", "deleted").toString());
-    }
+			this.reviewRepository.delete(review);
+			this.reviewRepository.flush();
 
-    @RequestMapping("/get")
-    public ResponseEntity<String> getReview(@RequestBody(required = true)String strRequest)
-            throws JSONException, JsonProcessingException {
-        JSONObject request = new JSONObject(strRequest);
-        String postId = request.getString("postId");
-        Review review = this.reviewRepository.findOne(new Integer(postId));
-        if (review == null) {
-            return ResponseEntity.badRequest().body(
-                    new JSONObject().put("message", "review doesn't exist").toString());
-        }
-        return ResponseEntity.ok().body(
-                new ObjectMapper().writeValueAsString(review));
+			return ResponseEntity.ok().body(
+					new JSONObject().put(JsonStrings.MESSAGE
+							, JsonStrings.SUCCESS)
+                            .put(JsonStrings.DELETED,JsonStrings.DELETED).toString());
+		}
+		catch (NumberFormatException e) {
+			return ResponseEntity.badRequest().body(
+					new JSONObject()
+					.put(JsonStrings.MESSAGE, JsonStrings.REVIEW_NOT_FOUND)
+					.toString());
+		}
+	}
+
+	@RequestMapping("/get")
+	public ResponseEntity<String> getReview(@RequestBody(required = true)String strRequest)
+			throws JSONException, JsonProcessingException {
+		JSONObject request = new JSONObject(strRequest);
+		String postId;
+		if (request.has("postId")) {
+			postId = request.getString("postId");
+		} else {
+			postId = request.getString(JsonStrings.REVIEW_ID);
+		}
+		try {
+			Review review = this.reviewRepository.findOne(new Integer(postId));
+			if (review == null) {
+				return ResponseEntity.badRequest().body(
+						new JSONObject()
+						.put(JsonStrings.MESSAGE, JsonStrings.REVIEW_NOT_FOUND)
+						.toString());
+			}
+			return ResponseEntity.ok().body(
+					new ObjectMapper().writeValueAsString(review));
+		}
+		catch (NumberFormatException e) {
+			return ResponseEntity.badRequest().body(
+					new JSONObject()
+					.put(JsonStrings.MESSAGE, JsonStrings.REVIEW_NOT_FOUND)
+					.toString());
+		}
     }
 }

@@ -3,9 +3,6 @@ package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 import java.util.Collection;
 
 import javax.persistence.*;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
@@ -40,7 +37,6 @@ public class Privilege {
     private Collection<Role> roles;
     
     public Privilege() {
-    		this.setName(new String());
     }
     
     public Privilege(String name) {

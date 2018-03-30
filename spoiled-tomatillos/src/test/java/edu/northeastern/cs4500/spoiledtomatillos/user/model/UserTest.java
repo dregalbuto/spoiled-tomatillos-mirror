@@ -17,15 +17,15 @@ public class UserTest {
 	@Test
 	public void testFirstName() {
 		u = new User();
-		u.setFirst_name("test");
-		assertEquals("test", u.getFirst_name());
+		u.setFirstName("test");
+		assertEquals("test", u.getFirstName());
 	}
 	
 	@Test
 	public void testLastName() {
 		u = new User();
-		u.setLast_name("test");
-		assertEquals("test", u.getLast_name());
+		u.setLastName("test");
+		assertEquals("test", u.getLastName());
 	}
 	
 	@Test
@@ -63,7 +63,6 @@ public class UserTest {
 	
 	@Test
 	public void testToken() throws IllegalAccessException {
-	    Date d = new Date();
         u = new User("test_first", "test_last", "test@test",
                 "test_name", "superSecret");
         boolean err = false;
@@ -88,6 +87,13 @@ public class UserTest {
         String token = u.getToken("superSecret");
         assertTrue(!token.equals(""));
         assertTrue(u.validToken(token));
+        u.setEnabled(false);
+        try {
+            u.getToken("superSecret");
+        } catch (IllegalAccessException ex) {
+		    err = true;
+        }
+        assertTrue(err);
         u.setTokenExpired();
         assertFalse(u.validToken(token));
 	}
