@@ -105,6 +105,7 @@ class DeleteReview extends Component {
 		}
 
 
+
 	render() {
 		const { open } = this.state
 		return (
@@ -291,9 +292,11 @@ class Reviews extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			cookies: ''
-
+			cookies: '',
 		};
+
+
+
 	}
 
 

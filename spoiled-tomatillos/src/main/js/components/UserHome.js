@@ -26,10 +26,9 @@ class Features extends Component {
       id='2LqzF5WauAw'
       placeholder='https://ia.media-imdb.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SY1000_SX675_AL_.jpg'
       source='youtube'
+
       />
-
       <a href="http://www.imdb.com/title/tt0816692/?ref_=tt_mv_close"> <h2>Watch interstellar now</h2> </a>
-
 
       <div className="button-wrapper">
 
@@ -82,6 +81,8 @@ class Home extends Component {
     });
 
      this.handleDelete = this.handleDelete.bind(this);
+
+
 
   }
 
@@ -156,18 +157,19 @@ class Home extends Component {
 
     const listItem = this.state.cookies.reviews.map((review) =>
 
-    <ul>
-      <li>
-        <div>{review.movie.title}
-          <div>{review.text}
-          {review.id}
-              <Button onClick={(e)=>this.handleDelete(review.id,e)}>
-                delete
-              </Button>
-          </div>
-        </div>
-      </li>
-    </ul>
+    // <ul>
+    //   <li>
+    //     <div>{review.movie.title}
+    //       <div>{review.text}
+    //       {review.id}
+    //           <Button onClick={(e)=>this.handleDelete(review.id,e)}>
+    //             delete
+    //           </Button>
+    //       </div>
+    //     </div>
+    //   </li>
+    // </ul>
+    <div>TEST - movie review </div>
   );
 
 
