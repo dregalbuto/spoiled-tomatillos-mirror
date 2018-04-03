@@ -1,0 +1,42 @@
+CS4500 Software Development
+
+------------------------------------------------
+Sprint 4 Group Grade Team 24:
+------------------------------------------------
+
+
+Functionality Expectations Achieved:
+-----------------------------------------------
+
+Use-cases (out of 4): 4
+
+Comments on use-cases: Completed the use cases; by next day.
+
+Comments on Functionality Expectations: Functionality works on aws; verified on updated link received on saturday.
+
+
+Stretches Achieved:
+-----------------------------------------------
+
+
+Stretch: More use cases demonstrated.
+Stretch: more functionality in a particular tier created during the sprint and demonstrated. Here; especially for middle or back-end tiers; showing tests against an interface could be an effective demonstration.
+
+
+
+
+Comments: 
+
+
+Environment Expectations: 
+-----------------------------------------------
+
+Comments: Environment as expected 
+
+------------------------------------------------
+Team GRADE: B+
+------------------------------------------------
+
+Extra Comments: Sonar has 99% coverage 
+
+Grader: Praveen
