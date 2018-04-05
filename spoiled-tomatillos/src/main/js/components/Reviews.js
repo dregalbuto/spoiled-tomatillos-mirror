@@ -122,9 +122,9 @@ class DeleteReview extends Component {
 		 		basic
 		 		size='small'>
 
-		 		<Header icon='archive' content='Are you sure to delete this group?' />
+		 		<Header icon='archive' content='Are you sure to delete this review?' />
 		 			<Modal.Content>
-		 				<p>Once you confirm, you will lose the members and reviews in this group.</p>
+		 				<p>Once you confirm, you will this review.</p>
 		 			</Modal.Content>
 		 			<Modal.Actions>
 		 				<Button basic color='red' inverted onClick={this.close}>
