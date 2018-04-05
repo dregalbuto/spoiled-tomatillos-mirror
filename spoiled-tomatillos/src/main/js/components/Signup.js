@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 var _ = require('underscore');
 import "./Signup.css";
 import {Form,FormGroup, ControlLabel, FormControl, Col} from 'react-bootstrap'
-import { Redirect } from 'react-router'
 import { Button, Modal } from 'semantic-ui-react'
-
+import { Route, Redirect } from 'react-router'
+import Login from './Login.js';
 
 class SignupForm extends Component {
 	constructor(props) {
@@ -27,12 +27,11 @@ class SignupForm extends Component {
 		    formValid: false,
 			formErrors: {email: '', password: '', confirmemail:'', passwordconfirm:''},
 		}
-		
+
 	    this.onSubmit = this.onSubmit.bind(this);
 	    this.onChange = this.onChange.bind(this);
-		
 	}
-	
+
 	validateField(fieldName, value) {
 		  let fieldValidationErrors = this.state.formErrors;
 		  let emailValid = this.state.emailValid;
@@ -72,18 +71,17 @@ class SignupForm extends Component {
 		  this.setState({formValid: this.state.emailValid && this.state.passwordValid
 			  && this.state.confirmEmailValid && this.state.confirmPasswordValid});
 	}
-		
+
 	onChange(e) {
 		const name = e.target.name;
 		const value = e.target.value;
 		this.setState({[name]: value}, () => { this.validateField(name, value) });
 	}
-	
-	
+
 	onSubmit(e) {
 		e.preventDefault();
 		console.log(this.state);
-		
+
 		var url = '/api/user/signup';
 		var newUser = {
 				first_name: this.state.first_name,
@@ -91,9 +89,9 @@ class SignupForm extends Component {
 				email: this.state.email,
 				username: this.state.username,
 				password: this.state.password
-		};		
+		};
 		this.setState({ fireRedirect: true })
-	  
+
 	    fetch(url, {
 	    		method: 'POST',
 	    		headers: {
@@ -103,12 +101,12 @@ class SignupForm extends Component {
 	    		body: JSON.stringify(newUser)
 	    })
 	    .then(response => response.json())
-		.then(data => {   	
+		.then(data => {
 			{/*
 			// redirect to user home page with /user/ as path name TODO
 			//sessionStorage.setItem('userEmail', data.email);
 			*/}
-		
+
 			console.log(data);
 
 		},
@@ -119,10 +117,11 @@ class SignupForm extends Component {
 		    }
 		});
 
-	   
+
 	}
-	
+
 	render() {
+
 		return (
 				<div>
 				<Form horizontal onSubmit={this.onSubmit}>
@@ -130,7 +129,7 @@ class SignupForm extends Component {
 				<div className="panel panel-default" style={errorBox}>
 				 <FormErrors formErrors={this.state.formErrors} />
 				</div>
-				 
+
 				<FormGroup controlId="formHorizontalEmail">
 				 <Col componentClass={ControlLabel} sm={2}>
 			      Email
@@ -143,7 +142,7 @@ class SignupForm extends Component {
 					/>
 			    </Col>
 				</FormGroup>
-				
+
 				 <FormGroup controlId="formHorizontalConfirmEmail">
 				 <Col componentClass={ControlLabel} sm={2}>Confirm Email</Col>
 			      	<Col sm={10}>
@@ -183,7 +182,7 @@ class SignupForm extends Component {
 			     	style={inputBox}/>
 				 </Col>
 				 </FormGroup>
-				 
+
 				 <FormGroup controlId="formHorizontalPassword">
 				 <Col componentClass={ControlLabel} sm={2}>Password</Col>
 			     <Col sm={10}>
@@ -193,7 +192,7 @@ class SignupForm extends Component {
 			     		style={inputBox}/>
 				 </Col>
 				 </FormGroup>
-				 
+
 				 <FormGroup controlId="formHorizontalConfirmpassword">
 				 <Col componentClass={ControlLabel} sm={2}>Confirm Password</Col>
 			     <Col sm={10}>
@@ -210,7 +209,7 @@ class SignupForm extends Component {
 					<Modal trigger={
 						<Button type="submit" className="button button_wide"
 							disabled={!this.state.formValid}>CREATE ACCOUNT</Button>}
-					 style={{height: 200}} 
+					 style={{height: 200}}
 					 header='Your account is created.'
 						    content='You can now log in with your account.'
 						    actions={[
@@ -218,13 +217,17 @@ class SignupForm extends Component {
 						      { key: 'done', content: 'Done', positive: true },
 						    ]}
 					/>
+					{this.state.fireRedirect && (
+  				          <Redirect to={"/Login"}/>
+  				        )}
+
 
 					</Col>
 				</FormGroup>
-				 
+
 				</Form>
-				
-				
+
+
 				</div>
 		)
 	}
@@ -234,7 +237,7 @@ class SignupForm extends Component {
 class Signup extends Component {
 	constructor(props) {
 	    super(props);
-	    this.state = {}; 
+	    this.state = {};
 	}
 
 	render() {
@@ -243,9 +246,9 @@ class Signup extends Component {
 			<div className="create_account_form">
 			<h1>Create account</h1>
 			<p>Create a user account in Spoiled Tomatillos</p>
-				
-			<SignupForm />	
-		
+
+			<SignupForm />
+
 			</div>
 		  </div>
 		)
@@ -269,7 +272,7 @@ export const FormErrors = ({formErrors}) =>
     if(formErrors[fieldName].length > 0){
       return (
         <p key={i}>{fieldName} {formErrors[fieldName]}</p>
-      )        
+      )
     } else {
       return '';
     }
