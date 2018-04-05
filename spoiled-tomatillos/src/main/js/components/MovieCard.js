@@ -30,7 +30,9 @@ class MovieCard extends Component {
           overview: "",
           runtime: -1,
           poster: null,
+          size: "big",
     };
+    console.log(this.state);
     if (props.id !== undefined) {
       fetch("/api/movies/info?id=" + props.id)
               .then((res) => {
@@ -52,13 +54,22 @@ class MovieCard extends Component {
                   overview: data.description,
                   runtime: data.runtimeMinuets,
                   poster: data.imgURL,
+                  size: this.state.size,
                 });
               });
-    } else if (props.data === undefined) {
-      return;
-    } else {
+    } else if (props.data !== undefined) {
       this.state = props.data;
     }
+
+    this.state.size = "big";
+    if (props.size !== undefined) {
+      if (props.size == "normal") {
+        this.state.size = "normal";
+      } else if (props.size == "small") {
+        this.state.size = "small";
+      }
+    }
+    console.log(this.state);
   }
 
   /**
@@ -98,6 +109,8 @@ class MovieCard extends Component {
                <div className="col-xs-6"> Running Time: <span className="meta-data">{data.runtime}</span> </div>
                <div className="col-xs-6"> Vote Average: <span className="meta-data">{data.vote}</span></div>
              </div>
+           </div>
+           <div>
            </div>
          </div>
          <div className="poster-container nopadding col-xs-12 col-md-4 pull-md-8 col-lg-5 pull-lg-7 ">
