@@ -175,7 +175,24 @@ class UserReviews extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({"email": this.state.email, "token": token, "reviewId": id})
-      }).then((e) => {this.setState(this.state)});
+      }).then((e) => {
+        fetch("/api/user/id/" + this.state.userId)
+                .then((res) => {
+                  return res.text();
+                }).then((data) => {
+                  try {
+                    data = JSON.parse(data);
+                  } catch (e) {
+                    return;
+                  }
+
+                  // update state with API data
+                  this.setState({
+                    userId: this.state.userId,
+                    email: data.email,
+                    reviews: data.reviews,
+                  });
+                });});
       return false;
     }
 
