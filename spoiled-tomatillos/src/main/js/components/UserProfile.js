@@ -19,11 +19,9 @@ import {
   Visibility,
   Item,
   Label,
-  Step, Table, Statistic
+  Step, Table
 } from 'semantic-ui-react'
-
 import { Link } from 'react-router-dom';
-import NavigationBar from './NavigationBar.js';
 
 class UserProfile extends Component {
 	constructor(props) {
@@ -34,63 +32,6 @@ class UserProfile extends Component {
 	render() {
 		return(
 			<div>
-
-			<NavigationBar />
-
-			<Container text>
-		    <Header
-		      as='h2'
-		      content='username'
-		      inverted
-		      style={{
-		        fontSize: '1.7em',
-		        fontWeight: 'normal',
-		        marginTop: '1.5em',
-		      }}
-		    >
-		    <Grid>
-		    <Grid.Column width={4}>
-		    <Image circular src='https://react.semantic-ui.com/assets/images/avatar/large/patrick.png' />
-		    {' '}Patrick
-		    </Grid.Column>
-		    <Grid.Column width={9}>
-
-		    <Segment inverted>
-		    <Statistic.Group inverted>
-		      <Statistic color='blue' size='small'>
-		        <Statistic.Value>39</Statistic.Value>
-		        <Statistic.Label>Movies Watched</Statistic.Label>
-		      </Statistic>
-		      <Statistic color='blue' size='small'>
-		        <Statistic.Value>562</Statistic.Value>
-		        <Statistic.Label>Friends</Statistic.Label>
-		      </Statistic>
-		      <Statistic color='blue' size='small'>
-		        <Statistic.Value>7</Statistic.Value>
-		        <Statistic.Label>Groups</Statistic.Label>
-		      </Statistic>
-		    </Statistic.Group>
-		    </Segment>
-
-
-		    </Grid.Column>
-		    <Grid.Column width={3}>
-
-
-		    <Header as='h3' icon inverted>
-		    <Icon name='settings' />
-		    Account Settings
-
-		  </Header>
-
-		    </Grid.Column>
-		  </Grid>
-
-
-		</Header>
-
-		   </Container>
-
 		    <Segment style={{ padding: '8em 0em' }} vertical>
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Favourite Movies</Header>
 		    <Grid container columns={3} doubling stackable>

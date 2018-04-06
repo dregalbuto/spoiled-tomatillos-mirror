@@ -4,9 +4,74 @@ import './UserHome.css';
 import { Link } from 'react-router-dom';
 import NavigationBar from './NavigationBar.js';
 import SearchBar from './SearchBar.js';
-import { Embed, Header } from 'semantic-ui-react'
+import { Embed, Header, Statistic, Grid, Container, Image, Segment, Icon } from 'semantic-ui-react'
 import {Button} from 'react-bootstrap';
 import { UserReviews } from './ReviewCard.js';
+
+class UserStats extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return (
+      <Container text>
+		    <Header
+		      as='h2'
+		      content='username'
+		      inverted
+		      style={{
+		        fontSize: '1.7em',
+		        fontWeight: 'normal',
+		        marginTop: '1.5em',
+		      }}
+		    >
+		    <Grid>
+		    <Grid.Column width={4}>
+		    <Image circular src='https://react.semantic-ui.com/assets/images/avatar/large/patrick.png' />
+		    {' '}Patrick
+		    </Grid.Column>
+		    <Grid.Column width={9}>
+
+		    <Segment inverted>
+		    <Statistic.Group inverted>
+		      <Statistic color='blue' size='small'>
+		        <Statistic.Value>39</Statistic.Value>
+		        <Statistic.Label>Movies Watched</Statistic.Label>
+		      </Statistic>
+		      <Statistic color='blue' size='small'>
+		        <Statistic.Value>562</Statistic.Value>
+		        <Statistic.Label>Friends</Statistic.Label>
+		      </Statistic>
+		      <Statistic color='blue' size='small'>
+		        <Statistic.Value>7</Statistic.Value>
+		        <Statistic.Label>Groups</Statistic.Label>
+		      </Statistic>
+		    </Statistic.Group>
+		    </Segment>
+
+
+		    </Grid.Column>
+		    <Grid.Column width={3}>
+
+
+		    <Header as='h3' icon inverted>
+		    <Icon name='settings' />
+		    Account Settings
+
+		  </Header>
+
+		    </Grid.Column>
+		  </Grid>
+
+
+		</Header>
+    </Container>
+    )
+  }
+
+}
 
 class FeaturesButton extends Component {
   render() {
@@ -75,16 +140,12 @@ class Home extends Component {
       for(var i = 0; i<response.reviews.length;i++){
         //console.log(response.reviews[i]);
       }
-
       this.state.reviews = response.reviews;
       console.log(this.state.reviews);
 
     });
 
      this.handleDelete = this.handleDelete.bind(this);
-
-
-
   }
 
 
@@ -97,8 +158,6 @@ class Home extends Component {
     this.setState( {cookies: cookie.load('user')} );
     //console.log("UserHome: ");
   }
-
-
 
   handleDelete(id,e){
     e.preventDefault;
@@ -146,10 +205,7 @@ class Home extends Component {
         alert(error);
       }
     });
-
-
   }
-
 
   render() {
     console.log(this.state.cookies);
@@ -174,13 +230,12 @@ class Home extends Component {
   );
 
 
-
-
   return (
     <div>
       <header>
         <NavigationBar />
           <SearchBar />
+          <UserStats />
             <Header as='h4' inverted color='blue' size='huge'>Hi, {this.state.cookies.username}</Header>
             <h1>My review</h1>
             <UserReviews />
