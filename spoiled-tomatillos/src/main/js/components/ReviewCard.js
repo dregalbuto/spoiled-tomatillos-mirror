@@ -67,9 +67,19 @@ class ReviewCard extends Component {
     let text = this.state.text;
     let userId = this.state.userId;
 
-    let cri = (<div className="row"><h1><Link to={"/user/" + userId}>Review</Link></h1></div>);
+
+    let cri = (<div className="row"><h1>Review</h1>
+               <small><Link to={"/user/" + userId}>User</Link></small></div>);
+    if (this.props.hidden == true || this.props.hidden == "true") {
+      cri = (<div><small><Link to={"/user/" + userId}>User</Link></small></div>);
+    }
     if(critic) {
-      cri = (<div><div className="row"><h1>Review</h1></div><span className="tagline">Critic</span></div>);
+      if (this.props.hidden == true || this.props.hidden == "true") {
+        cri = (<div><span className="tagline">Critic</span></div>);
+      } else {
+        cri = (<div><div className="row"><h1>Review</h1></div><span className="tagline">Critic</span></div>);
+      }
+
     }
 
     return (
@@ -128,9 +138,9 @@ class MovieReviews extends Component {
 
   render() {
     const listItem = this.state.reviews.map((rev) =>
-      (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev.id} id={rev.id} /></li>)
+      (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev.id} id={rev.id} hidden={true} /></li>)
     );
-    return (<ul>{listItem}</ul>);
+    return (<div><h1>Reviews</h1><ul>{listItem}</ul></div>);
   }
 }
 
@@ -198,10 +208,10 @@ class UserReviews extends Component {
 
     render() {
       const listItem = this.state.reviews.map((rev) =>
-        (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev} id={rev} />
+        (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev} id={rev} hidden={true} />
         <button onClick={this.deleteReview.bind(this, rev)}>Delete</button></li>)
       );
-      return (<ul>{listItem}</ul>);
+      return (<div><h1>Reviews</h1><ul>{listItem}</ul></div>);
     }
 }
 
