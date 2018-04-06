@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './Movie.css';
 
 /**
@@ -111,9 +112,14 @@ class MovieCard extends Component {
                  <div className="col-xs-6"> Vote Average: <span className="meta-data">{data.vote}</span></div>
                </div>
              </div>
-           <div>
-             <Link to={"www.fandango.com/search?q=" + data.original_title + "&mode=Movies"}>Fandango</Link>
-             <Link to={"www.imdb.com/title/" + data.movieID}>IMDB</Link>
+             <div className="row">
+               <div className="col-sm">
+                 <a href={"https://www.fandango.com/search?q=" + data.original_title + "&mode=Movies"}>Fandango</a>
+               </div>
+               <div className="col-sm">
+                 <a href={"https://www.imdb.com/title/" + data.movieID}>IMDB</a>
+               </div>
+             </div>
            </div>
            <div className="poster-container nopadding col-xs-12 col-md-4 pull-md-8 col-lg-5 pull-lg-7 ">
              <img id="postertest" className='poster' src={posterIMG}/>
@@ -131,9 +137,14 @@ class MovieCard extends Component {
                  <div className="poster-container nopadding">
                    <img id="postertest" className='poster' src={posterIMG}/>
                  </div>
-               <div>
-                 <Link to={"www.fandango.com/search?q=" + data.original_title + "&mode=Movies"}>Fandango</Link>
-                 <Link to={"www.imdb.com/title/" + data.movieID}>IMDB</Link>
+                 <div className="row">
+                   <div className="col-sm">
+                     <a href={"https://www.fandango.com/search?q=" + data.original_title + "&mode=Movies"}>Fandango</a>
+                   </div>
+                   <div className="col-sm">
+                     <a href={"https://www.imdb.com/title/" + data.movieID}>IMDB</a>
+                   </div>
+                 </div>
                </div>
              </div>
         );
