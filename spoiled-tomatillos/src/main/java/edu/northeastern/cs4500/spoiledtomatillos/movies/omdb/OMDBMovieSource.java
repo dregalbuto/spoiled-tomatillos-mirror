@@ -80,7 +80,9 @@ public class OMDBMovieSource implements ExternalMovieSource {
         }
         List<Review> reviews = new ArrayList<>();
         for (OMDBMovieRatings omdbMovieRatings : omdbMovie.getRatings()) {
-            reviews.add(new Review("", 0, movie, null));
+            reviews.add(new Review(omdbMovieRatings.getSource(),
+                    Integer.valueOf(omdbMovieRatings.getValue().replaceAll("[^0-9]*",""))/20,
+                    movie, null));
         }
         return reviews;
     }
