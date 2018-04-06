@@ -54,7 +54,7 @@ class Movies extends Component {
 				<div className="Title">
 				<h2>Explore Celebrities</h2>
 
-				<div class="ui small images">
+				<div className="ui small images">
 				<div>
 					<Image size='medium' src="https://ia.media-imdb.com/images/M/MV5BMTcwOTg3NzgyNF5BMl5BanBnXkFtZTgwNzAyNDkyOTE@._V1_.jpg"/>
 

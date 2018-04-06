@@ -143,8 +143,8 @@ class FriendList extends Component {
 
 
 class UserStats extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {};
   }
 
