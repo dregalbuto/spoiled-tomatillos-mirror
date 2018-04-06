@@ -67,14 +67,13 @@ class ReviewCard extends Component {
     let text = this.state.text;
     let userId = this.state.userId;
 
-    let cri = "";
+    let cri = (<div className="row"><h1><Link to={"/user/" + userId}>Review</Link></h1></div>);
     if(critic) {
-      cri = <span className="tagline">Critic</span>;
+      cri = (<div><div className="row"><h1>Review</h1></div><span className="tagline">Critic</span></div>);
     }
 
     return (
 	  <div>
-	    <div className="row"><h1><Link to={"/user/" + userId}>Review</Link></h1></div>
 	    {cri}
 	    <div><Rating icon='star' size='massive' defaultRating={rating} maxRating={5} /></div>
 	    <div>{text}</div>
@@ -135,5 +134,59 @@ class MovieReviews extends Component {
   }
 }
 
+class UserReviews extends Component {
+  constructor(props) {
+      super(props);
+      var id = cookie.load('user').id;
+      if (props.id !== undefined) {
+         id = props.id;
+      }
+
+      this.state = {
+            userId: id,
+            email: "",
+            reviews: [],
+      };
+        fetch("/api/user/id/" + this.state.userId)
+                .then((res) => {
+                  return res.text();
+                }).then((data) => {
+                  try {
+                    data = JSON.parse(data);
+                  } catch (e) {
+                    return;
+                  }
+
+                  // update state with API data
+                  this.setState({
+                    userId: this.state.userId,
+                    email: data.email,
+                    reviews: data.reviews,
+                  });
+                });
+    }
+
+    deleteReview(id, e) {
+      let token = cookie.load('user').user_token;
+      fetch("/api/reviews/delete", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"email": this.state.email, "token": token, "reviewId": id})
+      }).then((e) => {this.setState(this.state)});
+      return false;
+    }
+
+    render() {
+      const listItem = this.state.reviews.map((rev) =>
+        (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev} id={rev} />
+        <button onClick={this.deleteReview.bind(this, rev)}>Delete</button></li>)
+      );
+      return (<ul>{listItem}</ul>);
+    }
+}
+
 export default ReviewCard;
-export { MovieReviews };
+export { MovieReviews, UserReviews };
