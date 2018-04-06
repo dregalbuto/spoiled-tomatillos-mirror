@@ -368,7 +368,7 @@ class Groups extends Component {
 		return(
 				<div>
 				<NavigationBar />
-				<Link to="/Profile"><Button basic inverted color='blue'>Back</Button></Link>
+				<Link to="/user/:id"><Button basic inverted color='blue'>Back</Button></Link>
 				<Header as='h2' content='My Groups' inverted style={{ fontSize: '1.7em', fontWeight: 'normal', marginTop: '1.5em',}} />
 
 				<Table color='grey' key='grey'>

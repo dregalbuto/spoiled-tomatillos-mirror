@@ -79,7 +79,7 @@ class FriendList extends Component {
     return (
       <div>
       <NavigationBar />
-      <Link to="/Profile"><Button basic inverted color='blue'>Back</Button></Link>
+      <Link to="/user/:id"><Button basic inverted color='blue'>Back</Button></Link>
       <UserHeading />
 
       <h3>Friend List</h3>
