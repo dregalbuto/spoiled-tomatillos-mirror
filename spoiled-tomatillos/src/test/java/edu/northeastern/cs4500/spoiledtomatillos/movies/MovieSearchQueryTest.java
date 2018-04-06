@@ -3,6 +3,8 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
+
 import static org.junit.Assert.*;
 
 public class MovieSearchQueryTest {

@@ -3,6 +3,7 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.omdb.OMDBMovieSource;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

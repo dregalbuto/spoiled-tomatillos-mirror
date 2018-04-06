@@ -2,8 +2,8 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies.omdb;
 
 import edu.northeastern.cs4500.spoiledtomatillos.movies.ExternalMovieSource;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
-import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieSearchQuery;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
 
 import org.springframework.web.client.RestTemplate;
 
