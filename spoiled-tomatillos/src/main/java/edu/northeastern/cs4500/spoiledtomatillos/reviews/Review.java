@@ -40,7 +40,7 @@ public class Review {
      * A user has many reviews.
      */
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne//(cascade = CascadeType.ALL)
     //@JoinColumn(name="users")
     private User user;
 

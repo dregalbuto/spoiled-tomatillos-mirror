@@ -100,6 +100,8 @@ public class ReviewController {
 			}
 
 			this.reviewRepository.delete(review);
+			user.getReviews().remove(review);
+			this.userService.save(user);
 			this.reviewRepository.flush();
 
 			return ResponseEntity.ok().body(
