@@ -2,7 +2,6 @@ import React, { Component }  from 'react'
 import { Button, Image, List, Container, Divider,
 Grid, Header,Icon, Menu, Segment, Item, Label, Table, Statistic, Pagination} from 'semantic-ui-react'
 import NavigationBar from './NavigationBar.js';
-import Profile from './UserProfile.js';
 import { Link } from 'react-router-dom';
 
 

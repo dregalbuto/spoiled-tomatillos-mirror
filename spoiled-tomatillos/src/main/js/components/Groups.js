@@ -14,7 +14,6 @@ import { Button, Container, Header, Icon, Image, List, Table,
 	Dropdown, Pagination
 } from 'semantic-ui-react'
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem, ListGroup, ListGroupItem} from 'react-bootstrap';
-import Profile from './UserProfile.js';
 import { Link } from 'react-router-dom';
 import NavigationBar from './NavigationBar.js';
 import cookie from 'react-cookies'

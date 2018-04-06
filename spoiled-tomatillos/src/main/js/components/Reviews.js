@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import Homepage from './Homepage.js';
-import Profile from './UserProfile.js';
 import Groups from './Groups.js';
 import NavigationBar from './NavigationBar.js';
 import {Navbar, NavItem, NavDropdown, Nav, MenuItem} from 'react-bootstrap';
