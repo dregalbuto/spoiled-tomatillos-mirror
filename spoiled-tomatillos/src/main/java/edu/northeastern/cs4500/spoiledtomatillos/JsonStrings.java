@@ -2,7 +2,6 @@ package edu.northeastern.cs4500.spoiledtomatillos;
 
 public class JsonStrings {
 	public static final String EMAIL = "email";
-	public static final String USER_EMAIL = "userEmail";
 	public static final String USER_ID = "userId";
 	public static final String TOKEN = "token";
 	public static final String MESSAGE = "message";
@@ -17,6 +16,8 @@ public class JsonStrings {
 	public static final String TARGET_EMAIL = "targetEmail";
 	public static final String SECRET = "password";
 	public static final String LOGGED_IN = "Logged in successfully";
+	public static final String REC_MESSAGE = "recommendationMessage";
+	public static final String REC_ID = "recommendationId";
 
 	public static final String SUCCESS = "Success";
 	public static final String ERROR = "Error processing request";
@@ -35,6 +36,7 @@ public class JsonStrings {
 	public static final String USER_EXISTS = "Account with this email already exists";
 	public static final String ADMIN_EXISTS = "Account already admin";
 	public static final String EMAIL_SENT = "Email sent";
+	public static final String GROUP_NOT_FOUND = "Group not found";
 
 	private JsonStrings() {
 		throw new IllegalStateException("Utility class");
