@@ -121,53 +121,75 @@ class FriendList extends Component {
   }
 }
 
+*/}
+
+
+
 class ConnectedFriends extends Component {
-  constructor() {
-    super();
-    this.state={};
+  constructor(props) {
+      super(props);
+      this.state={
+        cookies:cookie.load('user'),
+        friends:[],
+        fetchedFriends:[],
+      };
+      console.log(this.state.cookies);
+      var email = this.state.cookies.email;
+      var token = this.state.cookies.user_token;
+      var data = {
+        "email":email,
+        "token":token
+      }
+
+      fetch('/api/friend/friends', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data=>{
+        console.log(data);
+        var i;
+        for(i=0;i<data.length;i++){
+          fetch('api/user/id/'+data[i]).then(res=>res.json())
+          .then((res)=>{
+            console.log(res);
+            this.state.friends.push(res);
+          })}
+
+      });
+    }
+
+  componentWillMount(){
+    console.log("hello");
+    console.log(this.state.friends);
+
   }
+
   render() {
+      console.log(this.state.friends);
+      var users=[];
+      users=this.state.friends;
+      console.log(users);
+
+      var friendElements=[];
+      for(var i = 0; i < users.length; i++){
+        console.log("hrllp");
+        friendElements.push(
+          <div>users[i].username</div>
+        )
+      }
+      console.log(friendElements);
+
     return (
+
       <div>
-      <h3>Friend List</h3>
-      <List divided verticalAlign='middle' size='massive'>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/lena.png' />
-      <List.Content>
-      Lena
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/lindsay.png' />
-      <List.Content>
-      Lindsay
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/mark.png' />
-      <List.Content>
-      Mark
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/molly.png' />
-      <List.Content>
-      Molly
-      </List.Content>
-      </List.Item>
-      </List>
+        <h3>Friend List</h3>
+        <div> {this.state.friends}</div>
+        <footer> <Pagination defaultActivePage={5} totalPages={10} /></footer>
       </div>
     )
   }
@@ -175,9 +197,10 @@ class ConnectedFriends extends Component {
 
 class UserHeading extends Component {
   constructor() {
-    super();
-    this.state={};
-  }
+     super();
+      this.state={};
+    }
+
   render() {
     return (
       <Container text>
@@ -225,6 +248,16 @@ class UserHeading extends Component {
 
       </Container>
 
+  }
+  render() {
+    return (
+      <div>
+      <NavigationBar />
+      <Link to="/user/:id"><Button basic inverted color='blue'>Back</Button></Link>
+      <UserHeading />
+      <ConnectedFriends />
+{/*      <FriendRequests requests={this.state.requests}/>*/}
+      </div>
     )
   }
 }
