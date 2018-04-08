@@ -4,7 +4,6 @@ import { Button, Image, List, Container, Divider,
 Grid, Header,Icon, Menu, Segment, Item, Label, Table, Statistic, Pagination} from 'semantic-ui-react'
 import NavigationBar from './NavigationBar.js';
 import { Link } from 'react-router-dom';
-import cookie from 'react-cookies'
 
 class Request extends Component {
   constructor() {
@@ -46,6 +45,7 @@ class Request extends Component {
     )
   }
 }
+{/*
 class FriendRequests extends Component {
   constructor() {
     super();
@@ -76,11 +76,45 @@ class FriendRequests extends Component {
   }
 }
 
+*/}
+
 class ConnectedFriends extends Component {
-  constructor() {
-    super();
-    this.state={};
-  }
+  constructor(props) {
+      super(props);
+      this.state={
+        cookies:cookie.load('user'),
+        friends:[],
+      };
+      console.log(this.state.cookies);
+      var email = this.state.cookies.email;
+      var token = this.state.cookies.user_token;
+      var data = {
+        "email":email,
+        "token":token
+      }
+
+      fetch('/api/friend/friends', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data=>{
+        console.log(data);
+      });
+
+  {/*
+      fetch("api/user/email/"+this.state.cookies.email).then(res=>res.json()).
+      then((res)=>{
+        console.log(res);
+      }
+      */}
+
+    }
+
   render() {
     return (
       <div>
@@ -130,55 +164,10 @@ class ConnectedFriends extends Component {
 }
 
 class UserHeading extends Component {
-  constructor(props) {
-    super(props);
-    this.state={
-      cookies:cookie.load('user'),
-      friends:[],
-    };
-    console.log(this.state.cookies);
-    var email = this.state.cookies.email;
-    var token = this.state.cookies.user_token;
-    var data = {
-      "email":email,
-      "token":token
+  constructor() {
+     super();
+      this.state={};
     }
-
-    fetch('/api/friend/friends', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data=>{
-      console.log(data);
-    });
-
-{/*
-    fetch("api/user/email/"+this.state.cookies.email).then(res=>res.json()).
-    then((res)=>{
-      console.log(res);
-    }
-    */}
-
-  }
-
-  componentWillMount() {
-    {/*
-    this.setState({cookies:cookie.load('user')});
-    console.log(this.state.cookies);
-    var userEmail = this.state.cookies.email;
-    fetch("/api/user/email" + userEmail)
-        .then(res=>res.json())
-        .then(json=>{console.log(json)});*/}
-  }
-
-
-
-
 
   render() {
     return (
@@ -273,7 +262,7 @@ class FriendList extends Component {
       <Link to="/user/:id"><Button basic inverted color='blue'>Back</Button></Link>
       <UserHeading />
       <ConnectedFriends />
-      <FriendRequests requests={this.state.requests}/>
+{/*      <FriendRequests requests={this.state.requests}/>*/}
       </div>
     )
   }
