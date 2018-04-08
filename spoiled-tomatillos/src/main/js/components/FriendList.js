@@ -84,6 +84,7 @@ class ConnectedFriends extends Component {
       this.state={
         cookies:cookie.load('user'),
         friends:[],
+        fetchedFriends:[],
       };
       console.log(this.state.cookies);
       var email = this.state.cookies.email;
@@ -104,58 +105,45 @@ class ConnectedFriends extends Component {
       .then(response => response.json())
       .then(data=>{
         console.log(data);
+        var i;
+        for(i=0;i<data.length;i++){
+          fetch('api/user/id/'+data[i]).then(res=>res.json())
+          .then((res)=>{
+            console.log(res);
+            this.state.friends.push(res.username);
+          })}
+
       });
-
-  {/*
-      fetch("api/user/email/"+this.state.cookies.email).then(res=>res.json()).
-      then((res)=>{
-        console.log(res);
-      }
-      */}
-
     }
 
+  componentWillMount(){
+    console.log("hello");
+    console.log(this.state.friends);
+
+  }
+
   render() {
-    return (
-      <div>
-      <h3>Friend List</h3>
-      <List divided verticalAlign='middle' size='massive'>
+      console.log(this.state.friends);
+
+      const listItem = this.state.friends.map((friend) =>
       <List.Item>
       <List.Content floated='right'>
       <Button>Remove</Button>
       </List.Content>
       <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/lena.png' />
       <List.Content>
-      Lena
+      {friend}
       </List.Content>
       </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/lindsay.png' />
-      <List.Content>
-      Lindsay
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/mark.png' />
-      <List.Content>
-      Mark
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/molly.png' />
-      <List.Content>
-      Molly
-      </List.Content>
-      </List.Item>
+
+    );
+    return (
+
+      <div>
+      <h3>Friend List</h3>
+      <List divided verticalAlign='middle' size='massive'>
+
+    <div>{listItem}</div>
       </List>
       <footer> <Pagination defaultActivePage={5} totalPages={10} /></footer>
       </div>
