@@ -17,6 +17,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.*;
@@ -90,7 +91,7 @@ public class User {
     private Collection<Review> reviews = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
     @JsonProperty(value = "recommendations")
     private Collection<Recommendation> recommendations = new ArrayList<>();
     
@@ -103,10 +104,7 @@ public class User {
     			this.recommendations.remove(r);
     		}
     }
-    
-    public Collection<Recommendation> getRecommendations() {
-    		return this.recommendations;
-    }
+   
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
@@ -252,6 +250,7 @@ public class User {
     }
 }
 
+@SuppressWarnings("serial")
 class UserSeralizer extends StdSerializer<User> {
 
     public UserSeralizer() {

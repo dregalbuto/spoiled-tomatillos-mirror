@@ -1,14 +1,20 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
@@ -18,7 +24,10 @@ import edu.northeastern.cs4500.spoiledtomatillos.recommendations.RecommendationR
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserServiceImpl;
 
+@Controller
+@RequestMapping("/api/recommendations")
 public class RecommendationController {
+	@Autowired
 	RecommendationRepository recommendationRepository;
 	@Autowired
 	MovieCachedRepository movieCachedRepository;
@@ -28,53 +37,59 @@ public class RecommendationController {
 	private class Helper {
 		
 		ResponseEntity<String> response;
-		User sourceUser;
+		// maps to "email" and "token"
+		User loggedInUser;
+		// maps to "targetEmail"
 		User targetUser;
+		// There will always be a movie
 		Movie movie;
-		String message;
+		// There might be a message
+		String recMessage;
+		// There might be a recommendation ID
 		String recId;
 		
 		Helper(String strRequest) throws JSONException {
 			response = null;
-			sourceUser = null;
+			loggedInUser = null;
 			targetUser = null;
 			movie = null;
-			message = null;
+			recMessage = null;
 			recId = null;
 			JSONObject request = new JSONObject(strRequest);
-			String sourceEmail = request.getString(JsonStrings.EMAIL);
-			String sourceToken = request.getString(JsonStrings.TOKEN);
-			String movieId = request.getString(JsonStrings.GROUP_ID);
-			// Check if the logged-in user is valid
-			if (!User.validLogin(sourceEmail, sourceToken, userService)) {
-				response = ResponseEntity.badRequest().body(
-						new JSONObject().put(JsonStrings.MESSAGE
-								, JsonStrings.INVALID_LOGIN).toString());
-			} else {
-				sourceUser = userService.findByEmail(sourceEmail);
-			}
-			// Check if the movie is valid
-			Movie localMovie = movieCachedRepository.getMovie(movieId);
-			if (localMovie == null) {
-				response = ResponseEntity.badRequest().body(
-						new JSONObject().put(JsonStrings.MESSAGE
-								, JsonStrings.MOVIE_NOT_FOUND).toString());
-			} else {
-				movie = localMovie;
-			}
-			// optional target email if this recommendation is being sent 
-			// from one user to another user
+			// Check if the target (receiver) user is valid
 			if (request.has(JsonStrings.TARGET_EMAIL)) {
 				String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
-				User localTargetUser = userService.findByEmail(targetEmail);
-				if (localTargetUser != null ) { 
-					targetUser = localTargetUser; 
-				}	
+				if ((targetUser = userService.findByEmail(targetEmail)) == null) {
+					response = ResponseEntity.badRequest().body(
+							new JSONObject().put(JsonStrings.MESSAGE
+									, JsonStrings.TARGET_USER_NOT_FOUND).toString());
+				}
+			}
+			// Check if the movie is valid 
+			if (request.has(JsonStrings.MOVIE_ID)) {
+				String movieId = request.getString(JsonStrings.MOVIE_ID);
+				if ((movie = movieCachedRepository.getMovie(movieId)) == null) {
+					response = ResponseEntity.badRequest().body(
+							new JSONObject().put(JsonStrings.MESSAGE
+									, JsonStrings.MOVIE_NOT_FOUND).toString());
+				} 
+			}
+			// Check if the logged-in (sender) user is present and valid
+			if (request.has(JsonStrings.EMAIL) && request.has(JsonStrings.TOKEN)) {
+				String loggedInEmail = request.getString(JsonStrings.EMAIL);
+				String loggedInToken = request.getString(JsonStrings.TOKEN);
+				if (!User.validLogin(loggedInEmail, loggedInToken, userService)) {
+					response = ResponseEntity.badRequest().body(
+							new JSONObject().put(JsonStrings.MESSAGE
+									, JsonStrings.INVALID_LOGIN).toString());
+				} else {
+					loggedInUser = userService.findByEmail(loggedInEmail);
+				}
 			}
 			// if this is a recommendation from one user to another user,
 			// there is an optional "message" from the source user to targetUser
 			if (request.has(JsonStrings.REC_MESSAGE)) {
-				recId = request.getString(JsonStrings.REC_MESSAGE);
+				recMessage = request.getString(JsonStrings.REC_MESSAGE);
 			}
 			// if this is handling an existing Recommendation, get its id
 			if (request.has(JsonStrings.REC_ID)) {
@@ -91,7 +106,7 @@ public class RecommendationController {
 		// If any errors were generated by the Helper, return them
 		if (h.response != null) { return h.response; }
 		// Make a Recommendation out of the JSON string
-		Recommendation rec = new Recommendation(h.sourceUser, h.movie, h.message);
+		Recommendation rec = new Recommendation(h.loggedInUser, h.movie, h.recMessage);
 		// Save the recommendation
 		rec = this.recommendationRepository.save(rec);
 		// Associate the recommendation with the target user
@@ -100,7 +115,8 @@ public class RecommendationController {
 		this.userService.save(h.targetUser);
 		// Return success object (maybe add more things to response?)
 		return ResponseEntity.ok().body(new JSONObject()
-				.put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
+				.put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
+				.put(JsonStrings.REC_ID, rec.getId()).toString());
 	}
 	
 	@RequestMapping("/delete")
@@ -111,29 +127,36 @@ public class RecommendationController {
 		// If any errors were generated by the Helper, return them
 		if (h.response != null) { return h.response; }
 		// Find the recommendation in the repository
-		Recommendation rec = recommendationRepository.findOne(h.recId);
+		Recommendation rec = recommendationRepository.getOne(Integer.parseInt(h.recId));
 		// Delete the recommendation from the user's recommendations
 		this.recommendationRepository.delete(rec);
 		// Delete the recommendation from the repository
-		h.sourceUser.deleteRecommendation(rec);
+		h.loggedInUser.deleteRecommendation(rec);
 		// Save the user
-		this.userService.save(h.sourceUser);
+		this.userService.save(h.loggedInUser);
 		// Return success object (maybe add more things to response?)
 		return ResponseEntity.ok().body(new JSONObject()
-				.put(JsonStrings.MESSAGE, JsonStrings.SUCCESS).toString());
+				.put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)
+				.put(JsonStrings.REC_ID, rec.getId()).toString());
 	}
 	
 	@RequestMapping("/get")
 	public ResponseEntity<String> get(@RequestBody(required = true) String request) 
-		throws JSONException, JsonProcessingException {
+		throws JSONException, IOException {
 		// Parse the JSON
 		Helper h = new Helper(request);
 		// If any errors were generated by the Helper, return them
 		if (h.response != null) { return h.response;}
 		// Return the user's recommendations
-		return ResponseEntity.ok().body(
-				new ObjectMapper().writeValueAsString(
-						h.sourceUser.getRecommendations()));
+		List<Recommendation> recs = new ArrayList<>();
+		for (Recommendation r : this.recommendationRepository.findAll()) {
+			recs.add(r);
+		}
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		String response = objectMapper.writeValueAsString(recs);
+		return ResponseEntity.ok().body(response);
 	}
 	
 }
