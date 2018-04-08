@@ -181,12 +181,12 @@ public class GroupController {
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.NO_PERMISSION).toString());
 		}
-		if (h.group.getIdList().contains(h.otherUser.getId()) ||
-				!h.group.getIdList().add(h.otherUser.getId())) {
+		if (h.group.getIdList().contains(h.otherUser.getId())) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE
 							, JsonStrings.CANNOT_JOIN).toString());
 		}
+		h.group.getIdList().add(h.otherUser.getId());
 		this.groupRepository.save(h.group);
 		return ResponseEntity.ok().body(
 				new JSONObject().put(JsonStrings.MESSAGE, JsonStrings.SUCCESS)

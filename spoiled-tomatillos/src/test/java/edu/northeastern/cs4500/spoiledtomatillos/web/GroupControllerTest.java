@@ -430,6 +430,20 @@ public class GroupControllerTest {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
 				.contentType(MediaType.APPLICATION_JSON).content(blnbl.toString()))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+		
+		// Add to blacklist user not found
+		JSONObject targetUserNotFound = new JSONObject();
+		targetUserNotFound.put("email", "test_ge2@a.co");
+		targetUserNotFound.put("token", token1);
+		targetUserNotFound.put("groupId", groupId);
+		targetUserNotFound.put(JsonStrings.TARGET_EMAIL, "BAD_TARGET_EMAIL");
+		JSONObject myResponse = new JSONObject(this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/addtolist")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(targetUserNotFound.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.TARGET_USER_NOT_FOUND, myResponse.get(JsonStrings.MESSAGE));
+					
 
         //Add to blacklist no perm
         JSONObject blnp = new JSONObject();
@@ -483,7 +497,7 @@ public class GroupControllerTest {
 				.post("/api/user/email/test_ge2@a.co/groups"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
-		assertEquals(ret, "[]");
+		assertEquals("[]", ret);
 
 		//Remove again
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/removefromlist")
