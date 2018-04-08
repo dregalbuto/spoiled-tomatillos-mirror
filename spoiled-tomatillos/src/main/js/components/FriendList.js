@@ -78,6 +78,8 @@ class FriendRequests extends Component {
 
 */}
 
+
+
 class ConnectedFriends extends Component {
   constructor(props) {
       super(props);
@@ -110,7 +112,7 @@ class ConnectedFriends extends Component {
           fetch('api/user/id/'+data[i]).then(res=>res.json())
           .then((res)=>{
             console.log(res);
-            this.state.friends.push(res.username);
+            this.state.friends.push(res);
           })}
 
       });
@@ -124,28 +126,25 @@ class ConnectedFriends extends Component {
 
   render() {
       console.log(this.state.friends);
+      var users=[];
+      users=this.state.friends;
+      console.log(users);
 
-      const listItem = this.state.friends.map((friend) =>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/lena.png' />
-      <List.Content>
-      {friend}
-      </List.Content>
-      </List.Item>
+      var friendElements=[];
+      for(var i = 0; i < users.length; i++){
+        console.log("hrllp");
+        friendElements.push(
+          <div>users[i].username</div>
+        )
+      }
+      console.log(friendElements);
 
-    );
     return (
 
       <div>
-      <h3>Friend List</h3>
-      <List divided verticalAlign='middle' size='massive'>
-
-    <div>{listItem}</div>
-      </List>
-      <footer> <Pagination defaultActivePage={5} totalPages={10} /></footer>
+        <h3>Friend List</h3>
+        <div> {this.state.friends}</div>
+        <footer> <Pagination defaultActivePage={5} totalPages={10} /></footer>
       </div>
     )
   }
