@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,20 +22,22 @@ import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RecommendationControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
 	
-	private final String LOGGED_IN = "test@husky.neu.edu";
-	private final String TARGET = "kate@neu.edu";
+	private final String LOGGED_IN1 = "test@husky.neu.edu";
+	private final String LOGGED_IN2 = "test2@husky.neu.edu";
+	private final String LOGGED_IN3 = "test3@husky.neu.edu";
+	private final String LOGGED_IN4 = "test4@husky.neu.edu";
+	private final String TARGET = "target@husky.neu.edu";
 	private final String MOVIE = "tt0046003";
 	private final String REC_MESSAGE = "You'll really love this movie!";
 	
 	@Test
 	public void addErrors() throws Exception {
-		Helper.signupLoginDefaults(LOGGED_IN, mockMvc);
+		Helper.signupLoginDefaults(LOGGED_IN1, mockMvc);
 		
 		// Check if the target (receiver) user is valid
 		JSONObject object1 = new JSONObject();
@@ -62,7 +63,7 @@ public class RecommendationControllerTest {
 		
 		// Check if the logged-in (sender) user is present and valid
 		JSONObject object3 = new JSONObject();
-		object3.put(JsonStrings.EMAIL,LOGGED_IN);
+		object3.put(JsonStrings.EMAIL,LOGGED_IN1);
 		object3.put(JsonStrings.TOKEN, "BAD_TOKEN");
 		JSONObject response3 = new JSONObject(this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/api/recommendations/create")
@@ -75,22 +76,23 @@ public class RecommendationControllerTest {
 	
 	@Test
 	public void deleteErrors() throws Exception {
-		Helper.signupLoginDefaults(LOGGED_IN, mockMvc);
+		String token = Helper.signupLoginDefaults(LOGGED_IN2, mockMvc);
 		
 		// Check if the target (receiver) user is valid
 		JSONObject object1 = new JSONObject();
-		object1.put(JsonStrings.TARGET_EMAIL, LOGGED_IN);
+		object1.put(JsonStrings.TARGET_EMAIL, LOGGED_IN2);
 		object1.put(JsonStrings.MOVIE_ID, MOVIE);
-		this.mockMvc
+		JSONObject response1 = new JSONObject(this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/api/recommendations/create")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(object1.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn().getResponse().getContentAsString();
+				.andReturn().getResponse().getContentAsString());
+		String recId = response1.getString(JsonStrings.REC_ID);
 		
 		// Check if the logged-in (deleter) user is present and valid
 		JSONObject object2 = new JSONObject();
-		object2.put(JsonStrings.EMAIL,LOGGED_IN);
+		object2.put(JsonStrings.EMAIL,LOGGED_IN2);
 		object2.put(JsonStrings.TOKEN, "BAD_TOKEN");
 		JSONObject response2 = new JSONObject(this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/api/recommendations/delete")
@@ -99,15 +101,39 @@ public class RecommendationControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andReturn().getResponse().getContentAsString());
 		assertEquals(JsonStrings.INVALID_LOGIN, response2.get(JsonStrings.MESSAGE));
+		
+		// Try to delete the request but give an invalid rec ID
+		JSONObject object3 = new JSONObject();
+		object3.put(JsonStrings.EMAIL,LOGGED_IN2);
+		object3.put(JsonStrings.TOKEN, token);
+		object3.put(JsonStrings.REC_ID, "666");
+		JSONObject response3 = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/recommendations/delete")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(object3.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.REC_NOT_FOUND, response3.get(JsonStrings.MESSAGE));
+		
+		// Actually delete the request
+		JSONObject object4 = new JSONObject();
+		object4.put(JsonStrings.EMAIL,LOGGED_IN2);
+		object4.put(JsonStrings.TOKEN, token);
+		object4.put(JsonStrings.REC_ID, recId);
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/recommendations/delete")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(object4.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void getErrors() throws Exception {
-		String token = Helper.signupLoginDefaults(LOGGED_IN, mockMvc);
+		Helper.signupLoginDefaults(LOGGED_IN3, mockMvc);
 		
 		// Check if the target (getter) user is valid
 		JSONObject object1 = new JSONObject();
-		object1.put(JsonStrings.TARGET_EMAIL, LOGGED_IN);
+		object1.put(JsonStrings.TARGET_EMAIL, LOGGED_IN3);
 		this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/api/recommendations/create")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -115,25 +141,25 @@ public class RecommendationControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 		
 		// Check if the logged-in (getter) user is present and valid
-				JSONObject object2 = new JSONObject();
-				object2.put(JsonStrings.EMAIL,LOGGED_IN);
-				object2.put(JsonStrings.TOKEN, "BAD_TOKEN");
-				JSONObject response3 = new JSONObject(this.mockMvc
-						.perform(MockMvcRequestBuilders.post("/api/recommendations/get")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(object2.toString()))
-						.andExpect(MockMvcResultMatchers.status().isBadRequest())
-						.andReturn().getResponse().getContentAsString());
-				assertEquals(JsonStrings.INVALID_LOGIN, response3.get(JsonStrings.MESSAGE));
+		JSONObject object2 = new JSONObject();
+		object2.put(JsonStrings.EMAIL,LOGGED_IN3);
+		object2.put(JsonStrings.TOKEN, "BAD_TOKEN");
+		JSONObject response3 = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/recommendations/get")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(object2.toString()))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(JsonStrings.INVALID_LOGIN, response3.get(JsonStrings.MESSAGE));
 	}
 	
 	@Test
 	public void addGetDelete() throws Exception {
-		String token = Helper.signupLoginDefaults(LOGGED_IN, mockMvc);
+		String token = Helper.signupLoginDefaults(LOGGED_IN4, mockMvc);
 		String token2 = Helper.signupLoginDefaults(TARGET, mockMvc);
 		
 		JSONObject create = new JSONObject();
-		create.put(JsonStrings.EMAIL, LOGGED_IN);
+		create.put(JsonStrings.EMAIL, LOGGED_IN4);
 		create.put(JsonStrings.TOKEN, token);
 		create.put(JsonStrings.MOVIE_ID, MOVIE);
 		create.put(JsonStrings.TARGET_EMAIL, TARGET);
@@ -144,7 +170,6 @@ public class RecommendationControllerTest {
 				.content(create.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString());
-		System.out.println(response1);
 		String recId1 = response1.getString(JsonStrings.REC_ID);
 		
 		JSONObject createNoSourceUser = new JSONObject();
@@ -168,8 +193,12 @@ public class RecommendationControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString());
 		
+		System.out.println("----------------------------------------------");
+		System.out.println("response3:\n" + response3);		
+		System.out.println("----------------------------------------------");
+		
 		assertEquals(recId1, response3.getJSONObject(0).get(JsonStrings.REC_ID).toString());
-		assertEquals(LOGGED_IN, response3.getJSONObject(0).getJSONObject("recommendationGiver").get("email"));
+		assertEquals(LOGGED_IN4, response3.getJSONObject(0).getJSONObject("recommendationGiver").get("email"));
 		assertEquals(recId2, response3.getJSONObject(1).get(JsonStrings.REC_ID).toString());
 		assertTrue(response3.getJSONObject(1).isNull("recommendationGiver"));
 		

@@ -37,6 +37,7 @@ public class JsonStrings {
 	public static final String ADMIN_EXISTS = "Account already admin";
 	public static final String EMAIL_SENT = "Email sent";
 	public static final String GROUP_NOT_FOUND = "Group not found";
+	public static final String REC_NOT_FOUND = "Recommendation not found";
 
 	private JsonStrings() {
 		throw new IllegalStateException("Utility class");

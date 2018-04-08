@@ -92,7 +92,15 @@ public class RecommendationController {
 			}
 			// if this is handling an existing Recommendation, get its id
 			if (request.has(JsonStrings.REC_ID)) {
-				recId = request.getString(JsonStrings.REC_ID);
+				String tempId = request.getString(JsonStrings.REC_ID);
+				if (recommendationRepository
+						.exists(Integer.parseInt(request.getString(JsonStrings.REC_ID)))) {
+					recId = tempId;
+				} else {
+					response = ResponseEntity.badRequest().body(
+							new JSONObject().put(JsonStrings.MESSAGE
+									, JsonStrings.REC_NOT_FOUND).toString());
+				}
 			}
 		}
 	}
