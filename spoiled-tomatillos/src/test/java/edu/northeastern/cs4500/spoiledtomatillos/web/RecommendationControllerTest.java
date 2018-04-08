@@ -88,13 +88,12 @@ public class RecommendationControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString();
 		
-		
 		// Check if the logged-in (deleter) user is present and valid
 		JSONObject object2 = new JSONObject();
 		object2.put(JsonStrings.EMAIL,LOGGED_IN);
 		object2.put(JsonStrings.TOKEN, "BAD_TOKEN");
 		JSONObject response2 = new JSONObject(this.mockMvc
-				.perform(MockMvcRequestBuilders.post("/api/recommendations/create")
+				.perform(MockMvcRequestBuilders.post("/api/recommendations/delete")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(object2.toString()))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -104,19 +103,28 @@ public class RecommendationControllerTest {
 	
 	@Test
 	public void getErrors() throws Exception {
-		Helper.signupLoginDefaults(LOGGED_IN, mockMvc);
+		String token = Helper.signupLoginDefaults(LOGGED_IN, mockMvc);
 		
 		// Check if the target (getter) user is valid
 		JSONObject object1 = new JSONObject();
-		object1.put(JsonStrings.EMAIL, LOGGED_IN);
-		object1.put(JsonStrings.TOKEN, "BAD_TOKEN");
-		JSONObject response = new JSONObject(this.mockMvc
+		object1.put(JsonStrings.TARGET_EMAIL, LOGGED_IN);
+		this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/api/recommendations/create")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(object1.toString()))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest())
-				.andReturn().getResponse().getContentAsString());
-		assertEquals(JsonStrings.INVALID_LOGIN, response.get(JsonStrings.MESSAGE));
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		
+		// Check if the logged-in (getter) user is present and valid
+				JSONObject object2 = new JSONObject();
+				object2.put(JsonStrings.EMAIL,LOGGED_IN);
+				object2.put(JsonStrings.TOKEN, "BAD_TOKEN");
+				JSONObject response3 = new JSONObject(this.mockMvc
+						.perform(MockMvcRequestBuilders.post("/api/recommendations/get")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(object2.toString()))
+						.andExpect(MockMvcResultMatchers.status().isBadRequest())
+						.andReturn().getResponse().getContentAsString());
+				assertEquals(JsonStrings.INVALID_LOGIN, response3.get(JsonStrings.MESSAGE));
 	}
 	
 	@Test
