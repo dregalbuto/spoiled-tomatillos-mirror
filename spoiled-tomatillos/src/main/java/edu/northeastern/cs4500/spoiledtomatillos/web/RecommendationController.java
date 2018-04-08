@@ -1,6 +1,5 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +74,7 @@ public class RecommendationController {
 				} 
 			}
 			// Check if the logged-in (sender) user is present and valid
-			if (request.has(JsonStrings.EMAIL) && request.has(JsonStrings.TOKEN)) {
+			if (request.has(JsonStrings.EMAIL)) {
 				String loggedInEmail = request.getString(JsonStrings.EMAIL);
 				String loggedInToken = request.getString(JsonStrings.TOKEN);
 				if (!User.validLogin(loggedInEmail, loggedInToken, userService)) {
