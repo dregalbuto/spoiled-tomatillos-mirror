@@ -61,7 +61,11 @@ public class GroupController {
 			group = groupRepository.findOne(Integer.valueOf(groupId));
 			if (request.has(JsonStrings.TARGET_EMAIL)) {
 				String userEmail = request.getString(JsonStrings.TARGET_EMAIL);
-				otherUser = userService.findByEmail(userEmail);
+				if ((otherUser = userService.findByEmail(userEmail)) == null) {
+					response = ResponseEntity.badRequest().body(
+							new JSONObject().put(JsonStrings.MESSAGE
+									, JsonStrings.TARGET_USER_NOT_FOUND).toString());
+				}
 			}
 		}
 	}
