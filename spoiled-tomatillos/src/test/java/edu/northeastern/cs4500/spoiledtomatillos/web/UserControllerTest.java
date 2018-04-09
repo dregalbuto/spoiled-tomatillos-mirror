@@ -2,9 +2,7 @@ package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import static org.junit.Assert.assertEquals;
 
-import edu.northeastern.cs4500.spoiledtomatillos.user.repository.FriendListRepository;
-import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import edu.northeastern.cs4500.spoiledtomatillos.Helper;
 import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 
 import static junit.framework.TestCase.assertTrue;
@@ -312,4 +311,26 @@ public class UserControllerTest {
         assertEquals(JsonStrings.NO_PERMISSION, response.getString(JsonStrings.MESSAGE));
     }
 
+    @Test
+    public void search() throws Exception {
+    		Helper.signupLoginDefaults("test@email.com", mockMvc);
+    		
+    		// Return list of users
+    		JSONArray result2 = new JSONArray(this.mockMvc
+    				.perform(MockMvcRequestBuilders.get("/api/user/search?s=t"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString());
+    		assertTrue(result2.length() > 1);
+    		
+    		// Return list of users
+       JSONArray result = new JSONArray(this.mockMvc
+        		.perform(MockMvcRequestBuilders
+        				.get("/api/user/search?s=test@email.com"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString());
+       assertEquals("test@email.com", result.getJSONObject(0).get(JsonStrings.EMAIL));
+    }
+    
 }

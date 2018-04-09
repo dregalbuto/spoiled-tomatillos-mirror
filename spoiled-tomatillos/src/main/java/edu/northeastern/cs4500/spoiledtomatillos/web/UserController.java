@@ -16,6 +16,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,8 @@ public class UserController {
 	private final FriendListRepository friendListRepository;
 	@Autowired
 	private GroupRepository groupRepository;
+	
+	static final String ROLE = "ROLE_ADMIN";
 
 	@Autowired
 	UserController(UserService userService, FriendListRepository friendListRepository) {
@@ -39,7 +45,7 @@ public class UserController {
 			User user = new User("Spoiled", "Tomatillos", "tomatillosspoiled@gmail.com",
 							"admin", "admin");
 			List<Role> admin = new ArrayList<>();
-			admin.add(new Role("ROLE_ADMIN"));
+			admin.add(new Role(ROLE));
 			user.setRoles(admin);
 			this.userService.save(user);
 		}
@@ -65,6 +71,19 @@ public class UserController {
 		return this.userService.findById(Integer.valueOf(id));
 	}
 
+	/**
+	 * Search for a user
+	 * @param s email search
+	 * @return List of users
+	 * @throws JsonProcessingException 
+	 */
+	@CrossOrigin
+    @RequestMapping("/search")
+    @ResponseBody
+    public List<User> search(@RequestParam(required=true) String s) {
+		return userService.searchUser(s);
+    }
+	
 	@RequestMapping(value = "/id/{id:.+}/groups")
 	List<Group> getGroupsOfUser(@PathVariable(required = true) String id) {
 		List<Group> groups = new ArrayList<>();
@@ -142,7 +161,7 @@ public class UserController {
 
 		String firstname = request.get("first_name").toString();
 		String lastname = request.get("last_name").toString();
-		String email = request.get("email").toString();
+		String email = request.get(JsonStrings.EMAIL).toString();
 		String username = request.get("username").toString();
 		String password = request.get("password").toString();
 
@@ -172,7 +191,7 @@ public class UserController {
 	@RequestMapping(value = "/forget", method = RequestMethod.POST)
 	public ResponseEntity<String> forget(@RequestBody String strRequest) throws JSONException {
 		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString("email");
+		String email = request.getString(JsonStrings.EMAIL);
 		User user = this.userService.findByEmail(email);
 		if (user == null) {
 			return ResponseEntity.badRequest().body(
@@ -201,7 +220,7 @@ public class UserController {
 	@RequestMapping(value = "/change", method = RequestMethod.POST)
 	public ResponseEntity<String> change(@RequestBody String strRequest) throws JSONException {
 		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString("email");
+		String email = request.getString(JsonStrings.EMAIL);
 		String password = request.get("password").toString();
 		String newPassword = request.get("newPassword").toString();
 		User user = this.userService.findByEmail(email);
@@ -231,9 +250,9 @@ public class UserController {
 	@RequestMapping(value = "/promote", method = RequestMethod.POST)
 	public ResponseEntity<String> promote(@RequestBody String strRequest) throws JSONException {
 		JSONObject request = new JSONObject(strRequest);
-		String email = request.getString("email");
-		String token = request.getString("token");
-		String targetEmail = request.getString("targetEmail");
+		String email = request.getString(JsonStrings.EMAIL);
+		String token = request.getString(JsonStrings.TOKEN);
+		String targetEmail = request.getString(JsonStrings.TARGET_EMAIL);
 		if (!User.validLogin(email, token, this.userService)) {
 			return ResponseEntity.badRequest().body(
 					new JSONObject().put(JsonStrings.MESSAGE,
@@ -241,7 +260,7 @@ public class UserController {
 		}
 		User u = this.userService.findByEmail(email);
 		for (Role role : u.getRoles()) {
-			if (role.getName().equalsIgnoreCase("ROLE_ADMIN")) {
+			if (role.getName().equalsIgnoreCase(ROLE)) {
 				User targetUser = this.userService.findByEmail(targetEmail);
 				if (targetUser == null) {
 					return ResponseEntity.badRequest().body(
@@ -249,13 +268,13 @@ public class UserController {
 									JsonStrings.TARGET_USER_NOT_FOUND).toString());
 				}
 				for (Role targetRole : targetUser.getRoles()) {
-					if (targetRole.getName().equalsIgnoreCase("ROLE_ADMIN")) {
+					if (targetRole.getName().equalsIgnoreCase(ROLE)) {
 						return ResponseEntity.badRequest().body(
-										new JSONObject().put("message",
+										new JSONObject().put(JsonStrings.MESSAGE,
 												JsonStrings.ADMIN_EXISTS).toString());
 					}
 				}
-				targetUser.getRoles().add(new Role("ROLE_ADMIN"));
+				targetUser.getRoles().add(new Role(ROLE));
 				this.userService.save(targetUser);
 				return ResponseEntity.ok().body(
 						new JSONObject().put(JsonStrings.MESSAGE,
