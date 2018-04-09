@@ -15,6 +15,7 @@ import {
 	Table
 } from 'semantic-ui-react';
 import cookie from 'react-cookies'
+import ReviewCard, { MovieReviews } from './ReviewCard.js';
 
 
 class AddReview extends Component {
@@ -164,7 +165,7 @@ class Movie extends Component {
 				overview: data.description,
 				runtime: data.runtimeMinuets,
 				poster: data.imgURL,
-				reviews:data.reviews
+				reviews: data.reviews,
 			});
 		});
 	}
@@ -205,6 +206,7 @@ class Movie extends Component {
 			<div>
 				<div>
 					<MovieCard data={this.state}/>
+					<MovieReviews id={this.state.movieID}/>
 				</div>
 				<div>
 					Rating: {rating}
