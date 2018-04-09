@@ -224,15 +224,10 @@ public class GroupControllerTest {
         group2.put("token", token1);
         group2.put("groupId", groupId);
 
-        //assertEquals(group1, group2);
-
-
         //remove user
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/groups/remove")
                 .contentType(MediaType.APPLICATION_JSON).content(group1.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
-       //assertNotEquals(group1, group2);
     }
 
 }

@@ -284,7 +284,10 @@ public class GroupController {
               new JSONObject().put("message", "User not found").toString());
     }
     group.removeUser(u);
-    this.groupRepository.save(group);
+
+    groupRepository.flush();
+
+    //this.groupRepository.save(group);
     return ResponseEntity.ok().body(
             new JSONObject().put("message", "Success")
                     .put("user removed: ", u.getId()).toString());
