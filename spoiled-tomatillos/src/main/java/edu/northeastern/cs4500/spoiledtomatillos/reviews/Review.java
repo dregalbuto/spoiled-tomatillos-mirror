@@ -32,20 +32,18 @@ public class Review {
      * A movie has many reviews.
      */
     @JsonBackReference
-    @ManyToOne//(cascade = CascadeType.)
-    //@JoinColumn(name="movies")
+    @ManyToOne
     private Movie movie;
 
     /**
      * A user has many reviews.
      */
     @JsonBackReference
-    @ManyToOne//(cascade = CascadeType.ALL)
-    //@JoinColumn(name="users")
+    @ManyToOne
     private User user;
 
     @JsonBackReference
-    @ManyToOne//(cascade = Casca)
+    @ManyToOne
     private Group group;
 
     public Review() {
