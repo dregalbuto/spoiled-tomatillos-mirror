@@ -32,4 +32,15 @@ public class Helper {
 		request.put("password", "passw0rd");
 		return Helper.signupLogin(request, mockMvc);
 	}
+	
+	public static String signupLogin(String first, String last, String email, String username, 
+			MockMvc mockMvc) throws Exception {
+		JSONObject request = new JSONObject();
+		request.put("first_name", first);
+		request.put("last_name", last);
+		request.put("email", email);
+		request.put("username", username);
+		request.put("password", "passw0rd");
+		return Helper.signupLogin(request, mockMvc);
+	}
 }

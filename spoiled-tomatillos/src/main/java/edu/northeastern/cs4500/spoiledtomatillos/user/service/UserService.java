@@ -10,4 +10,5 @@ public interface UserService {
 	User findById(int id);
 	void save(User newuser);
 	List<User> getAllUsers();
+	List<User> searchUser(String q);
 }
