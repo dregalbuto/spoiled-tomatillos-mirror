@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledtomatillos.reviews;
+package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

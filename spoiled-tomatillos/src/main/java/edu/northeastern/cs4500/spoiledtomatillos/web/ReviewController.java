@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledtomatillos.reviews;
+package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieCachedRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserServiceImpl;
 import org.json.JSONException;
