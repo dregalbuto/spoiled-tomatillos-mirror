@@ -25,10 +25,13 @@ class Recomendation extends Component {
 			open:false,
 			recipient:'',
 			msg:'',
+			token: this.props.data.cookies.user_token,
+			movieId: this.props.data.movieID
 		};
 		console.log(this.props.data);
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
+		this.handleChange=this.handleChange.bind(this);
 	}
 
 	open() {
@@ -38,10 +41,46 @@ class Recomendation extends Component {
 		this.setState({ open: false })
 	}
 
-	handleClick(){
-		console.log("hekll;l'a");
+  handleChange(e){
+		const name = e.target.name;
+		const value = e.target.value;
+		this.setState({ [name]:value })
 	}
 
+	onSubmit(e){
+		console.log("Recommendation onsubmit");
+		e.preventDefault();
+		console.log(this.state);
+
+		var fetchedData = {};
+		var url = '/api/recommendations/create';
+		var data = {
+				"email": this.state.email,
+				"token": this.state.token,
+				"targetEmail": this.state.recipient,
+				"movieId": this.state.movieId,
+				"recommendationMessage": this.state.msg
+		};
+
+		var body1 = JSON.stringify(data);
+		console.log(body1);
+
+		fetch('/api/recommendations/create' , {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data)
+		}).then(response=>response.json()).then(data =>{
+			console.log("DATA FETCH REC");
+			console.log(data);
+			if(data.hasOwnProperty("recommendationId")){
+				alert("recommendation sent successfully");
+		  } else {
+				alert("failed to send recommendation");
+			}
+	})}
 
 		render() {
 			const { open } = this.state
@@ -61,14 +100,16 @@ class Recomendation extends Component {
 						<Form>
 						<Form.Field>
 							<label>Share to:</label>
-							<input placeholder="recipient email address"
-							ref= {(input) => {this.recipient = input;}}
+							<input name="recipient" placeholder="recipient email address"
+							type="text" value={this.recipient}
+							onChange={this.handleChange}
 							style={divStyle}/>
 							</Form.Field>
-							<Form.TextArea label = "Leave a message"
-							ref= {(input) => {this.msg = input;}}
+							<Form.TextArea name="msg" label = "Leave a message"
+						  type="text" value={this.msg}
 							style={divStyle}
-							placeholder="leave your message here"></Form.TextArea>
+							placeholder="leave your message here"
+							onChange={this.handleChange}></Form.TextArea>
 
 							</Form>
 						</Modal.Description>
@@ -79,7 +120,7 @@ class Recomendation extends Component {
 					<Button basic color='red' onClick={this.close}>
 						<Icon name='remove' /> Cancel
 					</Button>
-					<Button primary onClick={this.handleClick.bind(this)}>
+					<Button primary onClick={this.onSubmit.bind(this)}>
 						Add <Icon name='right chevron' />
 					</Button>
 				</Modal.Actions>
