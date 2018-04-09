@@ -3,6 +3,7 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies;
 import java.util.List;
 
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
 
 /**
  * Represent an external source to get movies from.

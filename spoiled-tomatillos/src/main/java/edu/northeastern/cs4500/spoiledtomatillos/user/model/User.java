@@ -17,11 +17,13 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.*;
 
 import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
+import edu.northeastern.cs4500.spoiledtomatillos.recommendations.Recommendation;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.user.service.UserService;
 import lombok.AccessLevel;
@@ -87,6 +89,22 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonProperty(value = "reviews")
     private Collection<Review> reviews = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @JsonProperty(value = "recommendations")
+    private Collection<Recommendation> recommendations = new ArrayList<>();
+    
+    public void addRecommendation(Recommendation r) {
+    		this.recommendations.add(r);
+    }
+    
+    public void deleteRecommendation(Recommendation r) {
+    		if (this.recommendations.contains(r)) {
+    			this.recommendations.remove(r);
+    		}
+    }
+   
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
@@ -232,6 +250,7 @@ public class User {
     }
 }
 
+@SuppressWarnings("serial")
 class UserSeralizer extends StdSerializer<User> {
 
     public UserSeralizer() {

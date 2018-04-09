@@ -17,6 +17,7 @@ import java.util.List;
 
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
 
 import static org.junit.Assert.*;
 

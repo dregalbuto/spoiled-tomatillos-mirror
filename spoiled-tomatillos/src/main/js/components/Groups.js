@@ -119,7 +119,8 @@ class GroupForm extends Component {
 				token: props.cookies.user_token,
 				groupName: '',
 				blacklist: 'true',  // save as 'blacklist' in JSON msg; default to be public (true)
-				movieId: ''
+				movieId: '',
+				fireRedirect: false
 		};
 
 		console.log("GroupForm cookies :");
@@ -220,6 +221,9 @@ class GroupForm extends Component {
 					Add <Icon name='right chevron' />
 						</Button>
 
+						{this.state.fireRedirect && (
+											<Redirect to={"/Profile"}/>
+										)}
 					</Form>
 		)
 	}
