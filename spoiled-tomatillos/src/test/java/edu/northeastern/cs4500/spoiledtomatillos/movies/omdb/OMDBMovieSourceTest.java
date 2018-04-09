@@ -43,7 +43,7 @@ public class OMDBMovieSourceTest {
         Movie movie = omdbMovieSource.getMovie(id);
         List<Review> reviews = omdbMovieSource.importCriticReview(movie);
         assertEquals(1, reviews.size());
-        assertEquals(new Review("", 0, movie, null), reviews.get(0));
+        assertEquals(new Review("Internet Movie Database", 2, movie, null), reviews.get(0));
     }
 /**
     @Test
