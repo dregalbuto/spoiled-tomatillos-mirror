@@ -6,6 +6,7 @@ import NavigationBar from './NavigationBar.js';
 import SearchBar from './SearchBar.js';
 import { Embed, Header } from 'semantic-ui-react'
 import {Button} from 'react-bootstrap';
+import { UserReviews } from './ReviewCard.js';
 
 class FeaturesButton extends Component {
   render() {
@@ -182,6 +183,7 @@ class Home extends Component {
           <SearchBar />
             <Header as='h4' inverted color='blue' size='huge'>Hi, {this.state.cookies.username}</Header>
             <h1>My review</h1>
+            <UserReviews />
             <div>{listItem}</div>
       </header>
 

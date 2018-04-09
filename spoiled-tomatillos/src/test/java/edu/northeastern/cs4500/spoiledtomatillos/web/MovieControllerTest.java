@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.spoiledtomatillos.movies;
+package edu.northeastern.cs4500.spoiledtomatillos.web;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

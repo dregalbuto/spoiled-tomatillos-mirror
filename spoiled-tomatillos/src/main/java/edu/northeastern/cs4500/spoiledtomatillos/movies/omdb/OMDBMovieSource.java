@@ -2,8 +2,8 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies.omdb;
 
 import edu.northeastern.cs4500.spoiledtomatillos.movies.ExternalMovieSource;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
-import edu.northeastern.cs4500.spoiledtomatillos.movies.MovieSearchQuery;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -80,7 +80,29 @@ public class OMDBMovieSource implements ExternalMovieSource {
         }
         List<Review> reviews = new ArrayList<>();
         for (OMDBMovieRatings omdbMovieRatings : omdbMovie.getRatings()) {
-            reviews.add(new Review("", 0, movie, null));
+            int rating = 0;
+            if (omdbMovieRatings.getValue().contains("/")) {
+                int top = Integer.parseInt(omdbMovieRatings.getValue()
+                        .split("/", 2)[0].split("\\.")[0]
+                        .replaceAll("[^0-9]*",""));
+                int bot = Integer.parseInt(omdbMovieRatings.getValue()
+                        .split("/", 2)[1].split("\\.")[0]
+                        .replaceAll("[^0-9]*",""));
+                rating = top * 5 / bot;
+            } else if (omdbMovieRatings.getValue().contains("%")) {
+                int top = Integer.parseInt(omdbMovieRatings.getValue()
+                        .split("%", 2)[0].split("\\.")[0]
+                        .replaceAll("[^0-9]*",""));
+                rating = top * 5 / 100;
+            } else {
+                rating = Math.min(5,
+                        Math.max(Integer.valueOf(omdbMovieRatings.getValue()
+                                .replaceAll("[^0-9]*","")), 0));
+            }
+            rating = Math.min(5, Math.max(rating, 0));
+            reviews.add(new Review(omdbMovieRatings.getSource(),
+                    rating,
+                    movie, null));
         }
         return reviews;
     }
