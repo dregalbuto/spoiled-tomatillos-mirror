@@ -16,10 +16,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,9 +69,8 @@ public class UserController {
 
 	/**
 	 * Search for a user
-	 * @param s email search
+	 * @param s search string
 	 * @return List of users
-	 * @throws JsonProcessingException 
 	 */
 	@CrossOrigin
     @RequestMapping("/search")
