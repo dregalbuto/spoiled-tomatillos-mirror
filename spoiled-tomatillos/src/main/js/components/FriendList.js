@@ -50,13 +50,20 @@ class UserElement extends Component {
     var buttons;
     if (this.state.type == "requests") {
       buttons = (<div>
-                   <button onClick={this.requestAction.bind(this, "accept", this.state.user.email)}>Accept</button>
-                   <button onClick={this.requestAction.bind(this, "reject", this.state.user.email)}>Reject</button>
+              {/*    <button onClick={this.requestAction.bind(this, "accept", this.state.user.email)}>Accept</button>*/}
+                   <Button floated='left' basic inverted color='grey'
+                    onClick={this.requestAction.bind(this, "accept", this.state.user.email)}>Accept</Button>
+              {/*      <button onClick={this.requestAction.bind(this, "reject", this.state.user.email)}>Reject</button>*/}
+                   <Button floated='left' basic inverted color='grey'
+                    onClick={this.requestAction.bind(this, "reject", this.state.user.email)}>Reject</Button>
                  </div>);
     } else {
       buttons = (<div>
-                   <button onClick={this.requestAction.bind(this, "unfriend", this.state.user.email)}>Unfriend</button>
+  {/*                    <button onClick={this.requestAction.bind(this, "unfriend", this.state.user.email)}>Unfriend</button>*/}
+                   <Button floated='left' basic inverted color='grey'
+                    onClick={this.requestAction.bind(this, "unfriend", this.state.user.email)}>Unfriend</Button>
                  </div>);
+
     }
 
     return (<div>
@@ -449,5 +456,6 @@ class FriendList extends Component {
 //  }
 //
 //}
+
 
 export default FriendList;
