@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     public List<User> searchUser(String q) {
         List<User> result = new ArrayList<>();
-        if (q == null || this.userRepository.count() == 0) {
+        if (q == "") {
             return result;
         }
         for (User user : getAllUsers()) {
