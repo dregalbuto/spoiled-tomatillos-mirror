@@ -18,6 +18,77 @@ import cookie from 'react-cookies'
 import ReviewCard, { MovieReviews } from './ReviewCard.js';
 
 
+class Recomendation extends Component {
+	constructor(props){
+		super(props);
+		this.state={
+			open:false,
+			recipient:'',
+			msg:'',
+		};
+		console.log(this.props.data);
+		this.open = this.open.bind(this);
+		this.close = this.close.bind(this);
+	}
+
+	open() {
+		this.setState({ open: true })
+	}
+	close() {
+		this.setState({ open: false })
+	}
+
+	handleClick(){
+		console.log("hekll;l'a");
+	}
+
+
+		render() {
+			const { open } = this.state
+			return (
+			<Modal
+				dimmer={false}
+				open={open}
+				onOpen={this.open}
+				onClose={this.close}
+				trigger={<Button floated='right' basic color='blue'>Send</Button>}
+				style={{height: 500}} >
+					<Modal.Header>
+						Recommend this movie to your friend!
+					</Modal.Header>
+					<Modal.Content>
+						<Modal.Description>
+						<Form>
+						<Form.Field>
+							<label>Share to:</label>
+							<input placeholder="recipient email address"
+							ref= {(input) => {this.recipient = input;}}
+							style={divStyle}/>
+							</Form.Field>
+							<Form.TextArea label = "Leave a message"
+							ref= {(input) => {this.msg = input;}}
+							style={divStyle}
+							placeholder="leave your message here"></Form.TextArea>
+
+							</Form>
+						</Modal.Description>
+
+
+				</Modal.Content>
+				<Modal.Actions>
+					<Button basic color='red' onClick={this.close}>
+						<Icon name='remove' /> Cancel
+					</Button>
+					<Button primary onClick={this.handleClick.bind(this)}>
+						Add <Icon name='right chevron' />
+					</Button>
+				</Modal.Actions>
+			</Modal>
+			)
+		}
+
+}
+
 class AddReview extends Component {
 	constructor(props) {
 		super(props);
@@ -206,8 +277,10 @@ class Movie extends Component {
 			<div>
 				<div>
 					<MovieCard data={this.state}/>
+					<Recomendation data = {this.state}/>
 					<MovieReviews id={this.state.movieID}/>
 				</div>
+
 				<div>
 					Rating: {rating}
 				</div>
