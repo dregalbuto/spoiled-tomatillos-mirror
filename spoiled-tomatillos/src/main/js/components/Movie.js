@@ -51,6 +51,9 @@ class Recomendation extends Component {
 		e.preventDefault();
 		console.log(this.state);
 
+		if(this.state.recipient == undefined || this.state.recipient = '' || this.state.msg == '' || this.state.msg == undefined) {
+			return alert("invalid input");
+		}
 		var fetchedData = {};
 		var url = '/api/recommendations/create';
 		var data = {
@@ -60,6 +63,7 @@ class Recomendation extends Component {
 				"movieId": this.state.movieId,
 				"recommendationMessage": this.state.msg
 		};
+
 
 		fetch('/api/recommendations/create' , {
 				method: 'POST',

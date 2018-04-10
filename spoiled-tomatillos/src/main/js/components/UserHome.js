@@ -13,41 +13,57 @@ class RecommendedMovie extends Component {
       this.state = {
         token: this.props.data.cookies.user_token,
         email: this.props.data.cookies.email,
+        recommendations:[]
       };
 
+      var data = {
+  			"email":this.state.email,
+        "token":this.state.token,
+  		}
+
+      console.log(this.state);
+      console.log(data);
+      fetch('http://localhost:8080/api/recommendations/get',{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+      },body: JSON.stringify(data)}).then(response=>response.json()).then(data=>{
+        console.log(data);
+        this.state.recommendations = data;
+        console.log(this.state.recommendations);
+      })
+    }
+
+    handleDelete(id,e){
 
     }
 
 
 
     render() {
+
+      console.log(this.state.recommendations);
+      const listItem = this.state.recommendations.map((recommendation) =>
+
+      <ul>
+        <li>
+          <div>{recommendation.movie.title}
+            <div>{review.text}
+            {recommendation.recommendationId}
+                <Button onClick={(e)=>this.handleDelete(recomendation.recommendationId,e)}>
+                  delete
+                </Button>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+    );
       return (
         <Segment style={{ padding: '8em 0em' }} vertical>
-		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Favourite Movies</Header>
-		    <Grid container columns={3} doubling stackable>
-	    			<Grid.Column>
-	    		        <Image
-	    		          bordered
-	    		          rounded
-	    		          size='large'
-	    		          	src='https://ia.media-imdb.com/images/M/MV5BODhkZGE0NDQtZDc0Zi00YmQ4LWJiNmUtYTY1OGM1ODRmNGVkXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SY1000_SX677_AL_.jpg'/>
-	    		    </Grid.Column>
-	    		          <Grid.Column>
-	    		          <Image
-	    		          	bordered
-	    		          	rounded
-	    		          	size='large'
-	    		          		src='https://ia.media-imdb.com/images/M/MV5BMjI3Nzg0MTM5NF5BMl5BanBnXkFtZTgwOTE2MTgwNTM@._V1_.jpg'/>
-	    		          </Grid.Column>
-	    		          <Grid.Column >
-	    		          <Image
-	    		          	bordered
-	    		          	rounded
-	    		          	size='large'
-	    		          		src='https://ia.media-imdb.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_SY1000_CR0,0,674,1000_AL_.jpg'/>
-	    		          </Grid.Column>
-	    		   </Grid>
-	    		<Button floated='right' basic inverted color='grey'>More</Button>
+		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Recommended Movies from your friends</Header>
+        <div>{listItem}</div>
 		    </Segment>
       )
     }
