@@ -50,10 +50,10 @@ class Recomendation extends Component {
 	onSubmit(e){
 		e.preventDefault();
 		console.log(this.state);
-
-		if(this.state.recipient == undefined || this.state.recipient = '' || this.state.msg == '' || this.state.msg == undefined) {
+{/*		if(this.state.recipient == undefined || this.state.recipient = '' || this.state.msg == '' || this.state.msg == undefined) {
 			return alert("invalid input");
 		}
+		*/}
 		var fetchedData = {};
 		var url = '/api/recommendations/create';
 		var data = {

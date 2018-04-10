@@ -43,27 +43,19 @@ class RecommendedMovie extends Component {
 
     render() {
 
-      console.log(this.state.recommendations);
-      const listItem = this.state.recommendations.map((recommendation) =>
-
-      <ul>
-        <li>
-          <div>{recommendation.movie.title}
-            <div>{review.text}
-            {recommendation.recommendationId}
-                <Button onClick={(e)=>this.handleDelete(recomendation.recommendationId,e)}>
-                  delete
-                </Button>
-            </div>
-          </div>
-        </li>
-      </ul>
-
-    );
+    console.log(this.state.recommendations);
+    const elements = []
+    for(let ele of this.state.recommendations){
+      elements.push(
+        <div>
+        <div>ele.movie.title</div>
+        </div>
+      )
+    }
       return (
         <Segment style={{ padding: '8em 0em' }} vertical>
 		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Recommended Movies from your friends</Header>
-        <div>{listItem}</div>
+        <div>{elements}</div>
 		    </Segment>
       )
     }
