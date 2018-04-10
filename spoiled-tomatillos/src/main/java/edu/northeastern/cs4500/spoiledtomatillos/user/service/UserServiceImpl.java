@@ -2,9 +2,11 @@ package edu.northeastern.cs4500.spoiledtomatillos.user.service;
 
 import edu.northeastern.cs4500.spoiledtomatillos.user.model.User;
 import edu.northeastern.cs4500.spoiledtomatillos.user.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,4 +39,19 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 
+    public List<User> searchUser(String q) {
+        List<User> result = new ArrayList<>();
+        if (q == "") {
+            return result;
+        }
+        for (User user : getAllUsers()) {
+            if (user.getEmail().contains(q) 
+            		|| user.getUsername().contains(q) 
+            		|| user.getFirstName().contains(q)
+            		|| user.getLastName().contains(q)) {
+                result.add(user);
+            }
+        }
+        return result;
+    }
 }

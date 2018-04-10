@@ -67,9 +67,17 @@ class ReviewCard extends Component {
     let text = this.state.text;
     let userId = this.state.userId;
 
-    let cri = (<div className="row"><h1><Link to={"/user/" + userId}>Review</Link></h1></div>);
+    let cri = (<div className="row"><h1>Review</h1>
+               <small><Link to={"/user/" + userId}>User</Link></small></div>);
+    if (this.props.hidden == true || this.props.hidden == "true") {
+      cri = (<div><small><Link to={"/user/" + userId}>User</Link></small></div>);
+    }
     if(critic) {
-      cri = (<div><div className="row"><h1>Review</h1></div><span className="tagline">Critic</span></div>);
+      if (this.props.hidden == true || this.props.hidden == "true") {
+        cri = (<div><span className="tagline">Critic</span></div>);
+      } else {
+        cri = (<div><div className="row"><h1>Review</h1></div><span className="tagline">Critic</span></div>);
+      }
     }
 
     return (
@@ -128,9 +136,9 @@ class MovieReviews extends Component {
 
   render() {
     const listItem = this.state.reviews.map((rev) =>
-      (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev.id} id={rev.id} /></li>)
+      (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev.id} id={rev.id} hidden={true} /></li>)
     );
-    return (<ul>{listItem}</ul>);
+    return (<div><h1>Reviews</h1><ul>{listItem}</ul></div>);
   }
 }
 
@@ -175,16 +183,33 @@ class UserReviews extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({"email": this.state.email, "token": token, "reviewId": id})
-      }).then((e) => {this.setState(this.state)});
+      }).then((e) => {
+        fetch("/api/user/id/" + this.state.userId)
+                .then((res) => {
+                  return res.text();
+                }).then((data) => {
+                  try {
+                    data = JSON.parse(data);
+                  } catch (e) {
+                    return;
+                  }
+
+                  // update state with API data
+                  this.setState({
+                    userId: this.state.userId,
+                    email: data.email,
+                    reviews: data.reviews,
+                  });
+                });});
       return false;
     }
 
     render() {
       const listItem = this.state.reviews.map((rev) =>
-        (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev} id={rev} />
+        (<li><ReviewCard key={"keyofreivewofelementwithidof" + rev} id={rev} hidden={true} />
         <button onClick={this.deleteReview.bind(this, rev)}>Delete</button></li>)
       );
-      return (<ul>{listItem}</ul>);
+      return (<div><h1>Reviews</h1><ul>{listItem}</ul></div>);
     }
 }
 

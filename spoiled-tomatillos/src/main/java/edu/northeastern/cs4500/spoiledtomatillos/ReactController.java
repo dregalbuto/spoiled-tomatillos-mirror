@@ -26,4 +26,13 @@ public class ReactController {
   public String movie() {
     return "/index";
   }
+
+  /**
+   * Forward user pages to index as well.
+   * @return always "index" loading react page.
+   */
+  @RequestMapping(value = "/user/*")
+  public String user() {
+    return "/index";
+  }
 }

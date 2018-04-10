@@ -46,12 +46,15 @@ public class MovieControllerTest {
     @Test
     public void search() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/info?id=tt0000001"))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/search?s=mencit"))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("[\"tt0000001\"]"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/search?s=mencitasd"))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
