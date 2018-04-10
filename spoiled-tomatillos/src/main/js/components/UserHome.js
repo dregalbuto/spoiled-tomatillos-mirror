@@ -7,11 +7,18 @@ import SearchBar from './SearchBar.js';
 import { Embed, Header, Statistic, Grid, Container, Image, Segment, Icon, List, Item, Button, Label } from 'semantic-ui-react'
 import { UserReviews } from './ReviewCard.js';
 
-class FavMovies extends Component {
+class RecommendedMovie extends Component {
     constructor(props) {
       super(props);
-      this.state = {};
+      this.state = {
+        token: this.props.data.cookies.user_token,
+        email: this.props.data.cookies.email,
+      };
+
+
     }
+
+
 
     render() {
       return (
@@ -430,7 +437,7 @@ class Home extends Component {
 
 
 
-            <FavMovies />
+            <RecommendedMovie data={this.state} />
       </header>
 
       <Features />

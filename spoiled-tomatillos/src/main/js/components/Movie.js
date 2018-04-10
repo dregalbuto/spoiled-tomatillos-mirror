@@ -48,7 +48,6 @@ class Recomendation extends Component {
 	}
 
 	onSubmit(e){
-		console.log("Recommendation onsubmit");
 		e.preventDefault();
 		console.log(this.state);
 
@@ -62,9 +61,6 @@ class Recomendation extends Component {
 				"recommendationMessage": this.state.msg
 		};
 
-		var body1 = JSON.stringify(data);
-		console.log(body1);
-
 		fetch('/api/recommendations/create' , {
 				method: 'POST',
 				headers: {
@@ -73,7 +69,6 @@ class Recomendation extends Component {
 				},
 				body: JSON.stringify(data)
 		}).then(response=>response.json()).then(data =>{
-			console.log("DATA FETCH REC");
 			console.log(data);
 			if(data.hasOwnProperty("recommendationId")){
 				alert("recommendation sent successfully");
@@ -90,7 +85,7 @@ class Recomendation extends Component {
 				open={open}
 				onOpen={this.open}
 				onClose={this.close}
-				trigger={<Button floated='right' basic color='blue'>Send</Button>}
+				trigger={<Button floated='right' basic color='blue'>Recommend to friends</Button>}
 				style={{height: 500}} >
 					<Modal.Header>
 						Recommend this movie to your friend!
@@ -121,7 +116,7 @@ class Recomendation extends Component {
 						<Icon name='remove' /> Cancel
 					</Button>
 					<Button primary onClick={this.onSubmit.bind(this)}>
-						Add <Icon name='right chevron' />
+						Send <Icon name='right chevron' />
 					</Button>
 				</Modal.Actions>
 			</Modal>
