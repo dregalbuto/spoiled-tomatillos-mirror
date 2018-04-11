@@ -18,6 +18,117 @@ import cookie from 'react-cookies'
 import ReviewCard, { MovieReviews } from './ReviewCard.js';
 
 
+class Recomendation extends Component {
+	constructor(props){
+		super(props);
+		this.state={
+			open:false,
+			recipient:'',
+			msg:'',
+			token: this.props.data.cookies.user_token,
+			movieId: this.props.data.movieID
+		};
+		console.log(this.props.data);
+		this.open = this.open.bind(this);
+		this.close = this.close.bind(this);
+		this.handleChange=this.handleChange.bind(this);
+	}
+
+	open() {
+		this.setState({ open: true })
+	}
+	close() {
+		this.setState({ open: false })
+	}
+
+  handleChange(e){
+		const name = e.target.name;
+		const value = e.target.value;
+		this.setState({ [name]:value })
+	}
+
+	onSubmit(e){
+		e.preventDefault();
+		console.log(this.state);
+{/*		if(this.state.recipient == undefined || this.state.recipient = '' || this.state.msg == '' || this.state.msg == undefined) {
+			return alert("invalid input");
+		}
+		*/}
+		var fetchedData = {};
+		var url = '/api/recommendations/create';
+		var data = {
+				"email": this.state.email,
+				"token": this.state.token,
+				"targetEmail": this.state.recipient,
+				"movieId": this.state.movieId,
+				"recommendationMessage": this.state.msg
+		};
+
+
+		fetch('/api/recommendations/create' , {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data)
+		}).then(response=>response.json()).then(data =>{
+			console.log(data);
+			if(data.hasOwnProperty("recommendationId")){
+				alert("recommendation sent successfully");
+		  } else {
+				alert("failed to send recommendation");
+			}
+	})}
+
+		render() {
+			const { open } = this.state
+			return (
+			<Modal
+				dimmer={false}
+				open={open}
+				onOpen={this.open}
+				onClose={this.close}
+				trigger={<Button floated='right' basic color='blue'>Recommend to friends</Button>}
+				style={{height: 500}} >
+					<Modal.Header>
+						Recommend this movie to your friend!
+					</Modal.Header>
+					<Modal.Content>
+						<Modal.Description>
+						<Form>
+						<Form.Field>
+							<label>Share to:</label>
+							<input name="recipient" placeholder="recipient email address"
+							type="text" value={this.recipient}
+							onChange={this.handleChange}
+							style={divStyle}/>
+							</Form.Field>
+							<Form.TextArea name="msg" label = "Leave a message"
+						  type="text" value={this.msg}
+							style={divStyle}
+							placeholder="leave your message here"
+							onChange={this.handleChange}></Form.TextArea>
+
+							</Form>
+						</Modal.Description>
+
+
+				</Modal.Content>
+				<Modal.Actions>
+					<Button basic color='red' onClick={this.close}>
+						<Icon name='remove' /> Cancel
+					</Button>
+					<Button primary onClick={this.onSubmit.bind(this)}>
+						Send <Icon name='right chevron' />
+					</Button>
+				</Modal.Actions>
+			</Modal>
+			)
+		}
+
+}
+
 class AddReview extends Component {
 	constructor(props) {
 		super(props);
@@ -206,8 +317,10 @@ class Movie extends Component {
 			<div>
 				<div>
 					<MovieCard data={this.state}/>
+					<Recomendation data = {this.state}/>
 					<MovieReviews id={this.state.movieID}/>
 				</div>
+
 				<div>
 					Rating: {rating}
 				</div>

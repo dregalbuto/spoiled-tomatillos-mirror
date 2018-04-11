@@ -5,12 +5,12 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import Reviews from './Reviews.js';
 import {
-	  Button, 
+	  Button,
 	  Header,
 	  Icon,
 	  Image,
 	  List,
-	  Menu,	 
+	  Menu,
 	  Segment,
 	  Item,
 	  Label,
@@ -26,7 +26,7 @@ class NavigationBar extends Component {
 				<div>
 				<nav id="topNav" className="navbar navbar-fixed-top">
 				<div className="container-fluid">
-				
+
 				<Navbar inverse collapseOnSelect>
 				  <Navbar.Header>
 				    <Navbar.Brand>
@@ -57,11 +57,11 @@ class NavigationBar extends Component {
 				        <MenuItem eventKey={3.7}>More</MenuItem>
 				      </NavDropdown>
 				    </Nav>
-					
+
 				    <Nav pullRight>
 				    <NavItem>
-				    		<Link to="/Profile"><Icon link name='user outline' /></Link>
-				    		
+				    		<Link to="/user/:id"><Icon link name='user outline' /></Link>
+
 				    </NavItem>
 				    <NavItem>
 				    		<Icon link name='empty heart' />
@@ -70,18 +70,18 @@ class NavigationBar extends Component {
 				    		<Link to="/Groups"><Icon link name='discussions'/></Link>
 				    		</NavItem>
 				    </Nav>
-				    
+
 				  </Navbar.Collapse>
 				</Navbar>
-				
+
 				</div>
 				</nav>
 				</div>
-					
+
 		)
 	}
-	
-	
+
+
 }
 
 export default NavigationBar;

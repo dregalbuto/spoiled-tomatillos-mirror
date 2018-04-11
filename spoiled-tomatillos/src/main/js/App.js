@@ -13,11 +13,11 @@ class App extends Component {
       <title>
       Spoiled Tomatillos
       </title>
-     
-		
+
+
 		<nav id="topNav" className="navbar navbar-fixed-top">
 		<div className="container-fluid">
-		
+
 		<Navbar inverse collapseOnSelect>
 		  <Navbar.Header>
 		    <Navbar.Brand>
@@ -50,12 +50,12 @@ class App extends Component {
 		    </Nav>
 		  </Navbar.Collapse>
 		</Navbar>
-		
+
 		</div>
 		</nav>
 
 </div>
-		
+
     );
   }
 }
