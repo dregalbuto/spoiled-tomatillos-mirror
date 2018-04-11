@@ -269,7 +269,8 @@ class RecommendedMovie extends Component {
 
     console.log(this.state);
     console.log(data);
-    fetch('http://localhost:8080/api/recommendations/get',{
+    var url = 'http://ec2-34-238-115-16.compute-1.amazonaws.com:8080/api/recommendations/get'
+    fetch(url,{
       method: 'POST',
       headers: {
         'Accept': 'application/json',
