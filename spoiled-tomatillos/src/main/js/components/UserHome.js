@@ -29,8 +29,7 @@ class RecommendedMovie extends Component {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
       },body: JSON.stringify(data)}).then(response=>response.json()).then(data=>{
-        console.log(data);
-        this.state.recommendations = data;
+        this.setState({recommendations: data});
         console.log(this.state.recommendations);
       })
     }
@@ -39,8 +38,6 @@ class RecommendedMovie extends Component {
 
     }
 
-
-
     render() {
 
     console.log(this.state.recommendations);
@@ -48,7 +45,7 @@ class RecommendedMovie extends Component {
     for(let ele of this.state.recommendations){
       elements.push(
         <div>
-        <div>ele.movie.title</div>
+         <div>{ele.recommendationId}</div>
         </div>
       )
     }
@@ -416,34 +413,7 @@ class Home extends Component {
             <h1>My review</h1>
             <UserReviews />
             <div>{listItem}</div>
-
-            <Segment inverted>
-       <Header as='h3' inverted style={{ fontSize: '2em' }}>My Reviews</Header>
-       <List divided inverted relaxed>
-         <List.Item>
-           <List.Content>
-             <List.Header>Lady Bird</List.Header>
-             a touching throwback to the adolescent years
-           </List.Content>
-         </List.Item>
-         <List.Item>
-           <List.Content>
-             <List.Header>
-             Pacific Rim: Uprising</List.Header>
-             A well done sequel
-           </List.Content>
-         </List.Item>
-         <List.Item>
-           <List.Content>
-             <List.Header>Unsane</List.Header>
-             The best film of Berlinale was shot on an iPhone!
-           </List.Content>
-         </List.Item>
-       </List>
-       <Link to="/Reviews"><Button floated='right' basic inverted color='grey'>More</Button></Link>
-     </Segment>
-
-
+   <Link to="/Reviews"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 
             <RecommendedMovie data={this.state} />
       </header>
