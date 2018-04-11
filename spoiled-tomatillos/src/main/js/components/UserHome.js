@@ -296,28 +296,76 @@ class Features extends Component {
 }
 
 
+
+class RecommendedMovie extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        token: this.props.data.cookies.user_token,
+        email: this.props.data.cookies.email,
+        recommendations:[]
+      };
+    }
+
+    handleDelete(id,e){
+
+    }
+
+    componentWillMount(){
+            var data = {
+        			"email":this.state.email,
+              "token":this.state.token,
+        		}
+
+            console.log(this.state);
+            console.log(data);
+            fetch('http://localhost:8080/api/recommendations/get',{
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },body: JSON.stringify(data)}).then(response=>response.json()).then(data=>{
+              this.setState({
+                recommendations: data,
+              });
+              console.log(this.state.recommendations);
+            })
+    }
+
+
+
+    render() {
+
+
+      console.log(this.state.recommendations);
+      const elements = []
+      for(let ele of this.state.recommendations){
+        elements.push(
+          <div>
+          <div>{ele.recommendationId}</div>
+          </div>
+        )}
+      return (
+        <Segment style={{ padding: '8em 0em' }} vertical>
+		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Recommended Movies from your friends</Header>
+        <div>{elements}</div>
+		    </Segment>
+      )
+
+}
+}
+
 ///////////////// Home /////////////////////
 class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
       cookies: '',
-      reviews:[],
+      recommendations:[],
     };
-    //console.log(this.props.match.params.id);
-    fetch("/api/user/id/" + props.match.params.id)
-    .then(response => response.json()).then(response=>{
-      //console.log(response.reviews)
-      for(var i = 0; i<response.reviews.length;i++){
-        //console.log(response.reviews[i]);
-      }
-      this.state.reviews = response.reviews;
-      console.log(this.state.reviews);
-
-    });
-
-     this.handleDelete = this.handleDelete.bind(this);
   }
+
+
 
 
   componentWillMount() {
@@ -328,78 +376,13 @@ class Home extends Component {
     }
     this.setState( {cookies: cookie.load('user')} );
     //console.log("UserHome: ");
+    //
+
   }
 
-  handleDelete(id,e){
-    e.preventDefault;
-    console.log(this.state.cookies);
-    console.log(this.state.cookies.user_token)
-    var usertoken = this.state.cookies.user_token;
-    var useremail = this.state.cookies.email;
-    var reviewid = id;
-    var userId = this.state.cookies.id;
-    var fetchedData = {};
-
-    console.log(id);
-    console.log(usertoken);
-
-    var data = {
-      "token":usertoken,
-      "postId":reviewid,
-      "email":useremail
-    }
-
-    var body = JSON.stringify(data);
-
-    fetch('/api/reviews/delete', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: body
-    }).then(response=>response.json()).then(data =>{
-      if(data.hasOwnProperty("deleted")){
-        alert("delete successfully");
-        fetch("/api/user/email/" + useremail)
-            .then(res=>res.json())
-            .then(res=>{
-              fetchedData = res;
-              this.state.cookies.reviews = fetchedData.reviews;
-              this.setState(this.state);
-            });
-
-
-
-      } else {
-        var error = data.message;
-        alert(error);
-      }
-    });
-  }
 
   render() {
-    console.log(this.state.cookies);
-    console.log(this.state.cookies.reviews);
-
-
-    const listItem = this.state.cookies.reviews.map((review) =>
-
-    // <ul>
-    //   <li>
-    //     <div>{review.movie.title}
-    //       <div>{review.text}
-    //       {review.id}
-    //           <Button onClick={(e)=>this.handleDelete(review.id,e)}>
-    //             delete
-    //           </Button>
-    //       </div>
-    //     </div>
-    //   </li>
-    // </ul>
-    <div>TEST - movie review </div>
-  );
-
+console.log(this.state.recomendations);
 
   return (
     <div>
