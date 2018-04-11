@@ -7,56 +7,6 @@ import SearchBar from './SearchBar.js';
 import { Embed, Header, Statistic, Grid, Container, Image, Segment, Icon, List, Item, Button, Label } from 'semantic-ui-react'
 import { UserReviews } from './ReviewCard.js';
 
-class RecommendedMovie extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        token: this.props.data.cookies.user_token,
-        email: this.props.data.cookies.email,
-        recommendations:[]
-      };
-
-      var data = {
-  			"email":this.state.email,
-        "token":this.state.token,
-  		}
-
-      console.log(this.state);
-      console.log(data);
-      fetch('http://localhost:8080/api/recommendations/get',{
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-      },body: JSON.stringify(data)}).then(response=>response.json()).then(data=>{
-        this.setState({recommendations: data});
-        console.log(this.state.recommendations);
-      })
-    }
-
-    handleDelete(id,e){
-
-    }
-
-    render() {
-
-    console.log(this.state.recommendations);
-    const elements = []
-    for(let ele of this.state.recommendations){
-      elements.push(
-        <div>
-         <div>{ele.recommendationId}</div>
-        </div>
-      )
-    }
-      return (
-        <Segment style={{ padding: '8em 0em' }} vertical>
-		    <Header as='h3' inverted style={{ fontSize: '2em' }}>Recommended Movies from your friends</Header>
-        <div>{elements}</div>
-		    </Segment>
-      )
-    }
-}
 
 class GroupList extends Component {
   constructor(props) {
@@ -394,7 +344,6 @@ class RecommendedMovie extends Component {
 
             <h1>My review</h1>
             <UserReviews />
-            <div>{listItem}</div>
    <Link to="/Reviews"><Button floated='right' basic inverted color='grey'>More</Button></Link>
 
             <RecommendedMovie data={this.state} />
