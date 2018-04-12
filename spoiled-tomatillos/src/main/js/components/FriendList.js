@@ -1,141 +1,197 @@
-import React, { Component }  from 'react'
-import { Button, Image, List, Container, Divider,
-Grid, Header,Icon, Menu, Segment, Item, Label, Table, Statistic, Pagination} from 'semantic-ui-react'
+import React, { Component }  from 'react';
+import { Button, Modal, Image, List, Container, Divider, Grid, Header,Icon, Menu, Segment, Item, Label, Table, Statistic, Pagination} from 'semantic-ui-react';
 import NavigationBar from './NavigationBar.js';
-import Profile from './UserProfile.js';
 import { Link } from 'react-router-dom';
+import cookie from 'react-cookies';
+import UserIDConverter from './UserIDConverter.js';
 
+class UserElement extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: props.type,
+      user: null,
+    };
+    fetch("/api/user/id/" + props.id).then((res) => {
+                    return res.text();
+                  }).then((data) => {
+                    try {
+                      data = JSON.parse(data);
+                    } catch (e) {
+                      return;
+                    }
 
-class UserHeading extends Component {
-  constructor() {
-    super();
-    this.state={};
+                    // update state with API data
+                    this.setState({
+                      type: props.type,
+                      user: data,
+                    });
+                  });
   }
+
+  requestAction(action, target) {
+    var user = cookie.load('user');
+    fetch("/api/friend/" + action, {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({email: user.email,token: user.user_token,targetEmail:target})
+            }).then(() => {this.props.updateHandler()});
+  }
+
   render() {
-    return (
-      <Container text>
-        <Header
-          as='h2'
-          content='username'
-          inverted
-          style={{
-            fontSize: '1.7em',
-            fontWeight: 'normal',
-            marginTop: '1.5em',
-          }}
-        >
-        <Grid>
-        <Grid.Column width={4}>
-        <Image circular src='https://react.semantic-ui.com/assets/images/avatar/large/patrick.png' />
-        {' '}Patrick
-        </Grid.Column>
-        <Grid.Column width={9}>
+    if (this.state.user == null) {
+      return (<div></div>);
+    }
+    var user = this.state.user;
 
-        <Segment inverted>
-        <Statistic.Group inverted>
-          <Statistic color='blue' size='small'>
-            <Statistic.Value>39</Statistic.Value>
-            <Statistic.Label>Movies Watched</Statistic.Label>
-          </Statistic>
-          <Statistic color='blue' size='small'>
-            <Statistic.Value>562</Statistic.Value>
-            <Statistic.Label>Friends</Statistic.Label>
-          </Statistic>
-          <Statistic color='blue' size='small'>
-            <Statistic.Value>7</Statistic.Value>
-            <Statistic.Label>Groups</Statistic.Label>
-          </Statistic>
-        </Statistic.Group>
-        </Segment>
+    var buttons;
+    if (this.state.type == "requests") {
+      buttons = (<div>
+              {/*    <button onClick={this.requestAction.bind(this, "accept", this.state.user.email)}>Accept</button>*/}
+                   <Button floated='left' basic inverted color='grey'
+                    onClick={this.requestAction.bind(this, "accept", this.state.user.email)}>Accept</Button>
+              {/*      <button onClick={this.requestAction.bind(this, "reject", this.state.user.email)}>Reject</button>*/}
+                   <Button floated='left' basic inverted color='grey'
+                    onClick={this.requestAction.bind(this, "reject", this.state.user.email)}>Reject</Button>
+                 </div>);
+    } else {
+      buttons = (<div>
+  {/*                    <button onClick={this.requestAction.bind(this, "unfriend", this.state.user.email)}>Unfriend</button>*/}
+                   <Button floated='left' basic inverted color='grey'
+                    onClick={this.requestAction.bind(this, "unfriend", this.state.user.email)}>Unfriend</Button>
+                 </div>);
 
+    }
 
-        </Grid.Column>
-        <Grid.Column width={3}>
-
-
-        <Header as='h3' icon inverted>
-        <Icon name='settings' />
-        Account Settings
-
-      </Header>
-
-        </Grid.Column>
-      </Grid>
-
-
-    </Header>
-
-       </Container>
-
-    )
+    return (<div>
+               <Link to={"/user/" + user.id}>{user.username + "<" +user.email + ">"}</Link>
+               {buttons}
+            </div>);
   }
 }
+
+class RequestElement extends Component {
+  constructor(props) {
+    super(props);
+    this.handleType = this.handleType.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.requestAction = this.requestAction.bind(this);
+  }
+
+  requestAction() {
+    var user = cookie.load('user');
+    var target = this.searchBox.value;
+    fetch("/api/friend/send", {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({email: user.email,token: user.user_token,targetEmail:target})
+            }).then(() => {this.props.updateHandler()});
+  }
+
+  /**
+   * Handing typing event on the SearchBar.
+   */
+  handleType(e) {
+
+  }
+
+  /**
+   * Handling keyboard event on SearchBar.
+   */
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.requestAction();
+    }
+  }
+
+  render() {
+    return (<div>
+               <input id='search-text' name='s' ref={(input) => {this.searchBox = input;}}
+                           style={{"color":"black",}}
+                           placeholder='Exact email of user to Friend' type='text' onInput={this.handleType} onKeyPress={this.handleKeyPress}/>
+               <button id='search-button' style={{"color":"black",}} type='button' onClick={this.requestAction}>
+                 <span>Add</span>
+               </button>
+            </div>);
+  }
+}
+
+class UserList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: props.type,
+      users:[],
+    };
+    var user = cookie.load('user');
+    fetch("/api/friend/" + props.type, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({email: user.email,token: user.user_token,})
+          }).then((res) => {
+                    return res.text();
+                  }).then((data) => {
+                    try {
+                      data = JSON.parse(data);
+                    } catch (e) {
+                      return;
+                    }
+
+                    // update state with API data
+                    this.setState({
+                      type: props.type,
+                      users: data,
+                    });
+                  });
+  }
+
+  render() {
+
+    const listItem = this.state.users.map((userId) =>
+      (<li><UserElement key={"keyofuserfriendofelementwithidof" + this.state.type + userId}
+                        type={this.state.type}
+                        id={userId}
+                        updateHandler={this.props.updateHandler}/></li>)
+    );
+    return (<ul>{listItem}</ul>);
+  }
+}
+
 class FriendList extends Component {
-  constructor() {
-    super();
-    this.state={};
+  constructor(props) {
+    super(props);
+    this.state = { num: 1 }
+  }
+
+  update(){
+    console.log("Update");
+    console.log(this.state);
+    this.setState({ num: this.state.num + 2 });
   }
 
   render() {
-    return (
-      <div>
-      <NavigationBar />
-      <Link to="/Profile"><Button basic inverted color='blue'>Back</Button></Link>
-      <UserHeading />
-
-      <h3>Friend List</h3>
-      <List divided verticalAlign='middle' size='massive'>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/lena.png' />
-      <List.Content>
-      Lena
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/lindsay.png' />
-      <List.Content>
-      Lindsay
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/mark.png' />
-      <List.Content>
-      Mark
-      </List.Content>
-      </List.Item>
-      <List.Item>
-      <List.Content floated='right'>
-      <Button>Remove</Button>
-      </List.Content>
-      <Image avatar src='https://react.semantic-ui.com/assets/images/avatar/small/molly.png' />
-      <List.Content>
-      Molly
-      </List.Content>
-      </List.Item>
-      </List>
-      <footer> <Pagination defaultActivePage={5} totalPages={10} /></footer>
-      </div>
-    )
+    var update = this.update;
+    return (<div>
+              <RequestElement updateHandler= {update.bind(this)}/>
+              <h1>Requests</h1>
+              <UserList type="requests" updateHandler= {update.bind(this)} key={this.state.num}/>
+              <h1>Friends</h1>
+              <UserList type="friends" updateHandler= {update.bind(this)} key={this.state.num + 1}/>
+            </div>);
   }
-
-
 }
 
-const style = {
-		h3: {
-			marginTop: '2em',
-			padding: '2em 0em',
-		}
 
-}
+
 
 export default FriendList;

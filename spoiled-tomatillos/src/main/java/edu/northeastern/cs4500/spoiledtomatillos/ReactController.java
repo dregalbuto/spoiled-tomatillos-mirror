@@ -24,7 +24,7 @@ public class ReactController {
    */
   @RequestMapping(value = "/Movie/*")
   public String movie() {
-    return "/index";
+    return "index";
   }
 
   /**
@@ -33,6 +33,6 @@ public class ReactController {
    */
   @RequestMapping(value = "/user/*")
   public String user() {
-    return "/index";
+    return "index";
   }
 }

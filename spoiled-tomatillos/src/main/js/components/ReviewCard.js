@@ -67,7 +67,6 @@ class ReviewCard extends Component {
     let text = this.state.text;
     let userId = this.state.userId;
 
-
     let cri = (<div className="row"><h1>Review</h1>
                <small><Link to={"/user/" + userId}>User</Link></small></div>);
     if (this.props.hidden == true || this.props.hidden == "true") {
@@ -79,7 +78,6 @@ class ReviewCard extends Component {
       } else {
         cri = (<div><div className="row"><h1>Review</h1></div><span className="tagline">Critic</span></div>);
       }
-
     }
 
     return (

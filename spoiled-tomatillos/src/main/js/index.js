@@ -9,7 +9,6 @@ import Signup from './components/Signup.js';
 import Homepage from './components/Homepage.js';
 import UserHome from './components/UserHome.js';
 import Movie from './components/Movie.js';
-import Profile from './components/UserProfile.js';
 import Groups from './components/Groups.js';
 import Reviews from './components/Reviews.js';
 import FriendList from './components/FriendList.js'
@@ -24,7 +23,6 @@ ReactDOM.render(
       <Route path = "/Signup" component = {Signup}/>
       <Route path = "/Movie/:id" component = {Movie}/>
       <Route path = "/user/:id" component = {UserHome}/>
-      <Route path = "/Profile" component = {Profile}/>
       <Route path = "/Groups" component={Groups}/>
       <Route path = "/Reviews" component={Reviews}/>
       <Route path = "/FriendList" component={FriendList}/>
