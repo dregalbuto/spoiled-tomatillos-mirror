@@ -25,7 +25,7 @@ public class FriendList {
 	private int id;
 
 	//@MapsId
-	@JoinColumn(name = "id")
+	//@JoinColumn(name = "id")
 	@OneToOne
 	@JsonBackReference
 	private User user;
