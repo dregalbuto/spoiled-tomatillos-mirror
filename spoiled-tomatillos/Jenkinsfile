@@ -23,13 +23,13 @@ pipeline {
 			steps {
 				withSonarQubeEnv('SonarQube') {
 					sh 'cd spoiled-tomatillos && mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.test.failure.ignore=true'
-					sh "cd spoiled-tomatillos && mvn sonar:sonar -Dsonar.host.url=http://ec2-18-220-143-170.us-east-2.compute.amazonaws.com:9000/ -Dsonar.projectName=spoiled-tomatillos-24 -Dsonar.branch=${env.BRANCH_NAME}"
+					sh "cd spoiled-tomatillos && mvn sonar:sonar -Dsonar.host.url=http://ec2-18-220-143-170.us-east-2.compute.amazonaws.com:9000/ -Dsonar.projectName=spoiled-tomatillos-24 -Dsonar.branch=${env.BRANCH_NAME} -Dsonar.coverage.exclusions=src/main/java/edu/northeastern/cs4500/spoiledtomatillos/movies/Movie.java,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/movies/MovieSearchQuery.java,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/movies/omdb/*,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/user/model/*,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/reviews/Review.java,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/groups/Group.java,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/JsonStrings.java,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/recommendations/Recommendation.java,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/web/MovieSearchQuery.java,src/main/java/edu/northeastern/cs4500/spoiledtomatillos/SpoiledTomatillosApplication.java"
 				}
 			}
 		}
 		stage('Quality') {
 			steps {
-				sh 'sleep 30'
+				sh 'sleep 60'
 				timeout(time: 30, unit: 'SECONDS') {
 					retry(5) {
 						script {
