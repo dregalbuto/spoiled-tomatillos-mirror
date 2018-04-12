@@ -31,6 +31,7 @@ public class RecommendationControllerTest {
 	private final String LOGGED_IN2 = "test2@husky.neu.edu";
 	private final String LOGGED_IN3 = "test3@husky.neu.edu";
 	private final String LOGGED_IN4 = "test4@husky.neu.edu";
+	private final String LOGGED_IN5 = "test5@husky.neu.edu";
 	private final String TARGET = "target@husky.neu.edu";
 	private final String MOVIE = "tt0046003";
 	private final String REC_MESSAGE = "You'll really love this movie!";
@@ -157,6 +158,7 @@ public class RecommendationControllerTest {
 	public void addGetDelete() throws Exception {
 		String token = Helper.signupLoginDefaults(LOGGED_IN4, mockMvc);
 		String token2 = Helper.signupLoginDefaults(TARGET, mockMvc);
+		String token3 = Helper.signupLoginDefaults(LOGGED_IN5, mockMvc);
 		
 		JSONObject create = new JSONObject();
 		create.put(JsonStrings.EMAIL, LOGGED_IN4);
@@ -183,6 +185,20 @@ public class RecommendationControllerTest {
 				.andReturn().getResponse().getContentAsString());
 		String recId2 = response2.getString(JsonStrings.REC_ID);
 		
+		JSONObject createSomeoneElse = new JSONObject();
+		createSomeoneElse.put(JsonStrings.EMAIL, LOGGED_IN4);
+		createSomeoneElse.put(JsonStrings.TOKEN, token);
+		createSomeoneElse.put(JsonStrings.MOVIE_ID, MOVIE);
+		createSomeoneElse.put(JsonStrings.TARGET_EMAIL, LOGGED_IN5);
+		createSomeoneElse.put(JsonStrings.REC_MESSAGE, REC_MESSAGE);
+		String recIdSomeoneElse = new JSONObject(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/recommendations/create")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(createSomeoneElse.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString())
+				.getString(JsonStrings.REC_ID);
+		
 		JSONObject getRecs = new JSONObject();
 		getRecs.put(JsonStrings.EMAIL, TARGET);
 		getRecs.put(JsonStrings.TOKEN, token2);
@@ -193,14 +209,11 @@ public class RecommendationControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn().getResponse().getContentAsString());
 		
-		System.out.println("----------------------------------------------");
-		System.out.println("response3:\n" + response3);		
-		System.out.println("----------------------------------------------");
-		
+		assertEquals(2, response3.length());
 		assertEquals(recId1, response3.getJSONObject(0).get(JsonStrings.REC_ID).toString());
-		assertEquals(LOGGED_IN4, response3.getJSONObject(0).getJSONObject("recommendationGiver").get("email"));
+		assertEquals(LOGGED_IN4, response3.getJSONObject(0).get("sender").toString());
 		assertEquals(recId2, response3.getJSONObject(1).get(JsonStrings.REC_ID).toString());
-		assertTrue(response3.getJSONObject(1).isNull("recommendationGiver"));
+		assertTrue(response3.getJSONObject(1).isNull("sender"));
 		
 		getRecs.put(JsonStrings.REC_ID, recId1);
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/recommendations/delete")
@@ -213,5 +226,25 @@ public class RecommendationControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(getRecs.toString()))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+		
+		JSONObject getRecs2 = new JSONObject();
+		getRecs2.put(JsonStrings.EMAIL, LOGGED_IN5);
+		getRecs2.put(JsonStrings.TOKEN, token3);
+		response3 = new JSONArray(this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/api/recommendations/get")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getRecs2.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn().getResponse().getContentAsString());
+		assertEquals(1, response3.length());		
+		assertEquals(recIdSomeoneElse, 
+				response3.getJSONObject(0).get(JsonStrings.REC_ID).toString());
+		
+		getRecs2.put(JsonStrings.REC_ID, recIdSomeoneElse);
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/recommendations/delete")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getRecs2.toString()))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
 	}
 }

@@ -89,23 +89,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonProperty(value = "reviews")
     private Collection<Review> reviews = new ArrayList<>();
-
+    
     @JsonManagedReference
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
-    @JsonProperty(value = "recommendations")
-    private Collection<Recommendation> recommendations = new ArrayList<>();
-    
-    public void addRecommendation(Recommendation r) {
-    		this.recommendations.add(r);
-    }
-    
-    public void deleteRecommendation(Recommendation r) {
-    		if (this.recommendations.contains(r)) {
-    			this.recommendations.remove(r);
-    		}
-    }
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonProperty(value = "recommendations_received")
+    private Collection<Recommendation> myReceivedRecs = new ArrayList<>();
    
-
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -284,6 +273,9 @@ class UserSeralizer extends StdSerializer<User> {
 
         jsonGenerator.writeFieldName("friends");
         jsonGenerator.writeObject(user.getFriends());
+        
+        jsonGenerator.writeFieldName("received_recommendations");
+        jsonGenerator.writeObject(user.getMyReceivedRecs());
 
         jsonGenerator.writeArrayFieldStart("groups");
         for (Group group : user.getGroups()) {
