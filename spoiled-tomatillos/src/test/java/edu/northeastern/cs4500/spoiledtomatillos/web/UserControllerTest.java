@@ -64,6 +64,7 @@ public class UserControllerTest {
                 "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\],\"reviews\"\\:\\[\\]," +
                 "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"requests\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
+                "\"received_recommendations\"\\:\\[\\],"+
                 "\"groups\"\\:\\[\\]\\}"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/someRandomUser"))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
@@ -122,6 +123,7 @@ public class UserControllerTest {
                 "\"email\"\\:\"erinzhang@husky.neu.edu\",\"username\"\\:\"erin.z\"," +
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\],\"reviews\"\\:\\[\\]," +
                 "\"friends\"\\:\\{\"id\"\\:[0-9]+,\"requests\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
+                "\"received_recommendations\"\\:\\[\\],"+
                 "\"groups\"\\:\\[\\]\\}"));
 
         JSONObject promotion = new JSONObject();
@@ -147,6 +149,7 @@ public class UserControllerTest {
                 "\"enabled\"\\:true,\"roles\"\\:\\[\\{\"id\"\\:[0-9]+,\"name\"\\:\"ROLE_ADMIN\"," +
                 "\"privileges\"\\:\\[\\]\\}\\],\"reviews\"\\:\\[\\]," +
                 "\"friends\"\\:\\{\"id\"\\:[0-9]*,\"requests\"\\:\\[\\],\"friends\"\\:\\[\\]\\}," +
+                "\"received_recommendations\"\\:\\[\\],"+
                 "\"groups\"\\:\\[\\]\\}"));
 
         promotion.put("targetEmail", "somethingrandomrandom@husky.neu.edu");
