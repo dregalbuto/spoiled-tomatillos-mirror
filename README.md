@@ -8,3 +8,5 @@ Project repository for team 24
 [MySQL endpoint](http://ec2-34-238-115-16.compute-1.amazonaws.com:8080/api/movies)  
 
 [Sonarqube Master](http://ec2-18-220-143-170.us-east-2.compute.amazonaws.com:9000/dashboard/index/edu.northeastern.cs4500:spoiled-tomatillos-24:master)
+
+[Final Presentation](https://youtu.be/_ceWRrF0sPw)
