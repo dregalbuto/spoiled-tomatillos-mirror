@@ -14,6 +14,6 @@ Yiwen Dong, Diana Regalbuto, Fiona Tran, Jiameng Wang, Xi Zhang
 
 [Final Presentation](https://youtu.be/_ceWRrF0sPw)
 
-[System Demo]()
+[System Demo](https://www.youtube.com/watch?v=mwMiJ5z_8yU&feature=youtu.be)
 
 [System Setup]()
