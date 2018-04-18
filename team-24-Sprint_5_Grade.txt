@@ -1,0 +1,45 @@
+CS4500 Software Development
+
+------------------------------------------------
+Sprint 5 Group Grade Team 24:
+------------------------------------------------
+
+Expectations Achieved:
+-----------------------------------------------
+
+1. Did you have a  vertically integrated prototype/system deployed to AWS that works. 
+   The TA’s and Professors are expecting to use their machines to access the system:
+   
+    Yes
+
+2. Testing coverage minimum:
+
+    100% Statement Coverage AND 85+% Branch Coverage
+
+3. Project report identifying how far the team is from completion. 
+   The metric could be the number of use cases completed versus specified,
+   the number of tasks completed versus specified for a release, and so on. 
+   Jira can produce reports like this for you: 
+   
+   Yes
+
+Comments on Expectations: Completed base expectations; coverage was 100% for line coverage
+
+Stretches Achieved:
+-----------------------------------------------
+
+(4) Bigger Stretch: Propose movies that a user may like that are on one of their video streaming platforms. The ideal would be to link this against provider libraries or schedules but as an easier first step you can link to a cache.
+
+
+
+
+
+Comments: Added a fandango link to the movie; which opens a page in fandango to see if movie is in a theatre.
+
+------------------------------------------------
+Team GRADE: 88
+------------------------------------------------
+
+Extra Comments:  
+
+Grader: Praveen
