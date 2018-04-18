@@ -3,14 +3,13 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies.omdb;
 import edu.northeastern.cs4500.spoiledtomatillos.movies.Movie;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class OMDBMovieSourceTest {
 
@@ -45,38 +44,4 @@ public class OMDBMovieSourceTest {
         assertEquals(1, reviews.size());
         assertEquals(new Review("Internet Movie Database", 2, movie, null), reviews.get(0));
     }
-/**
-    @Test
-    public void movieToExternalSource() {
-        String id = "tt0000001";
-        Movie movie = new Movie();
-        movie.setId(id);
-        OMDBMovie omdbMovie = omdbMovieSource.movieToExternalSource(movie);
-        assertEquals(id, omdbMovie.getImdbID());
-        assertEquals("Carmencita", omdbMovie.getTitle());
-        boolean exception = false;
-        try {
-            omdbMovieSource.movieToExternalSource(null);
-        } catch (Exception ex) {
-            exception = true;
-        }
-        assertEquals(true, exception);
-    }
-
-    @Test
-    public void externalSourceToMovie() {
-        String id = "tt0000001";
-        OMDBMovie omdbMovie = omdbMovieSource.getMovie(id);
-        Movie movie = omdbMovieSource.externalSourceToMovie(omdbMovie);
-        assertEquals(id, movie.getId());
-        assertEquals("Carmencita", movie.getTitle());
-        boolean exception = false;
-        try {
-            omdbMovieSource.externalSourceToMovie(null);
-        } catch (Exception ex) {
-            exception = true;
-        }
-        assertEquals(true, exception);
-    }
-    */
 }

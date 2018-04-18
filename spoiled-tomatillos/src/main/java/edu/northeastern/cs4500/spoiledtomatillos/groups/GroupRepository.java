@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * JPA repository for groups
  */
 public interface GroupRepository extends JpaRepository<Group, Integer> {
-  // Default function in JPA
+    // Default function in JPA
 }

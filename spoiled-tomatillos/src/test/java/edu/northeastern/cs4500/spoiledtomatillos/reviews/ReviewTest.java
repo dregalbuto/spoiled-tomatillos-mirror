@@ -2,7 +2,7 @@ package edu.northeastern.cs4500.spoiledtomatillos.reviews;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ReviewTest {
 
@@ -25,7 +25,6 @@ public class ReviewTest {
         testreview.setRating(5);
         assertEquals(5, testreview.getRating());
     }
-
 
 
 }

@@ -9,5 +9,6 @@ import lombok.NonNull;
 @Data
 public class MovieSearchQuery {
 
-    private @NonNull String title;
+    private @NonNull
+    String title;
 }

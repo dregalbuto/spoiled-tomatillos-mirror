@@ -4,7 +4,6 @@ import edu.northeastern.cs4500.spoiledtomatillos.movies.omdb.OMDBMovieSource;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
 import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,10 @@ public class MovieCachedRepository {
     private MovieRepository movieRepository;
     private ReviewRepository reviewRepository;
     private List<ExternalMovieSource> sources;
+
     /**
      * Constructor to create a MovieCachedRepository with needed repo.
+     *
      * @param movieRepository Cache to use for Movie.
      */
     @Autowired
@@ -36,6 +37,7 @@ public class MovieCachedRepository {
 
     /**
      * Get the movie based on id from either cache or gathered from the sources.
+     *
      * @param id ID of the movie to get.
      * @return Movie with data if found in the system. Null otherwise.
      */
@@ -63,6 +65,7 @@ public class MovieCachedRepository {
     /**
      * Search for movies based on the query data from either cache, or
      * refreshing data source.
+     *
      * @param q Query information to get movie.
      * @return List of best matched movie.
      */

@@ -7,8 +7,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+/**
+ * Tests the helpers
+ */
 public class Helper {
-	public static String signupLogin(JSONObject per, MockMvc mockMvc) throws Exception {
+    public static String signupLogin(JSONObject per, MockMvc mockMvc) throws Exception {
         // Signup
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user/signup")
                 .contentType(MediaType.APPLICATION_JSON).content(per.toString()))
@@ -22,25 +25,25 @@ public class Helper {
         return new JSONObject(cont).getString("token");
 
     }
-	
-	public static String signupLoginDefaults(String email, MockMvc mockMvc) throws Exception {
-		JSONObject request = new JSONObject();
-		request.put("first_name", "test_gf");
-		request.put("last_name", "test_gl");
-		request.put("email", email);
-		request.put("username", "test_gu");
-		request.put("password", "passw0rd");
-		return Helper.signupLogin(request, mockMvc);
-	}
-	
-	public static String signupLogin(String first, String last, String email, String username, 
-			MockMvc mockMvc) throws Exception {
-		JSONObject request = new JSONObject();
-		request.put("first_name", first);
-		request.put("last_name", last);
-		request.put("email", email);
-		request.put("username", username);
-		request.put("password", "passw0rd");
-		return Helper.signupLogin(request, mockMvc);
-	}
+
+    public static String signupLoginDefaults(String email, MockMvc mockMvc) throws Exception {
+        JSONObject request = new JSONObject();
+        request.put("first_name", "test_gf");
+        request.put("last_name", "test_gl");
+        request.put("email", email);
+        request.put("username", "test_gu");
+        request.put("password", "passw0rd");
+        return Helper.signupLogin(request, mockMvc);
+    }
+
+    public static String signupLogin(String first, String last, String email, String username,
+                                     MockMvc mockMvc) throws Exception {
+        JSONObject request = new JSONObject();
+        request.put("first_name", first);
+        request.put("last_name", last);
+        request.put("email", email);
+        request.put("username", username);
+        request.put("password", "passw0rd");
+        return Helper.signupLogin(request, mockMvc);
+    }
 }

@@ -1,7 +1,7 @@
 package edu.northeastern.cs4500.spoiledtomatillos.web;
 
-import static org.junit.Assert.assertEquals;
-
+import edu.northeastern.cs4500.spoiledtomatillos.Helper;
+import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -17,35 +17,33 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import edu.northeastern.cs4500.spoiledtomatillos.Helper;
-import edu.northeastern.cs4500.spoiledtomatillos.JsonStrings;
-
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
-	
-	@Autowired
+
+    @Autowired
     private MockMvc mockMvc;
 
-	@Test
-	public void getUserById() throws Exception {
+    @Test
+    public void getUserById() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/id/1000009"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-	}
-	
-	@Test
-	public void getUserByEmail() throws Exception {
+    }
+
+    @Test
+    public void getUserByEmail() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/email/moe@husky.neu.edu"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-	}
-	
+    }
+
     @Test
     public void registerAndInfoAndLogin() throws Exception {
         JSONObject request = new JSONObject();
@@ -101,11 +99,11 @@ public class UserControllerTest {
         JSONObject request = new JSONObject();
         request.put("email", "tomatillosspoiled@gmail.com");
         request.put("password", "admin");
-        String token  = new JSONObject(
+        String token = new JSONObject(
                 this.mockMvc.perform(MockMvcRequestBuilders.post("/api/user/login")
-                .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString()).getString("token");
+                        .contentType(MediaType.APPLICATION_JSON).content(request.toString()))
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andReturn().getResponse().getContentAsString()).getString("token");
 
         JSONObject erin = new JSONObject();
         erin.put("first_name", "erin");
@@ -243,7 +241,7 @@ public class UserControllerTest {
                 .andReturn().getResponse().getContentAsString());
         assertEquals(JsonStrings.BAD_SECRET, response.getString(JsonStrings.MESSAGE));
     }
-    
+
     @Test
     public void loginInvalid() throws Exception {
         JSONObject request = new JSONObject();
@@ -255,7 +253,7 @@ public class UserControllerTest {
                 .andReturn().getResponse().getContentAsString());
         assertEquals(JsonStrings.USER_NOT_FOUND, response.getString(JsonStrings.MESSAGE));
     }
-    
+
     @Test
     public void loginBadPassword() throws Exception {
         JSONObject erin = new JSONObject();
@@ -313,70 +311,70 @@ public class UserControllerTest {
 
     @Test
     public void search() throws Exception {
-    		// Return empty list
-		JSONArray result = new JSONArray(this.mockMvc
-				.perform(MockMvcRequestBuilders.get("/api/user/search?s=abcdefg"))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn().getResponse().getContentAsString());
-		assertEquals(0, result.length());
-    	
-    		Helper.signupLoginDefaults("test@email.com", mockMvc);
-    		
-    		// Return empty list
-    		result = new JSONArray(this.mockMvc
-    				.perform(MockMvcRequestBuilders.get("/api/user/search?s="))
+        // Return empty list
+        JSONArray result = new JSONArray(this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/api/user/search?s=abcdefg"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString());
-    		assertEquals(0, result.length());
-    		
-    		Helper.signupLogin("veryLongFirstname", "someLastName", "firstnameEmail", "test1", mockMvc);
-    		
-    		// Return user
-    		result = new JSONArray(this.mockMvc
-    				.perform(MockMvcRequestBuilders.get("/api/user/search?s=veryLongFirstname"))
+        assertEquals(0, result.length());
+
+        Helper.signupLoginDefaults("test@email.com", mockMvc);
+
+        // Return empty list
+        result = new JSONArray(this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/api/user/search?s="))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString());
-    		assertEquals(1, result.length());
-    		
-    		Helper.signupLogin("someFirstName", "veryLongLastname", "lastNameEmail", "test2", mockMvc);
-    		
-    		// Return user
-    		result = new JSONArray(this.mockMvc
-    				.perform(MockMvcRequestBuilders.get("/api/user/search?s=veryLongLastname"))
+        assertEquals(0, result.length());
+
+        Helper.signupLogin("veryLongFirstname", "someLastName", "firstnameEmail", "test1", mockMvc);
+
+        // Return user
+        result = new JSONArray(this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/api/user/search?s=veryLongFirstname"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString());
-    		assertEquals(1, result.length());
-    		
-    		Helper.signupLogin("test", "test", "very.weird.username", "test3", mockMvc);
-    		
-    		// Return user
-    		result = new JSONArray(this.mockMvc
-    				.perform(MockMvcRequestBuilders.get("/api/user/search?s=very.weird.username"))
+        assertEquals(1, result.length());
+
+        Helper.signupLogin("someFirstName", "veryLongLastname", "lastNameEmail", "test2", mockMvc);
+
+        // Return user
+        result = new JSONArray(this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/api/user/search?s=veryLongLastname"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString());
-    		assertEquals(1, result.length());
-    		
-    		// Return list of users
-    		result = new JSONArray(this.mockMvc
-    				.perform(MockMvcRequestBuilders.get("/api/user/search?s=t"))
+        assertEquals(1, result.length());
+
+        Helper.signupLogin("test", "test", "very.weird.username", "test3", mockMvc);
+
+        // Return user
+        result = new JSONArray(this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/api/user/search?s=very.weird.username"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString());
-    		assertTrue(result.length() > 1);
-    		
-    		// Return list of users
-       result = new JSONArray(this.mockMvc
-        		.perform(MockMvcRequestBuilders
-        				.get("/api/user/search?s=test@email.com"))
+        assertEquals(1, result.length());
+
+        // Return list of users
+        result = new JSONArray(this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/api/user/search?s=t"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString());
-       assertEquals("test@email.com", result.getJSONObject(0).get(JsonStrings.EMAIL));
+        assertTrue(result.length() > 1);
+
+        // Return list of users
+        result = new JSONArray(this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/api/user/search?s=test@email.com"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString());
+        assertEquals("test@email.com", result.getJSONObject(0).get(JsonStrings.EMAIL));
     }
-    
+
 }

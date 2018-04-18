@@ -9,30 +9,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ReactController {
 
-  /**
-   * Forward all unfound resource to index for react to handle.
-   * @return always "index" loading react page.
-   */
-  @RequestMapping("/*")
-  public String index() {
-    return "index";
-  }
+    /**
+     * Forward all unfound resource to index for react to handle.
+     *
+     * @return always "index" loading react page.
+     */
+    @RequestMapping("/*")
+    public String index() {
+        return "index";
+    }
 
-  /**
-   * Forward movie pages to index as well.
-   * @return always "index" loading react page.
-   */
-  @RequestMapping(value = "/Movie/*")
-  public String movie() {
-    return "index";
-  }
+    /**
+     * Forward movie pages to index as well.
+     *
+     * @return always "index" loading react page.
+     */
+    @RequestMapping(value = "/Movie/*")
+    public String movie() {
+        return "index";
+    }
 
-  /**
-   * Forward user pages to index as well.
-   * @return always "index" loading react page.
-   */
-  @RequestMapping(value = "/user/*")
-  public String user() {
-    return "index";
-  }
+    /**
+     * Forward user pages to index as well.
+     *
+     * @return always "index" loading react page.
+     */
+    @RequestMapping(value = "/user/*")
+    public String user() {
+        return "index";
+    }
 }
