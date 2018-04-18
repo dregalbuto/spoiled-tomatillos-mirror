@@ -1,27 +1,12 @@
 package edu.northeastern.cs4500.spoiledtomatillos.user.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
-import org.springframework.security.crypto.bcrypt.BCrypt;
-
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import javax.persistence.*;
-
 import edu.northeastern.cs4500.spoiledtomatillos.groups.Group;
 import edu.northeastern.cs4500.spoiledtomatillos.recommendations.Recommendation;
 import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
@@ -30,6 +15,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
+import javax.persistence.*;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.UUID;
 
 
 /**
@@ -40,6 +34,8 @@ import lombok.Setter;
 @JsonSerialize(using = UserSeralizer.class)
 public class User {
 
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static SecureRandom rnd = new SecureRandom();
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonProperty(value = "id")
@@ -70,7 +66,6 @@ public class User {
     @Setter(AccessLevel.NONE)
     //@JsonIgnore
     private long tokenExpiration;
-
     /**
      * All of the roles this user has
      */
@@ -84,28 +79,14 @@ public class User {
                     name = "role_id", referencedColumnName = "id"))
     @JsonProperty(value = "roles")
     private Collection<Role> roles;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonProperty(value = "reviews")
     private Collection<Review> reviews = new ArrayList<>();
-
     @JsonManagedReference
     @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
     @JsonProperty(value = "recommendations")
     private Collection<Recommendation> recommendations = new ArrayList<>();
-    
-    public void addRecommendation(Recommendation r) {
-    		this.recommendations.add(r);
-    }
-    
-    public void deleteRecommendation(Recommendation r) {
-    		if (this.recommendations.contains(r)) {
-    			this.recommendations.remove(r);
-    		}
-    }
-   
-
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
     //        optional = false, fetch = FetchType.LAZY)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -118,20 +99,16 @@ public class User {
     @ManyToMany
     private Collection<Group> groups = new ArrayList<>();
 
+    /**
+     * Empty constructor for User.
+     */
     public User() {
-        // Empty constructor fo
-        // r user.
+        // Empty constructor for user.
     }
 
     /**
      * Constructs a User with first, last name, email, username, encrypted
      * of given password with no permission and is enabled.
-     *
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param username
-     * @param password
      */
     public User(String firstName, String lastName, String email,
                 String username, String password) {
@@ -147,6 +124,52 @@ public class User {
     }
 
     /**
+     * Generate a random secure string of given length.
+     * @param len Length of string to generate.
+     * @return Randomly generated String with length of given len.
+     */
+    private static String randomString(int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Check if given login info is valid.
+     * @param email Email of this user.
+     * @param token Token of this user.
+     * @param repo Repository that this user is stored in.
+     * @return true if the login information provided is valid.
+     */
+    public static boolean validLogin(String email, String token, UserService repo) {
+        User user = repo.findByEmail(email);
+        if (user == null || !user.isEnabled()) {
+            return false;
+        }
+        return user.validToken(token);
+    }
+
+    /**
+     * Add given Recommendation to this user.
+     * @param r Recommendation to add.
+     */
+    public void addRecommendation(Recommendation r) {
+        this.recommendations.add(r);
+    }
+
+    /**
+     * Delete the given Recommendation.
+     * @param r Recommendation to remove.
+     */
+    public void deleteRecommendation(Recommendation r) {
+        if (this.recommendations.contains(r)) {
+            this.recommendations.remove(r);
+        }
+    }
+
+    /**
      * Given password in plain text and saves it encrypted.
      *
      * @param password user password in plain text.
@@ -155,17 +178,10 @@ public class User {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    private static SecureRandom rnd = new SecureRandom();
-
-    private static String randomString(int len){
-        StringBuilder sb = new StringBuilder(len);
-        for ( int i = 0; i < len; i++ ) {
-            sb.append(AB.charAt(rnd.nextInt(AB.length())));
-        }
-        return sb.toString();
-    }
-
+    /**
+     * Set this password to a random password of length 12.
+     * @return Randomly generated password.
+     */
     public String randomPassword() {
         String randomStr = randomString(12);
         this.setTokenExpired();
@@ -173,6 +189,11 @@ public class User {
         return randomStr;
     }
 
+    /**
+     * Check if password is correct.
+     * @param plainPassword Password in paintext to check.
+     * @return True if password matches that is stored in database.
+     */
     public boolean checkPassword(String plainPassword) {
         return BCrypt.checkpw(plainPassword, this.password);
     }
@@ -240,27 +261,36 @@ public class User {
         }
         return false;
     }
-
-    public static boolean validLogin(String email, String token, UserService repo) {
-        User user = repo.findByEmail(email);
-        if (user == null || !user.isEnabled()) {
-            return false;
-        }
-        return user.validToken(token);
-    }
 }
 
+/**
+ * Seralizes User to JSON
+ */
 @SuppressWarnings("serial")
 class UserSeralizer extends StdSerializer<User> {
 
+    /**
+     * Default Constructor.
+     */
     public UserSeralizer() {
         this(null);
     }
 
+    /**
+     * Pass to super constructor.
+     * @param t type of User class.
+     */
     protected UserSeralizer(Class<User> t) {
         super(t);
     }
 
+    /**
+     * Serializes given User with given generator.
+     * @param user User object to serialize.
+     * @param jsonGenerator Generator that creates the JSON.
+     * @param serializerProvider Not used.
+     * @throws IOException exception when JSON can't be generated.
+     */
     @Override
     public void serialize(User user, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();

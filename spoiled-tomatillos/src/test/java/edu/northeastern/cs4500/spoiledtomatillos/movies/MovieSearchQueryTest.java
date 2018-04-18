@@ -1,11 +1,10 @@
 package edu.northeastern.cs4500.spoiledtomatillos.movies;
 
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MovieSearchQueryTest {
 

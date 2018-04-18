@@ -14,7 +14,7 @@ import java.util.Collection;
  * Class for a movie in Spoiled Tomatillos.
  */
 @Data
-@Entity(name="movies")
+@Entity(name = "movies")
 public class Movie {
 
     @Id

@@ -2,8 +2,9 @@ package edu.northeastern.cs4500.spoiledtomatillos.movies;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
+import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
+import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.northeastern.cs4500.spoiledtomatillos.reviews.Review;
-import edu.northeastern.cs4500.spoiledtomatillos.reviews.ReviewRepository;
-import edu.northeastern.cs4500.spoiledtomatillos.web.MovieSearchQuery;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for the cached repository.
@@ -28,15 +25,13 @@ import static org.junit.Assert.*;
 @DataJpaTest
 public class MovieCachedRepositoryTest {
 
+    MovieCachedRepository movieCachedRepository;
     @Autowired
     private TestEntityManager entityManager;
-
     @Autowired
     private MovieRepository movieRepository;
     @Autowired
     private ReviewRepository reviewRepository;
-    MovieCachedRepository movieCachedRepository;
-
 
     @Before
     public void setUp() {

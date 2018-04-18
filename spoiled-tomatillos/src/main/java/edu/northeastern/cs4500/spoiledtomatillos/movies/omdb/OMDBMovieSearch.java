@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Created by Yiwen on 2/15/2018.
+ * Represent a search result from OMDB.
  */
 @Data
 public class OMDBMovieSearch {

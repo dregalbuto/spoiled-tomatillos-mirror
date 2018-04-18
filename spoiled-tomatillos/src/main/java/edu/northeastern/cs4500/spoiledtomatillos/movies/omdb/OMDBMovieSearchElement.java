@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * Created by Yiwen on 2/16/2018.
+ * Represent movie information from OMDB search quarry.
  */
 @Data
 public class OMDBMovieSearchElement {
